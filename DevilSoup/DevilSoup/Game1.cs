@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace DevilSoup
 {
     /// <summary>
@@ -38,6 +39,8 @@ namespace DevilSoup
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = camera.world;
 
+            Pad.findConnectedPad();
+
             base.Initialize();
         }
 
@@ -72,6 +75,7 @@ namespace DevilSoup
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            Pad.getKeyState();
             // TODO: Add your update logic here
 
             base.Update(gameTime);
