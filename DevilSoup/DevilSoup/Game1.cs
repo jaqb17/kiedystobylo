@@ -11,6 +11,8 @@ namespace DevilSoup
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Camera camera;
+        private Asset cauldron;
 
         public Game1()
         {
@@ -27,6 +29,14 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = new Camera();
+            camera.setWorldMatrix(new Vector3(0, 0, 0));
+            camera.view = Matrix.CreateLookAt(new Vector3(0, 100, 100), new Vector3(0, 0, 0), Vector3.UnitY);
+            camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
+
+            cauldron = new Asset();
+            cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
+            cauldron.world = camera.world;
 
             base.Initialize();
         }
@@ -76,6 +86,7 @@ namespace DevilSoup
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            cauldron.DrawModel(camera.view, camera.projection, graphics);
 
             base.Draw(gameTime);
         }
