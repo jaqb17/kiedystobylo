@@ -1,54 +1,99 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SlimDX.DirectInput;
 
 namespace DevilSoup
 {
-    public static class Pad
+    public class Pad
     {
-        private static KeyboardState keyboardState;
-        private static GamePadState gamepadState;
-        private static PlayerIndex conntectedPadId;
+        DirectInput Input = new DirectInput();
+        Joystick stick;
+        Joystick[] Sticks;
+        List<int> connectedPadsId;
 
-        public static void getKeyState()
+        //Thumstick variables.
+        int yValue = 0;
+        int xValue = 0;
+        int zValue = 0;
+        int rotationZValue = 0;
+
+        public Pad()
         {
-            keyboardState = Keyboard.GetState();
-            gamepadState = GamePad.GetState(conntectedPadId);             // Ważne! Trzeba wybrać ID pada!
-
-           // findConnectedPad();
-
-            Console.WriteLine(conntectedPadId + " " +gamepadState.IsButtonDown(Buttons.A));
-
-            /*
-            //if (keyboardState.IsKeyDown(Keys.J))
-
-            keys = keyboardState.GetPressedKeys();
-            string _stringValue = string.Empty;
-
-            foreach(Keys key in keys)
-            {
-                var keyValue = key.ToString();
-                _stringValue += keyValue;
-            }
-            Console.WriteLine(_stringValue);
-            */
+            //GetSticks();
+            Sticks = GetSticks();
+            connectedPadsId = new List<int>();
         }
 
-        public static void findConnectedPad()
+        private Joystick[] GetSticks()
         {
 
-            for (PlayerIndex i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
+            // Creates the list of joysticks connected to the computer via USB.
+            List<Joystick> sticks = new List<Joystick>();
+
+            foreach (DeviceInstance device in Input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly))
             {
-                GamePadState state = GamePad.GetState(i);
-                if (state.IsConnected)
+                // Creates a joystick for each game device in USB Ports
+                try
                 {
-                    conntectedPadId = i;
-                    Console.WriteLine("Znaleziono!!! " + i);
-                    break;
+                    stick = new Joystick(Input, device.InstanceGuid);
+                    stick.Acquire();
+
+                    // Gets the joysticks properties and sets the range for them.
+                    foreach (DeviceObjectInstance deviceObject in stick.GetObjects())
+                    {
+                        if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
+                            stick.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-100, 100);
+                    }
+
+                    // Adds how ever many joysticks are connected to the computer into the sticks list.
+                    sticks.Add(stick);
+                }
+                catch (DirectInputException)
+                {
+                    Console.WriteLine("Blad przy rozpoznawaniu joysticka");
+                }
+            }
+            return sticks.ToArray();
+        }
+
+        public void getKeyState()
+        {
+            for (int i = 0; i < Sticks.Length; i++)
+            {
+                StickHandlingLogic(Sticks[i], i);
+            }
+        }
+
+        private void StickHandlingLogic(Joystick stick, int id)
+        {
+            // Creates an object from the class JoystickState.
+            JoystickState state = new JoystickState();
+
+            state = stick.GetCurrentState(); //Gets the state of the joystick
+
+            //These are for the thumbstick readings
+            yValue = -state.Y;
+            xValue = state.X;
+            zValue = state.Z;
+            rotationZValue = -state.RotationZ;
+
+            // Stores the number of each button on the gamepad into the bool[] butons.
+            bool[] buttons = state.GetButtons();
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            if (id == 0)
+            {
+                // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    if (buttons[i])
+                        Console.WriteLine("Wcisnieto przycisk: " + i);
                 }
             }
         }

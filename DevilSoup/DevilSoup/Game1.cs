@@ -14,6 +14,7 @@ namespace DevilSoup
         SpriteBatch spriteBatch;
         private Camera camera;
         private Asset cauldron;
+        private Pad gamepad;
 
         public Game1()
         {
@@ -39,7 +40,7 @@ namespace DevilSoup
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = camera.world;
 
-            Pad.findConnectedPad();
+            gamepad = new Pad();
 
             base.Initialize();
         }
@@ -74,8 +75,8 @@ namespace DevilSoup
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            Pad.getKeyState();
+            
+            gamepad.getKeyState();
             // TODO: Add your update logic here
 
             base.Update(gameTime);
