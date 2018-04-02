@@ -12,13 +12,16 @@ namespace DevilSoup
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Vector3 cameraPos;
         private Camera camera;
         private Asset cauldron;
         private Pad gamepad;
+        private DanceArea danceArea;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -31,8 +34,10 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            cameraPos = new Vector3(0, 0, 0);
+
             camera = new Camera();
-            camera.setWorldMatrix(new Vector3(0, 0, 0));
+            camera.setWorldMatrix(cameraPos);
             camera.view = Matrix.CreateLookAt(new Vector3(0, 100, 100), new Vector3(0, 0, 0), Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
 
@@ -41,6 +46,9 @@ namespace DevilSoup
             cauldron.world = camera.world;
 
             gamepad = new Pad();
+
+            danceArea = new DanceArea(cameraPos);
+            danceArea.createSoul(Content);
 
             base.Initialize();
         }
@@ -91,7 +99,8 @@ namespace DevilSoup
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            cauldron.DrawModel(camera.view, camera.projection, graphics);
+            danceArea.moveSoul(camera.view, camera.projection);
+            cauldron.DrawModel(camera.view, camera.projection);
 
             base.Draw(gameTime);
         }

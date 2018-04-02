@@ -21,7 +21,7 @@ namespace DevilSoup
             this.model = model;
         }
 
-        public Asset(Model model, Matrix world, Matrix view, Matrix projection)
+        public Asset(Model model, Matrix world)
         {
             this.model = model;
             this.world = world;
@@ -32,7 +32,7 @@ namespace DevilSoup
             model = content.Load<Model>(path);
         }
 
-        public void DrawModel(Matrix view, Matrix projection, GraphicsDeviceManager graphics)
+        public void DrawModel(Matrix view, Matrix projection)
         {
             foreach (ModelMesh mesh in model.Meshes)
             {

@@ -43,10 +43,13 @@
   <ItemGroup>
     <Compile Include="Asset.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="DanceArea.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Pad.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleArea.cs" />
+    <Compile Include="Soul.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
