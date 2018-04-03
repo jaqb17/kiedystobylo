@@ -12,32 +12,54 @@ namespace DevilSoup
     {
 
         private const int numberOfAreas = 8;
-        private Vector3 cauldronPosition;
+        private Vector3 origin;
         private SingleArea[] singleAreas;
+        private float radius;
 
-        public DanceArea(Vector3 cauldronPosition)
+        public DanceArea(Asset cauldron)
         {
-            this.cauldronPosition = cauldronPosition;
+            this.radius = cauldron.radius / 3;
+            this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
+        }
+
+        private Vector3 computePosition(Vector3 origin, float radius, int id)
+        {
+            Vector3 result = origin;
+            float angle = (float) (id * 360.0f / numberOfAreas * Math.PI / 180.0f);
+            result.X += (float) (radius * Math.Cos(angle));
+            result.Z += (float)(radius * Math.Sin(angle));
+
+            return result;
         }
 
         public void createSoul(ContentManager content)
         {
-            singleAreas[0] = new SingleArea(content, cauldronPosition);
+            for(int i = 0; i < numberOfAreas; i++)
+                singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
         }
 
         public void moveSoul(Matrix view, Matrix projection)
         {
-            Vector3 newPos = singleAreas[0].soulPosition;
-            newPos.Y += 0.05f;
-            singleAreas[0].moveSoul(newPos);
-
-            updateSoul(view, projection);
+            for (int i = 0; i < numberOfAreas; i++)
+            {
+                if (singleAreas[i].ifSoulIsAlive)
+                {
+                    Vector3 newPos = singleAreas[i].soulPosition;
+                    newPos.Y += 0.05f;
+                    singleAreas[i].moveSoul(newPos);
+                    updateSoul(view, projection);
+                }
+            }
         }
 
         private void updateSoul(Matrix view, Matrix projection)
         {
-            singleAreas[0].updateSoul(view, projection);
+            for (int i = 0; i < numberOfAreas; i++)
+            {
+                singleAreas[i].updateSoul(view, projection);
+            }
+
         }
     }
 }

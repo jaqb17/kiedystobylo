@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
 
 namespace DevilSoup
 {
@@ -47,7 +47,7 @@ namespace DevilSoup
 
             gamepad = new Pad();
 
-            danceArea = new DanceArea(cameraPos);
+            danceArea = new DanceArea(cauldron);
             danceArea.createSoul(Content);
 
             base.Initialize();
