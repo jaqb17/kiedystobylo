@@ -13,6 +13,7 @@ namespace DevilSoup
         Asset soul;
         Vector3 soulPosition;
         public int lifes { get; set; }
+        
 
         public Soul(ContentManager content, String path)
         {

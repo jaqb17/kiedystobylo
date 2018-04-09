@@ -15,6 +15,10 @@ namespace DevilSoup
         private Vector3 origin;
         private SingleArea[] singleAreas;
         private float radius;
+       // private Game1 game1;
+        public float escape_height = 51.0f;
+        public int level = 0;
+
 
         public DanceArea(Asset cauldron)
         {
@@ -35,21 +39,56 @@ namespace DevilSoup
 
         public void createSoul(ContentManager content)
         {
-            for(int i = 0; i < numberOfAreas; i++)
+
+            int i = Randomizer.GetRandomNumber(0, numberOfAreas);
+            if (singleAreas[i] == null || singleAreas[i].soul == null)          
+            {
+                
                 singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
+            }
+                
         }
 
-        public void moveSoul(Matrix view, Matrix projection)
+        /*
+        public void reset()
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
-                if (singleAreas[i].ifSoulIsAlive)
+                if (singleAreas[i] != null) 
+                {
+                    if(singleAreas[i].soul!=null)
+                    {
+                        singleAreas[i].soul.killSoul();
+                        singleAreas[i].soul = null;
+                    }
+                } 
+
+            }
+        }*/
+        public void moveSoul(Matrix view, Matrix projection)
+        {
+            for (int i = 0; i < numberOfAreas; i++)
+            {                
+                if (singleAreas[i] != null && singleAreas[i].ifSoulIsAlive)
                 {
                     Vector3 newPos = singleAreas[i].soulPosition;
                     newPos.Y += 0.05f;
+                    Console.WriteLine("y " + newPos.Y);
                     singleAreas[i].moveSoul(newPos);
                     updateSoul(view, projection);
+                   // if(newPos.Y <= escape_height)
+                   // {
+                        //game1.Escaped(singleAreas[i].soul.lifes * 10);
+                       // singleAreas[i].soul.killSoul();
+                   // }
+                    //else if(singleAreas[i].soul.lifes<=0)
+                   // {
+                       // game1.Killed();
+                       // singleAreas[i].soul.killSoul();
+                        
+                   // }
                 }
+
             }
         }
 
@@ -57,6 +96,7 @@ namespace DevilSoup
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
+                if(singleAreas[i] != null)
                 singleAreas[i].updateSoul(view, projection);
             }
 

@@ -13,8 +13,10 @@ namespace DevilSoup
         public Vector3 areaCenter { get; private set; }
         public Vector3 soulPosition { get; private set; }
         public bool ifSoulIsAlive { get; private set; }
-        private Soul soul;
+        public Soul soul;
         private String path = "Assets\\Souls\\bryla";
+
+        
 
         public SingleArea(ContentManager content, Vector3 areaCenter)
         {
@@ -29,8 +31,8 @@ namespace DevilSoup
             this.soulPosition = position;
             this.soul.setSoulPosition(this.soulPosition);
         }
-
-        public void takeSoulLife()
+        
+        public bool takeSoulLife()
         {
             this.soul.lifes -= 1;
             if(this.soul.lifes <= 0)
@@ -38,12 +40,15 @@ namespace DevilSoup
                 this.ifSoulIsAlive = false;
                 this.soul.killSoul();
                 this.soul = null;
+                return true;
             }
+            return false;
         }
 
         public void updateSoul(Matrix view, Matrix projection)
         {
             this.soul.drawSoul(view, projection);
         }
+        
     }
 }

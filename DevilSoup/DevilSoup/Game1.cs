@@ -12,11 +12,16 @@ namespace DevilSoup
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private SpriteFont font;
         private Vector3 cameraPos;
         private Camera camera;
         private Asset cauldron;
         private Pad gamepad;
         private DanceArea danceArea;
+
+        public int hp = 100;
+        public int points = 0;
+        private bool started = true;
 
         public Game1()
         {
@@ -48,7 +53,8 @@ namespace DevilSoup
             gamepad = new Pad();
 
             danceArea = new DanceArea(cauldron);
-            danceArea.createSoul(Content);
+            font = Content.Load<SpriteFont>("HP");
+
 
             base.Initialize();
         }
@@ -61,6 +67,9 @@ namespace DevilSoup
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -87,6 +96,23 @@ namespace DevilSoup
             gamepad.getKeyState();
             // TODO: Add your update logic here
 
+            //if(startbutton)
+            {
+                //started = !started;
+                //danceArea.reset();
+                if(started)
+                {
+                    hp = 100;
+                    points = 0;
+                }
+
+            }
+
+            danceArea.createSoul(Content);
+            
+            
+            
+
             base.Update(gameTime);
         }
 
@@ -96,13 +122,40 @@ namespace DevilSoup
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            spriteBatch.Begin();
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             danceArea.moveSoul(camera.view, camera.projection);
             cauldron.DrawModel(camera.view, camera.projection);
+            switch (danceArea.level)
+            {
+                case 0:
+                    spriteBatch.DrawString(font, "HP: " + hp + "\nPOINTS: " + points+ "\nLEVEL: easy", new Vector2(100, 100), Color.Black);
+                    break;
+                case 1:
+                    spriteBatch.DrawString(font, "HP: " + hp + "\nPOINTS: " + points+ "\nLEVEL: medium", new Vector2(100, 100), Color.Black);
+                    break;
+                case 2:
+                    spriteBatch.DrawString(font, "HP: " + hp + "\nPOINTS: " + points+"\nLEVEL: hard", new Vector2(100, 100), Color.Black);
+                    break;
+            }
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void Escaped(int power)
+        {
+            hp -= power;
+            if (hp <= 0)
+                spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
+        }
+
+        public void Killed()
+        {
+            points += (danceArea.level + 1); 
         }
     }
 }
