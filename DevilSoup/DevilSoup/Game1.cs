@@ -122,13 +122,13 @@ namespace DevilSoup
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+            spriteBatch.Begin();
 
             // TODO: Add your drawing code here
-            danceArea.moveSoul(camera.view, camera.projection);
-            cauldron.DrawModel(camera.view, camera.projection);
             switch (danceArea.level)
             {
                 case 0:
@@ -142,6 +142,13 @@ namespace DevilSoup
                     break;
             }
             spriteBatch.End();
+
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
+            danceArea.moveSoul(camera.view, camera.projection);
+            cauldron.DrawModel(camera.view, camera.projection);
 
             base.Draw(gameTime);
         }
