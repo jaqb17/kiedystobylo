@@ -15,9 +15,10 @@ namespace DevilSoup
         private Vector3 origin;
         private SingleArea[] singleAreas;
         private float radius;
-        // private Game1 game1;
         public float escape_height = 51.0f;
         public int level = 0;
+        private Player player;
+        
 
 
         public DanceArea(Asset cauldron)
@@ -25,6 +26,7 @@ namespace DevilSoup
             this.radius = cauldron.radius / 3;
             this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
+            player = Player.getPlayer();
         }
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
@@ -49,7 +51,7 @@ namespace DevilSoup
 
         }
 
-        /*
+       
         public void reset()
         {
             for (int i = 0; i < numberOfAreas; i++)
@@ -64,7 +66,7 @@ namespace DevilSoup
                 } 
 
             }
-        }*/
+        }
         public void moveSoul(Matrix view, Matrix projection)
         {
             for (int i = 0; i < numberOfAreas; i++)
@@ -74,19 +76,20 @@ namespace DevilSoup
                     Vector3 newPos = singleAreas[i].soulPosition;
                     newPos.Y += 0.05f;
                     //Console.WriteLine("y " + newPos.Y);
-                    singleAreas[i].moveSoul(newPos);
+                    singleAreas[i].moveSoul(newPos);                    
+                    if (newPos.Y >= escape_height)
+                    {
+                        this.Escaped(singleAreas[i].soul.lifes * 10);
+                        singleAreas[i].soul.killSoul();
+                        singleAreas[i] = null;
+                    }
+                    else if (singleAreas[i].soul.lifes <= 0)
+                    {
+                        this.Killed();
+                        singleAreas[i].soul.killSoul();
+                        singleAreas[i] = null;
+                    }
                     updateSoul(view, projection);
-                    // if(newPos.Y <= escape_height)
-                    // {
-                    //game1.Escaped(singleAreas[i].soul.lifes * 10);
-                    // singleAreas[i].soul.killSoul();
-                    // }
-                    //else if(singleAreas[i].soul.lifes<=0)
-                    // {
-                    // game1.Killed();
-                    // singleAreas[i].soul.killSoul();
-
-                    // }
                 }
 
             }
@@ -100,6 +103,17 @@ namespace DevilSoup
                     singleAreas[i].updateSoul(view, projection);
             }
 
+        }
+
+        public void Escaped(int power)
+        {
+            player.hp -= power;
+            
+        }
+
+        public void Killed()
+        {
+            player.points += (this.level + 1);
         }
 
         public void readKey(int key)
