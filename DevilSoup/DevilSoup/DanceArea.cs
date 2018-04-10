@@ -15,7 +15,7 @@ namespace DevilSoup
         private Vector3 origin;
         private SingleArea[] singleAreas;
         private float radius;
-       // private Game1 game1;
+        // private Game1 game1;
         public float escape_height = 51.0f;
         public int level = 0;
 
@@ -30,8 +30,8 @@ namespace DevilSoup
         private Vector3 computePosition(Vector3 origin, float radius, int id)
         {
             Vector3 result = origin;
-            float angle = (float) (id * 360.0f / numberOfAreas * Math.PI / 180.0f);
-            result.X += (float) (radius * Math.Cos(angle));
+            float angle = (float)(id * 360.0f / numberOfAreas * Math.PI / 180.0f);
+            result.X += (float)(radius * Math.Cos(angle));
             result.Z += (float)(radius * Math.Sin(angle));
 
             return result;
@@ -41,12 +41,12 @@ namespace DevilSoup
         {
 
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
-            if (singleAreas[i] == null || singleAreas[i].soul == null)          
+            if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
-                
+
                 singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
             }
-                
+
         }
 
         /*
@@ -68,25 +68,25 @@ namespace DevilSoup
         public void moveSoul(Matrix view, Matrix projection)
         {
             for (int i = 0; i < numberOfAreas; i++)
-            {                
+            {
                 if (singleAreas[i] != null && singleAreas[i].ifSoulIsAlive)
                 {
                     Vector3 newPos = singleAreas[i].soulPosition;
                     newPos.Y += 0.05f;
-                    Console.WriteLine("y " + newPos.Y);
+                    //Console.WriteLine("y " + newPos.Y);
                     singleAreas[i].moveSoul(newPos);
                     updateSoul(view, projection);
-                   // if(newPos.Y <= escape_height)
-                   // {
-                        //game1.Escaped(singleAreas[i].soul.lifes * 10);
-                       // singleAreas[i].soul.killSoul();
-                   // }
+                    // if(newPos.Y <= escape_height)
+                    // {
+                    //game1.Escaped(singleAreas[i].soul.lifes * 10);
+                    // singleAreas[i].soul.killSoul();
+                    // }
                     //else if(singleAreas[i].soul.lifes<=0)
-                   // {
-                       // game1.Killed();
-                       // singleAreas[i].soul.killSoul();
-                        
-                   // }
+                    // {
+                    // game1.Killed();
+                    // singleAreas[i].soul.killSoul();
+
+                    // }
                 }
 
             }
@@ -96,10 +96,51 @@ namespace DevilSoup
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
-                if(singleAreas[i] != null)
-                singleAreas[i].updateSoul(view, projection);
+                if (singleAreas[i] != null)
+                    singleAreas[i].updateSoul(view, projection);
             }
 
+        }
+
+        public void readKey(int key)
+        {
+            switch(key)
+            {
+                case 0:
+                    if (singleAreas[6] != null)
+                        singleAreas[6].takeSoulLife();
+                    break;
+                case 1:
+                    if (singleAreas[2] != null)
+                        singleAreas[2].takeSoulLife();
+                    break;
+                case 2:
+                    if (singleAreas[4] != null)
+                        singleAreas[4].takeSoulLife();
+                    break;
+                case 3:
+                    if (singleAreas[0] != null)
+                        singleAreas[0].takeSoulLife();
+                    break;
+                case 4:
+                    if (singleAreas[3] != null)
+                        singleAreas[3].takeSoulLife();
+                    break;
+                case 5:
+                    if (singleAreas[1] != null)
+                        singleAreas[1].takeSoulLife();
+                    break;
+                case 6:
+                    if (singleAreas[5] != null)
+                        singleAreas[5].takeSoulLife();
+                    break;
+                case 7:
+                    if (singleAreas[7] != null)
+                        singleAreas[7].takeSoulLife();
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

@@ -59,15 +59,18 @@ namespace DevilSoup
             return sticks.ToArray();
         }
 
-        public void getKeyState()
+        public int getKeyState()
         {
+            int result = -1;
             for (int i = 0; i < Sticks.Length; i++)
             {
-                StickHandlingLogic(Sticks[i], i);
+                result = StickHandlingLogic(Sticks[i], i);
             }
+            
+            return result;
         }
 
-        private void StickHandlingLogic(Joystick stick, int id)
+        private int StickHandlingLogic(Joystick stick, int id)
         {
             // Creates an object from the class JoystickState.
             JoystickState state = new JoystickState();
@@ -86,16 +89,20 @@ namespace DevilSoup
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             if (id == 0)
             {
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
                 {
                     if (buttons[i])
+                    {
                         Console.WriteLine("Wcisnieto przycisk: " + i);
+                        return i;
+                    }
                 }
             }
+            return -1;
         }
     }
 }

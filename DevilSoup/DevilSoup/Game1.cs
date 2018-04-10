@@ -93,7 +93,6 @@ namespace DevilSoup
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
-            gamepad.getKeyState();
             // TODO: Add your update logic here
 
             //if(startbutton)
@@ -109,9 +108,11 @@ namespace DevilSoup
             }
 
             danceArea.createSoul(Content);
+
+            danceArea.readKey(gamepad.getKeyState());
             
-            
-            
+
+
 
             base.Update(gameTime);
         }

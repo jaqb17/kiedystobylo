@@ -16,8 +16,6 @@ namespace DevilSoup
         public Soul soul;
         private String path = "Assets\\Souls\\bryla";
 
-        
-
         public SingleArea(ContentManager content, Vector3 areaCenter)
         {
             this.areaCenter = areaCenter;
@@ -31,11 +29,13 @@ namespace DevilSoup
             this.soulPosition = position;
             this.soul.setSoulPosition(this.soulPosition);
         }
-        
+
         public bool takeSoulLife()
         {
+            if (this.soul == null) return true;
+
             this.soul.lifes -= 1;
-            if(this.soul.lifes <= 0)
+            if (this.soul.lifes <= 0)
             {
                 this.ifSoulIsAlive = false;
                 this.soul.killSoul();
@@ -47,8 +47,9 @@ namespace DevilSoup
 
         public void updateSoul(Matrix view, Matrix projection)
         {
-            this.soul.drawSoul(view, projection);
+            if(soul != null)
+                this.soul.drawSoul(view, projection);
         }
-        
+
     }
 }
