@@ -21,7 +21,7 @@ namespace DevilSoup
         private Player player;
 
 
-        private bool started = true;
+        private bool started = false;
 
         public Game1()
         {
@@ -96,21 +96,22 @@ namespace DevilSoup
                 Exit();
 
             // TODO: Add your update logic here
-
-            //if(startbutton)
+            if (gamepad.getKeyState() == 9)
+                started = true;
+            if (started)
             {
-                //started = !started;
-                //danceArea.reset();
-                if (started)
-                {
-                    Player.reset();
-                }
-
+                Player.reset();
+                
+                danceArea.createSoul(Content);
+                danceArea.readKey(gamepad.getKeyState());
+            }
+            else
+            {
+                danceArea.reset();
             }
 
-            danceArea.createSoul(Content);
 
-            danceArea.readKey(gamepad.getKeyState());
+
 
 
 
@@ -155,7 +156,9 @@ namespace DevilSoup
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
-            danceArea.moveSoul(camera.view, camera.projection);
+            if (started)
+                danceArea.moveSoul(camera.view, camera.projection);
+
             cauldron.DrawModel(camera.view, camera.projection);
 
             base.Draw(gameTime);

@@ -13,7 +13,7 @@ namespace DevilSoup
         Asset soul;
         Vector3 soulPosition;
         public int lifes { get; set; }
-        
+
 
         public Soul(ContentManager content, String path)
         {
@@ -36,7 +36,7 @@ namespace DevilSoup
 
         private Vector3 defineColor()
         {
-            LifeColors color = (LifeColors) Enum.Parse(typeof(LifeColors), Enum.GetName(typeof(LifeColors), lifes));
+            LifeColors color = (LifeColors)Enum.Parse(typeof(LifeColors), Enum.GetName(typeof(LifeColors), lifes));
 
             switch (color)
             {
@@ -52,10 +52,11 @@ namespace DevilSoup
 
             return new Vector3(255.0f, 0.0f, 0.0f);
         }
-        
+
         public void drawSoul(Matrix view, Matrix projection)
         {
-            this.soul.DrawModel(view, projection, defineColor());
+            if (this.soul != null)
+                this.soul.DrawModel(view, projection, defineColor());
         }
 
         public void killSoul()

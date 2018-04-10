@@ -26,6 +26,9 @@ namespace DevilSoup
 
         public void moveSoul(Vector3 position)
         {
+            if (this.soul == null)
+                return;
+
             this.soulPosition = position;
             this.soul.setSoulPosition(this.soulPosition);
         }

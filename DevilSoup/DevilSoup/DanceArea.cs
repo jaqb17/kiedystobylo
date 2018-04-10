@@ -45,7 +45,6 @@ namespace DevilSoup
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
             if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
-
                 singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
             }
 
@@ -83,7 +82,7 @@ namespace DevilSoup
                         singleAreas[i].soul.killSoul();
                         singleAreas[i] = null;
                     }
-                    else if (singleAreas[i].soul.lifes <= 0)
+                    else if (singleAreas[i].soul != null && singleAreas[i].soul.lifes <= 0)
                     {
                         this.Killed();
                         singleAreas[i].soul.killSoul();
