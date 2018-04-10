@@ -19,11 +19,9 @@ namespace DevilSoup
         public int level = 0;
         private Player player;
 
-
-
         public DanceArea(Asset cauldron)
         {
-            this.radius = cauldron.radius / 3;
+            this.radius = cauldron.radius / 2.5f;
             this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
             player = Player.getPlayer();
@@ -31,7 +29,9 @@ namespace DevilSoup
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
         {
+            origin.X += 7f;
             Vector3 result = origin;
+          
             float angle = (float)(id * 360.0f / numberOfAreas * Math.PI / 180.0f);
             result.X += (float)(radius * Math.Cos(angle));
             result.Z += (float)(radius * Math.Sin(angle));
@@ -49,7 +49,6 @@ namespace DevilSoup
             }
 
         }
-
 
         public void reset()
         {
@@ -117,42 +116,49 @@ namespace DevilSoup
             player.points += (this.level + 1);
         }
 
+        private void hurtSoul(int id)
+        {
+            bool ifKilled = false;
+            if (singleAreas[id] != null)
+                ifKilled = singleAreas[id].takeSoulLife();
+
+            if(ifKilled)
+                this.Killed();
+        }
+
         public void readKey(int key)
         {
 
             switch (key)
             {
                 case 0:
-                    if (singleAreas[6] != null)
-                        singleAreas[6].takeSoulLife();
+                    hurtSoul(6);
                     break;
                 case 1:
-                    if (singleAreas[2] != null)
-                        singleAreas[2].takeSoulLife();
+                    hurtSoul(2);
                     break;
                 case 2:
-                    if (singleAreas[4] != null)
-                        singleAreas[4].takeSoulLife();
+                    hurtSoul(4);
                     break;
                 case 3:
-                    if (singleAreas[0] != null)
-                        singleAreas[0].takeSoulLife();
+                    hurtSoul(0);
                     break;
                 case 4:
-                    if (singleAreas[3] != null)
-                        singleAreas[3].takeSoulLife();
+                    hurtSoul(3);
                     break;
                 case 5:
-                    if (singleAreas[1] != null)
-                        singleAreas[1].takeSoulLife();
+                    hurtSoul(1);
                     break;
                 case 6:
-                    if (singleAreas[5] != null)
-                        singleAreas[5].takeSoulLife();
+                    hurtSoul(5);
                     break;
                 case 7:
-                    if (singleAreas[7] != null)
-                        singleAreas[7].takeSoulLife();
+                    hurtSoul(7);
+                    break;
+                case 8:
+                    level++;
+                    if (level > 2)
+                        level = 0;
                     break;
                 default:
                     return;

@@ -13,7 +13,7 @@ namespace DevilSoup
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private SpriteFont font;
-        private Vector3 cameraPos;
+        private Vector3 cameraPos, cauldronPos;
         private Camera camera;
         private Asset cauldron;
         private Pad gamepad;
@@ -21,6 +21,9 @@ namespace DevilSoup
         private Player player;
         int timeDelayed = 0;
         bool availableToChange = true;
+
+        int createSoulTimeDelay = 0;
+        bool ifCreateSoul = true;
 
 
         private bool started = false;
@@ -41,16 +44,17 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            cameraPos = new Vector3(0, 0, 0);
+            cameraPos = new Vector3(0, 110, 50);
+            cauldronPos = new Vector3(0f, 0f, 0f);
 
             camera = new Camera();
             camera.setWorldMatrix(cameraPos);
-            camera.view = Matrix.CreateLookAt(new Vector3(0, 100, 100), new Vector3(0, 0, 0), Vector3.UnitY);
+            camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
 
             cauldron = new Asset();
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
-            cauldron.world = camera.world;
+            cauldron.world = Matrix.CreateTranslation(cauldronPos);
 
             gamepad = new Pad();
 
@@ -111,23 +115,38 @@ namespace DevilSoup
                 {
                     Player.reset();
                     player = Player.getPlayer();
-                    danceArea.createSoul(Content);
                 }
                 else danceArea.reset();
             }
 
-            if(!availableToChange)
+            if (!availableToChange)
             {
                 timeDelayed--;
-                if(timeDelayed <= 0)
+                if (timeDelayed <= 0)
                 {
                     availableToChange = true;
                 }
             }
-               
+
             if (started)
             {
                 danceArea.readKey(keyPressed);
+
+                if (ifCreateSoul)
+                {
+                    danceArea.createSoul(Content);
+                    ifCreateSoul = false;
+                    createSoulTimeDelay = 60 / (danceArea.level + 1);
+                }
+
+                if (!ifCreateSoul)
+                {
+                    createSoulTimeDelay--;
+                    if (createSoulTimeDelay <= 0)
+                    {
+                        ifCreateSoul = true;
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -148,8 +167,6 @@ namespace DevilSoup
             // TODO: Add your drawing code here
             if (player.hp > 0)
             {
-
-
                 switch (danceArea.level)
                 {
                     case 0:
@@ -163,7 +180,11 @@ namespace DevilSoup
                         break;
                 }
             }
-            else spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
+            else
+            {
+                spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
+                started = false;
+            }
             spriteBatch.End();
 
             GraphicsDevice.BlendState = BlendState.Opaque;

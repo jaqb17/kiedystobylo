@@ -98,7 +98,7 @@ namespace DevilSoup
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
                 {
-                    if ((buttons[i] && !lastButtons[i]) || (buttons[i] && (i == 8 || i == 9)))
+                    if ((buttons[i] && !lastButtons[i]) || (buttons[i] && i == 9))
                     {
                         Console.WriteLine("Wcisnieto przycisk: " + i);
                         lastButtons = buttons;
