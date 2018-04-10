@@ -18,7 +18,7 @@ namespace DevilSoup
         public float escape_height = 51.0f;
         public int level = 0;
         private Player player;
-        
+
 
 
         public DanceArea(Asset cauldron)
@@ -50,19 +50,19 @@ namespace DevilSoup
 
         }
 
-       
+
         public void reset()
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
-                if (singleAreas[i] != null) 
+                if (singleAreas[i] != null)
                 {
-                    if(singleAreas[i].soul!=null)
+                    if (singleAreas[i].soul != null)
                     {
                         singleAreas[i].soul.killSoul();
                         singleAreas[i].soul = null;
                     }
-                } 
+                }
 
             }
         }
@@ -75,7 +75,7 @@ namespace DevilSoup
                     Vector3 newPos = singleAreas[i].soulPosition;
                     newPos.Y += 0.05f;
                     //Console.WriteLine("y " + newPos.Y);
-                    singleAreas[i].moveSoul(newPos);                    
+                    singleAreas[i].moveSoul(newPos);
                     if (newPos.Y >= escape_height)
                     {
                         this.Escaped(singleAreas[i].soul.lifes * 10);
@@ -106,18 +106,21 @@ namespace DevilSoup
 
         public void Escaped(int power)
         {
+            player = Player.getPlayer();
             player.hp -= power;
-            
+
         }
 
         public void Killed()
         {
+            player = Player.getPlayer();
             player.points += (this.level + 1);
         }
 
         public void readKey(int key)
         {
-            switch(key)
+
+            switch (key)
             {
                 case 0:
                     if (singleAreas[6] != null)

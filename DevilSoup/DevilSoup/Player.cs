@@ -15,6 +15,7 @@ namespace DevilSoup
         {
             if (instance == null)
                 instance = new Player();
+
             return instance;
         }
 

@@ -13,6 +13,7 @@ namespace DevilSoup
         Joystick stick;
         Joystick[] Sticks;
         List<int> connectedPadsId;
+        bool[] lastButtons;
 
         //Thumstick variables.
         int yValue = 0;
@@ -66,7 +67,7 @@ namespace DevilSoup
             {
                 result = StickHandlingLogic(Sticks[i], i);
             }
-            
+
             return result;
         }
 
@@ -86,6 +87,8 @@ namespace DevilSoup
             // Stores the number of each button on the gamepad into the bool[] butons.
             bool[] buttons = state.GetButtons();
 
+            if (lastButtons == null) lastButtons = buttons;
+
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,13 +98,16 @@ namespace DevilSoup
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
                 {
-                    if (buttons[i])
+                    if ((buttons[i] && !lastButtons[i]) || (buttons[i] && (i == 8 || i == 9)))
                     {
                         Console.WriteLine("Wcisnieto przycisk: " + i);
+                        lastButtons = buttons;
                         return i;
                     }
                 }
             }
+
+            lastButtons = buttons;
             return -1;
         }
     }

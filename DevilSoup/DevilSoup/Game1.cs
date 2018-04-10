@@ -19,6 +19,8 @@ namespace DevilSoup
         private Pad gamepad;
         private DanceArea danceArea;
         private Player player;
+        int timeDelayed = 0;
+        bool availableToChange = true;
 
 
         private bool started = false;
@@ -95,26 +97,38 @@ namespace DevilSoup
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+            int keyPressed = gamepad.getKeyState();
+
             // TODO: Add your update logic here
-            if (gamepad.getKeyState() == 9)
-                started = true;
+            if (keyPressed == 9 && availableToChange)
+            {
+                started = !started;
+                availableToChange = false;
+                timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
+
+                if (started)
+                {
+                    Player.reset();
+                    player = Player.getPlayer();
+                    danceArea.createSoul(Content);
+                }
+                else danceArea.reset();
+            }
+
+            if(!availableToChange)
+            {
+                timeDelayed--;
+                if(timeDelayed <= 0)
+                {
+                    availableToChange = true;
+                }
+            }
+               
             if (started)
             {
-                Player.reset();
-                
-                danceArea.createSoul(Content);
-                danceArea.readKey(gamepad.getKeyState());
+                danceArea.readKey(keyPressed);
             }
-            else
-            {
-                danceArea.reset();
-            }
-
-
-
-
-
-
 
             base.Update(gameTime);
         }
