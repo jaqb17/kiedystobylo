@@ -58,6 +58,7 @@
     <Compile Include="SingleArea.cs" />
     <Compile Include="Soul.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="WoodenLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

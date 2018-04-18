@@ -25,7 +25,6 @@ namespace DevilSoup
         int createSoulTimeDelay = 0;
         bool ifCreateSoul = true;
 
-
         private bool started = false;
 
         public Game1()
@@ -45,16 +44,18 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             cameraPos = new Vector3(0, 110, 50);
+            // cameraPos = new Vector3(0f, 0f, 200f);
             cauldronPos = new Vector3(0f, 0f, 0f);
-
             camera = new Camera();
             camera.setWorldMatrix(cameraPos);
             camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
+            //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
 
             cauldron = new Asset();
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
+
 
             gamepad = new Pad();
 
@@ -96,16 +97,17 @@ namespace DevilSoup
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
+            danceArea.currentKeyPressed = Keyboard.GetState();
             int keyPressed = gamepad.getKeyState();
 
             // TODO: Add your update logic here
-            if (keyPressed == 9 && availableToChange)
+            if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
             {
                 started = !started;
                 availableToChange = false;
@@ -131,6 +133,7 @@ namespace DevilSoup
             if (started)
             {
                 danceArea.readKey(keyPressed);
+                danceArea.NumPadHitMapping();
 
                 if (ifCreateSoul)
                 {
@@ -147,8 +150,19 @@ namespace DevilSoup
                         ifCreateSoul = true;
                     }
                 }
+                if (danceArea.isLogCreated == false)
+                {
+                    danceArea.isLogCreated = true;
+                    danceArea.createLog(Content);
+                }
+                if (danceArea.isLogCreated == true)
+                {
+                    danceArea.moveLog();
+
+                }
             }
 
+            danceArea.pastKeyPressed = danceArea.currentKeyPressed;
             base.Update(gameTime);
         }
 
@@ -195,7 +209,8 @@ namespace DevilSoup
                 danceArea.moveSoul(camera.view, camera.projection);
 
             cauldron.DrawModel(camera.view, camera.projection);
-
+            //cauldron2.DrawModel(camera.view, camera.projection);
+            //woodenLog.drawWoodenLog(camera.view, camera.projection);
             base.Draw(gameTime);
         }
 
