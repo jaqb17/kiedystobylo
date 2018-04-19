@@ -51,6 +51,7 @@ namespace DevilSoup
             camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
+            IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
 
             cauldron = new Asset();
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");

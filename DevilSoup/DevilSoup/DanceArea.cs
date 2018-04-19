@@ -35,6 +35,7 @@ namespace DevilSoup
         public int level = 0;
         private Player player;
         private WoodenLog woodLog;
+        private FireFuelBar fuelBar;
 
         public bool isLogCreated = false;
 
