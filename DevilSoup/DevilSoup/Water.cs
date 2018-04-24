@@ -8,41 +8,43 @@ using System.Threading.Tasks;
 
 namespace DevilSoup
 {
-    public class WoodenLog
+    class Water
     {
-        Asset log;
+        Asset asset;
         public Vector3 position { get; set; }
-        private float fireBoostValue { get; set;}
+        private float fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
-        public WoodenLog()
+        public Water()
         {
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
         }
-        public WoodenLog(ContentManager content, string path)
+        public Water(ContentManager content, string path)
         {
             isDestroyable = false;
-            position = new Vector3(100f, 0, 10);
-            log = new Asset();
-            log.loadModel(content, path);
+            position = new Vector3(150f, 0, 0);
+            asset = new Asset();
+            asset.loadModel(content, path);
+            fireBoostValue = -0.1f;
         }
         public void setPosition(Vector3 _position)
         {
             this.position = _position;
-            this.log.world = Matrix.CreateTranslation(position);
+            //this.log.world = Matrix.CreateTranslation(position);
             //this.log.scaleAset(0.3f);
             //Console.WriteLine(this.position);
         }
-        public void drawWoodenLog(Matrix view, Matrix projection)
+        public void drawWater(Matrix view, Matrix projection)
         {
-            if (this.log != null)
-                this.log.DrawModel(view, projection,new Vector3(50,50,50));
+            
+            if (this.asset != null)
+                this.asset.DrawModel(view, projection);
         }
-        public void destroyLog()
+        public void destroyWater()
         {
-            Console.WriteLine("Zniszczono");
-            this.log.unloadModel();
-            this.log = null;
+            Console.WriteLine("Woda wzieta");
+            //this.log.unloadModel();
+            //this.log = null;
         }
     }
 }

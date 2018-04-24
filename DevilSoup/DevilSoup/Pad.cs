@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SlimDX.DirectInput;
+using WiimoteLib;
+using Microsoft.Xna.Framework;
 
 namespace DevilSoup
 {
@@ -12,6 +14,7 @@ namespace DevilSoup
         DirectInput Input = new DirectInput();
         Joystick stick;
         Joystick[] Sticks;
+        Wiimote wiimote;
         List<int> connectedPadsId;
         bool[] lastButtons;
 
@@ -26,8 +29,20 @@ namespace DevilSoup
             //GetSticks();
             Sticks = GetSticks();
             connectedPadsId = new List<int>();
+            wiimote = new Wiimote();
+            connectWiiremote();
         }
+        private void connectWiiremote()
+        {
+            try
+            {
+                wiimote.Connect();
+                wiimote.SetReportType(InputReport.IRAccel, true);
+                wiimote.SetLEDs(true, false, false, false);
+            }
+            catch { Console.WriteLine("Can't find a Wiimote"); }
 
+        }
         private Joystick[] GetSticks()
         {
 
@@ -65,13 +80,13 @@ namespace DevilSoup
             int result = -1;
             for (int i = 0; i < Sticks.Length; i++)
             {
-                result = StickHandlingLogic(Sticks[i], i);
+                result = StickHandlingLogic(Sticks[i]);
             }
 
             return result;
         }
 
-        private int StickHandlingLogic(Joystick stick, int id)
+        private int StickHandlingLogic(Joystick stick)
         {
             // Creates an object from the class JoystickState.
             JoystickState state = new JoystickState();
@@ -93,7 +108,7 @@ namespace DevilSoup
             //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (id == 0)
+            if (stick.Information.ProductName == "USB Gamepad")
             {
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
@@ -109,6 +124,27 @@ namespace DevilSoup
 
             lastButtons = buttons;
             return -1;
+        }
+
+        public double swung()
+        {
+            WiimoteState state = wiimote.WiimoteState;
+            Point3F accelVector = state.AccelState.Values;
+            return Math.Sqrt(accelVector.X * accelVector.X + accelVector.Y * accelVector.Y);
+        }
+
+        public Vector3 accelerometerStatus()
+        {
+            WiimoteState state = wiimote.WiimoteState;
+
+            Point3F accelVector = state.AccelState.Values;
+            
+            Vector3 result = new Vector3(accelVector.X, accelVector.Y, accelVector.Z);
+            if (Math.Abs(result.X) <= 1.1f) result.X = 0f;
+            if (Math.Abs(result.Y) <= 1.1f) result.Y = 0f;
+            if (Math.Abs(result.Z) <= 1.1f) result.Z = 0f;
+            Console.WriteLine(result.ToString());
+            return result;
         }
     }
 }

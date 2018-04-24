@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using WiimoteLib;
 
+
+//http://www.miszalok.de/C_3D_XNA/C4_Controller/XNAC4_Wiimote_e.htm
 namespace DevilSoup
 {
     /// <summary>
@@ -24,6 +27,8 @@ namespace DevilSoup
 
         int createSoulTimeDelay = 0;
         bool ifCreateSoul = true;
+        bool ifCheckAccelerometer = true;
+        int accelTimeDelay = 0;
 
         private bool started = false;
 
@@ -43,8 +48,8 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            cameraPos = new Vector3(0, 110, 50);
-            // cameraPos = new Vector3(0f, 0f, 200f);
+            cameraPos = new Vector3(0, 110, 40);
+            //cameraPos = new Vector3(0f, 0f, 200f);
             cauldronPos = new Vector3(0f, 0f, 0f);
             camera = new Camera();
             camera.setWorldMatrix(cameraPos);
@@ -52,11 +57,9 @@ namespace DevilSoup
             //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
-
             cauldron = new Asset();
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-
 
             gamepad = new Pad();
 
@@ -65,6 +68,7 @@ namespace DevilSoup
 
             player = Player.getPlayer();
 
+            danceArea.FuelBarInitialize(Content);
 
             base.Initialize();
         }
@@ -101,11 +105,13 @@ namespace DevilSoup
         /// 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //GamePadState xPadState = GamePad.GetState(PlayerIndex.One);
+            if (GamePad.GetState(PlayerIndex.Two).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             danceArea.currentKeyPressed = Keyboard.GetState();
             int keyPressed = gamepad.getKeyState();
+            
 
             // TODO: Add your update logic here
             if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
@@ -135,12 +141,14 @@ namespace DevilSoup
             {
                 danceArea.readKey(keyPressed);
                 danceArea.NumPadHitMapping();
-
+                
                 if (ifCreateSoul)
                 {
                     danceArea.createSoul(Content);
                     ifCreateSoul = false;
                     createSoulTimeDelay = 60 / (danceArea.level + 1);
+                    
+
                 }
 
                 if (!ifCreateSoul)
@@ -151,6 +159,24 @@ namespace DevilSoup
                         ifCreateSoul = true;
                     }
                 }
+
+                if (ifCheckAccelerometer)
+                {
+                    //gamepad.accelerometerStatus();
+                    ifCheckAccelerometer = false;
+                    accelTimeDelay = 10;
+                    danceArea.fuelBar.fuelValueChange(-3);
+                }
+
+                if (!ifCheckAccelerometer)
+                {
+                    accelTimeDelay--;
+                    if (accelTimeDelay <= 0)
+                    {
+                        ifCheckAccelerometer = true;
+                    }
+                }
+
                 if (danceArea.isLogCreated == false)
                 {
                     danceArea.isLogCreated = true;
@@ -159,7 +185,9 @@ namespace DevilSoup
                 if (danceArea.isLogCreated == true)
                 {
                     danceArea.moveLog();
-
+                    //danceArea.moveLog(gamepad.accelerometerStatus());
+                    if (gamepad.swung() > 4.0f)
+                        danceArea.woodLogDestroySuccessfulHit(15);
                 }
             }
 
@@ -178,9 +206,9 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             spriteBatch.Begin();
-
+            danceArea.DrawFuelBar(spriteBatch);
             // TODO: Add your drawing code here
-            if (player.hp > 0)
+            if (player.hp > 0 && danceArea.fuelBar.isBarEmpty() == false)
             {
                 switch (danceArea.level)
                 {
@@ -198,7 +226,7 @@ namespace DevilSoup
             else
             {
                 spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
-                started = false;
+                //started = false;
             }
             spriteBatch.End();
 
@@ -207,11 +235,15 @@ namespace DevilSoup
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             if (started)
+            {
                 danceArea.moveSoul(camera.view, camera.projection);
+                if (danceArea.isLogCreated == true)
+                    danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
+            }
 
-            cauldron.DrawModel(camera.view, camera.projection);
+           cauldron.DrawModel(camera.view, camera.projection);
             //cauldron2.DrawModel(camera.view, camera.projection);
-            //woodenLog.drawWoodenLog(camera.view, camera.projection);
+            
             base.Draw(gameTime);
         }
 

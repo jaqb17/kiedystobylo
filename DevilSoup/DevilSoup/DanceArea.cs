@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DevilSoup
 {
@@ -34,8 +35,8 @@ namespace DevilSoup
         public float escape_height = 51.0f;
         public int level = 0;
         private Player player;
-        private WoodenLog woodLog;
-        private FireFuelBar fuelBar;
+        public WoodenLog woodLog { get; set; }
+        public FireFuelBar fuelBar { get; set; }
 
         public bool isLogCreated = false;
 
@@ -148,22 +149,34 @@ namespace DevilSoup
         //WoodLog Methods
         public void createLog(ContentManager content)
         {
-            woodLog = new WoodenLog();
+            //woodLog = new WoodenLog();
+            woodLog = new WoodenLog(content, "Assets\\Souls\\bryla");
         }
         public void moveLog()
         {
 
             Vector3 newLogPosition = woodLog.position;
+
             newLogPosition.X -= 1f;
-            newLogPosition.Y = (-(newLogPosition.X * newLogPosition.X) / 400)+100;
+            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X)/200+50;
+            //newLogPosition.Y += 0.1f;
+            //if (newLogPosition.X < 0f)
+            //    newLogPosition.Y -= 0.1f;
             woodLog.setPosition(newLogPosition);
-            if (woodLog.position.Y > 75f)
+            if (woodLog.position.Y > 48.5f)
                 woodLog.isDestroyable = true;
             else
                 woodLog.isDestroyable = false;
-            if (newLogPosition.X < -200f)
+            if (newLogPosition.X < -100f)
                 woodLogDestroyFailedToHit();
 
+        }
+
+        public void moveLog(Vector3 offset)
+        {
+            Vector3 newLogPosition = woodLog.position;
+            newLogPosition += offset/3;
+            woodLog.setPosition(newLogPosition);
         }
 
         private void woodLogDestroyFailedToHit()
@@ -171,14 +184,16 @@ namespace DevilSoup
             isLogCreated = false;
             this.woodLog = null;
         }
-        
-        private void woodLogDestroySuccessfulHit()
+
+        public void woodLogDestroySuccessfulHit(int _fuelValueChange)
         {
             //Add fuel to the flames
-            //destroy woodlog
+            isLogCreated = false;
+            woodLog.destroyLog();
+            fuelBar.fuelValueChange(_fuelValueChange);
         }
 
-        
+
         //Keymapping
         public void readKey(int key)
         {
@@ -245,9 +260,16 @@ namespace DevilSoup
             }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog.isDestroyable == true)
             {
-                woodLog.destroyLog();
-                isLogCreated = false;
+                woodLogDestroySuccessfulHit(25);
             }
+        }
+        public void FuelBarInitialize(ContentManager content)
+        {
+            fuelBar = new FireFuelBar(new Vector2(50, 30), "Assets\\FireFuelBar\\bar", content);
+        }
+        public void DrawFuelBar(SpriteBatch _batch)
+        {
+            _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
         }
     }
 }
