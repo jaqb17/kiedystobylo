@@ -197,32 +197,31 @@ namespace DevilSoup
         //Keymapping
         public void readKey(int key)
         {
-
             switch (key)
             {
                 case 0:
-                    hurtSoul(6);
+                    hurtSoul((int)Areas.Up);
                     break;
                 case 1:
-                    hurtSoul(2);
+                    hurtSoul((int)Areas.Bottom);
                     break;
                 case 2:
-                    hurtSoul(4);
+                    hurtSoul((int)Areas.Left);
                     break;
                 case 3:
-                    hurtSoul(0);
+                    hurtSoul((int)Areas.Right);
                     break;
                 case 4:
-                    hurtSoul(3);
+                    hurtSoul((int)Areas.BottomLeft);
                     break;
                 case 5:
-                    hurtSoul(1);
+                    hurtSoul((int)Areas.BottomRight);
                     break;
                 case 6:
-                    hurtSoul(5);
+                    hurtSoul((int)Areas.UpperLeft);
                     break;
                 case 7:
-                    hurtSoul(7);
+                    hurtSoul((int)Areas.UpperRight);
                     break;
                 case 8:
                     level++;

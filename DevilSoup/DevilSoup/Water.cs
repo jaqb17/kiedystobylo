@@ -38,7 +38,7 @@ namespace DevilSoup
         {
             
             if (this.asset != null)
-                this.asset.DrawModel(view, projection);
+                this.asset.DrawModel(view, projection,new Vector3(0,255,0));
         }
         public void destroyWater()
         {

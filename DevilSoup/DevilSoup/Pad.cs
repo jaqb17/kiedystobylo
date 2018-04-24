@@ -108,7 +108,7 @@ namespace DevilSoup
             //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (stick.Information.ProductName == "USB Gamepad")
+            if (stick.Information.ProductName == "USB Gamepad ") //stick.Information.ProductName == "USB Gamepad " id==0
             {
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
@@ -130,7 +130,7 @@ namespace DevilSoup
         {
             WiimoteState state = wiimote.WiimoteState;
             Point3F accelVector = state.AccelState.Values;
-            return Math.Sqrt(accelVector.X * accelVector.X + accelVector.Y * accelVector.Y);
+            return Math.Sqrt(accelVector.X * accelVector.X + accelVector.Z * accelVector.Z);
         }
 
         public Vector3 accelerometerStatus()
@@ -146,5 +146,6 @@ namespace DevilSoup
             Console.WriteLine(result.ToString());
             return result;
         }
+        
     }
 }

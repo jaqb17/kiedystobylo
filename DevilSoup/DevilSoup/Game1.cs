@@ -165,7 +165,7 @@ namespace DevilSoup
                     //gamepad.accelerometerStatus();
                     ifCheckAccelerometer = false;
                     accelTimeDelay = 10;
-                    danceArea.fuelBar.fuelValueChange(-3);
+                    danceArea.fuelBar.fuelValueChange(-1);
                 }
 
                 if (!ifCheckAccelerometer)
@@ -226,7 +226,7 @@ namespace DevilSoup
             else
             {
                 spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
-                //started = false;
+                started = false;
             }
             spriteBatch.End();
 
