@@ -40,6 +40,7 @@ namespace DevilSoup
         {
             comboThread = new Thread(new ThreadStart(comboLoop));
             comboThread.Start();
+            comboThread.Name = "Combo thread";
             comboThread.IsBackground = true;
         }
 
@@ -56,7 +57,7 @@ namespace DevilSoup
                 {
                     Thread.Sleep(2000);
                     randomizeIfComboIsActive();
-                    Console.WriteLine("Combo aktywne: " + this.ifComboActive);
+                    Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
                 }
                 else
                 {
@@ -88,12 +89,13 @@ namespace DevilSoup
         {
             index = this.correctIndex(index);
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, singleRectWidth, singleRectHeight);
-            Color[] data = new Color[singleRectWidth * singleRectHeight];
+            
 
             Color color = Color.LightYellow;
             if (index == availableCombos[randomedComboIndex][comboPosition]) color = Color.Red;
             else if (availableCombos[randomedComboIndex].Contains<int>(index)) color = Color.YellowGreen;
 
+            Color[] data = new Color[singleRectWidth * singleRectHeight];
             for (int i = 0; i < data.Length; ++i) data[i] = color * transparency;
             rect.SetData(data);
 

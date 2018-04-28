@@ -73,6 +73,7 @@ namespace DevilSoup
                     }
                 }
             }
+            combo.stopComboLoop();
         }
         public void moveSoul(Matrix view, Matrix projection)
         {
