@@ -12,19 +12,6 @@ namespace DevilSoup
 {
     public class DanceArea
     {
-
-        public enum Areas
-        {
-            BottomRight = 1,
-            Right = 0,
-            Bottom = 2,
-            BottomLeft = 3,
-            Left = 4,
-            UpperLeft = 5,
-            Up = 6,
-            UpperRight = 7,
-        }
-
         public KeyboardState currentKeyPressed;
         public KeyboardState pastKeyPressed;
 
@@ -200,28 +187,28 @@ namespace DevilSoup
             switch (key)
             {
                 case 0:
-                    hurtSoul((int)Areas.Up);
+                    hurtSoul((int)SingleAreasIndexes.Up);
                     break;
                 case 1:
-                    hurtSoul((int)Areas.Bottom);
+                    hurtSoul((int)SingleAreasIndexes.Bottom);
                     break;
                 case 2:
-                    hurtSoul((int)Areas.Left);
+                    hurtSoul((int)SingleAreasIndexes.Left);
                     break;
                 case 3:
-                    hurtSoul((int)Areas.Right);
+                    hurtSoul((int)SingleAreasIndexes.Right);
                     break;
                 case 4:
-                    hurtSoul((int)Areas.BottomLeft);
+                    hurtSoul((int)SingleAreasIndexes.BottomLeft);
                     break;
                 case 5:
-                    hurtSoul((int)Areas.BottomRight);
+                    hurtSoul((int)SingleAreasIndexes.BottomRight);
                     break;
                 case 6:
-                    hurtSoul((int)Areas.UpperLeft);
+                    hurtSoul((int)SingleAreasIndexes.UpperLeft);
                     break;
                 case 7:
-                    hurtSoul((int)Areas.UpperRight);
+                    hurtSoul((int)SingleAreasIndexes.UpperRight);
                     break;
                 case 8:
                     level++;
@@ -236,21 +223,21 @@ namespace DevilSoup
         public void NumPadHitMapping()
         {
             if (currentKeyPressed.IsKeyDown(Keys.NumPad1) && pastKeyPressed.IsKeyUp(Keys.NumPad1))
-                hurtSoul((int)Areas.BottomLeft);
+                hurtSoul((int)SingleAreasIndexes.BottomLeft);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad2) && pastKeyPressed.IsKeyUp(Keys.NumPad2))
-                hurtSoul((int)Areas.Bottom);
+                hurtSoul((int)SingleAreasIndexes.Bottom);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad3) && pastKeyPressed.IsKeyUp(Keys.NumPad3))
-                hurtSoul((int)Areas.BottomRight);
+                hurtSoul((int)SingleAreasIndexes.BottomRight);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad4) && pastKeyPressed.IsKeyUp(Keys.NumPad4))
-                hurtSoul((int)Areas.Left);
+                hurtSoul((int)SingleAreasIndexes.Left);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad6) && pastKeyPressed.IsKeyUp(Keys.NumPad6))
-                hurtSoul((int)Areas.Right);
+                hurtSoul((int)SingleAreasIndexes.Right);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad7) && pastKeyPressed.IsKeyUp(Keys.NumPad7))
-                hurtSoul((int)Areas.UpperLeft);
+                hurtSoul((int)SingleAreasIndexes.UpperLeft);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad8) && pastKeyPressed.IsKeyUp(Keys.NumPad8))
-                hurtSoul((int)Areas.Up);
+                hurtSoul((int)SingleAreasIndexes.Up);
             if (currentKeyPressed.IsKeyDown(Keys.NumPad9) && pastKeyPressed.IsKeyUp(Keys.NumPad9))
-                hurtSoul((int)Areas.UpperRight);
+                hurtSoul((int)SingleAreasIndexes.UpperRight);
             if (currentKeyPressed.IsKeyDown(Keys.C) && pastKeyPressed.IsKeyUp(Keys.C))
             {
                 level++;

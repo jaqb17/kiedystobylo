@@ -22,6 +22,7 @@ namespace DevilSoup
         private Pad gamepad;
         private DanceArea danceArea;
         private Player player;
+        private Combo combo;
         int timeDelayed = 0;
         bool availableToChange = true;
 
@@ -67,7 +68,7 @@ namespace DevilSoup
             font = Content.Load<SpriteFont>("HP");
 
             player = Player.getPlayer();
-
+            combo = Combo.createCombo();
             danceArea.FuelBarInitialize(Content);
 
             base.Initialize();
@@ -221,6 +222,11 @@ namespace DevilSoup
                     case 2:
                         spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: hard", new Vector2(100, 100), Color.Black);
                         break;
+                }
+
+                for(int i = 0; i < 9; i++)
+                {
+                    spriteBatch.Draw(combo.drawMap(graphics), combo.getRectangleCoord(graphics, i), combo.getColor());
                 }
             }
             else
