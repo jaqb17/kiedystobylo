@@ -8,13 +8,14 @@ namespace DevilSoup
 {
     public enum SingleAreasIndexes
     {
-        BottomRight = 1,
-        Right = 0,
-        Bottom = 2,
-        BottomLeft = 3,
-        Left = 4,
         UpperLeft = 5,
         Up = 6,
         UpperRight = 7,
+        Left = 4,
+        Center = 8,
+        Right = 0,
+        BottomRight = 1,
+        Bottom = 2,
+        BottomLeft = 3
     }
 }

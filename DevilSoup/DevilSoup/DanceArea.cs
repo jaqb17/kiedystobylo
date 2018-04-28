@@ -19,6 +19,7 @@ namespace DevilSoup
         private Vector3 origin;
         private SingleArea[] singleAreas;
         private float radius;
+        private Combo combo;
         public float escape_height = 51.0f;
         public int level = 0;
         private Player player;
@@ -33,6 +34,7 @@ namespace DevilSoup
             this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
             player = Player.getPlayer();
+            combo = Combo.createCombo();
         }
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
@@ -70,7 +72,6 @@ namespace DevilSoup
                         singleAreas[i].soul = null;
                     }
                 }
-
             }
         }
         public void moveSoul(Matrix view, Matrix projection)
@@ -145,7 +146,7 @@ namespace DevilSoup
             Vector3 newLogPosition = woodLog.position;
 
             newLogPosition.X -= 1f;
-            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X)/200+50;
+            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 50;
             //newLogPosition.Y += 0.1f;
             //if (newLogPosition.X < 0f)
             //    newLogPosition.Y -= 0.1f;
@@ -162,7 +163,7 @@ namespace DevilSoup
         public void moveLog(Vector3 offset)
         {
             Vector3 newLogPosition = woodLog.position;
-            newLogPosition += offset/3;
+            newLogPosition += offset / 3;
             woodLog.setPosition(newLogPosition);
         }
 
@@ -180,6 +181,19 @@ namespace DevilSoup
             fuelBar.fuelValueChange(_fuelValueChange);
         }
 
+        private void comboFunction(int areaPressed)
+        {
+            if(combo.getIfComboIsActive())
+            {
+                int[] killedSoulIds = combo.areaPressed(areaPressed);
+                if (killedSoulIds != null)
+                {
+                    foreach (int index in killedSoulIds)
+                        for (int i = 0; i < 4; i++)
+                            this.hurtSoul(index);
+                }
+            }
+        }
 
         //Keymapping
         public void readKey(int key)
@@ -188,27 +202,35 @@ namespace DevilSoup
             {
                 case 0:
                     hurtSoul((int)SingleAreasIndexes.Up);
+                    comboFunction((int)SingleAreasIndexes.Up);
                     break;
                 case 1:
                     hurtSoul((int)SingleAreasIndexes.Bottom);
+                    comboFunction((int)SingleAreasIndexes.Bottom);
                     break;
                 case 2:
                     hurtSoul((int)SingleAreasIndexes.Left);
+                    comboFunction((int)SingleAreasIndexes.Left);
                     break;
                 case 3:
                     hurtSoul((int)SingleAreasIndexes.Right);
+                    comboFunction((int)SingleAreasIndexes.Right);
                     break;
                 case 4:
                     hurtSoul((int)SingleAreasIndexes.BottomLeft);
+                    comboFunction((int)SingleAreasIndexes.BottomLeft);
                     break;
                 case 5:
                     hurtSoul((int)SingleAreasIndexes.BottomRight);
+                    comboFunction((int)SingleAreasIndexes.BottomRight);
                     break;
                 case 6:
                     hurtSoul((int)SingleAreasIndexes.UpperLeft);
+                    comboFunction((int)SingleAreasIndexes.UpperLeft);
                     break;
                 case 7:
                     hurtSoul((int)SingleAreasIndexes.UpperRight);
+                    comboFunction((int)SingleAreasIndexes.UpperRight);
                     break;
                 case 8:
                     level++;
@@ -223,21 +245,46 @@ namespace DevilSoup
         public void NumPadHitMapping()
         {
             if (currentKeyPressed.IsKeyDown(Keys.NumPad1) && pastKeyPressed.IsKeyUp(Keys.NumPad1))
+            {
                 hurtSoul((int)SingleAreasIndexes.BottomLeft);
+                comboFunction((int)SingleAreasIndexes.BottomLeft);
+            }
+                
             if (currentKeyPressed.IsKeyDown(Keys.NumPad2) && pastKeyPressed.IsKeyUp(Keys.NumPad2))
+            {
                 hurtSoul((int)SingleAreasIndexes.Bottom);
+                comboFunction((int)SingleAreasIndexes.Bottom);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad3) && pastKeyPressed.IsKeyUp(Keys.NumPad3))
+            {
                 hurtSoul((int)SingleAreasIndexes.BottomRight);
+                comboFunction((int)SingleAreasIndexes.BottomRight);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad4) && pastKeyPressed.IsKeyUp(Keys.NumPad4))
+            {
                 hurtSoul((int)SingleAreasIndexes.Left);
+                comboFunction((int)SingleAreasIndexes.Left);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad6) && pastKeyPressed.IsKeyUp(Keys.NumPad6))
+            {
                 hurtSoul((int)SingleAreasIndexes.Right);
+                comboFunction((int)SingleAreasIndexes.Right);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad7) && pastKeyPressed.IsKeyUp(Keys.NumPad7))
+            {
                 hurtSoul((int)SingleAreasIndexes.UpperLeft);
+                comboFunction((int)SingleAreasIndexes.UpperLeft);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad8) && pastKeyPressed.IsKeyUp(Keys.NumPad8))
+            {
                 hurtSoul((int)SingleAreasIndexes.Up);
+                comboFunction((int)SingleAreasIndexes.Up);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad9) && pastKeyPressed.IsKeyUp(Keys.NumPad9))
+            {
                 hurtSoul((int)SingleAreasIndexes.UpperRight);
+                comboFunction((int)SingleAreasIndexes.UpperRight);
+            }
             if (currentKeyPressed.IsKeyDown(Keys.C) && pastKeyPressed.IsKeyUp(Keys.C))
             {
                 level++;

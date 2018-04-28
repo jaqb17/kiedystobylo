@@ -125,6 +125,7 @@ namespace DevilSoup
                 {
                     Player.reset();
                     player = Player.getPlayer();
+                    combo.startComboLoop();
                 }
                 else danceArea.reset();
             }
@@ -148,8 +149,6 @@ namespace DevilSoup
                     danceArea.createSoul(Content);
                     ifCreateSoul = false;
                     createSoulTimeDelay = 60 / (danceArea.level + 1);
-                    
-
                 }
 
                 if (!ifCreateSoul)
@@ -224,14 +223,18 @@ namespace DevilSoup
                         break;
                 }
 
-                for(int i = 0; i < 9; i++)
+                if (combo.getIfComboIsActive() && started)
                 {
-                    spriteBatch.Draw(combo.drawMap(graphics), combo.getRectangleCoord(graphics, i), combo.getColor());
+                    for (int i = 0; i < 9; i++)
+                    {
+                        spriteBatch.Draw(combo.drawMap(graphics, i), combo.getRectangleCoord(graphics, i), combo.getColor());
+                    }
                 }
             }
             else
             {
                 spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
+                combo.stopComboLoop();
                 started = false;
             }
             spriteBatch.End();
