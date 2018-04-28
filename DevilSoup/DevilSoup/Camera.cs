@@ -19,7 +19,6 @@ namespace DevilSoup
         
 
         public Vector3 Position { get; } = new Vector3(0, 7.5f, 20);
-        
 
         public Camera() { }
 

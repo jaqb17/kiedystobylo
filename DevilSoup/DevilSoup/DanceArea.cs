@@ -18,6 +18,7 @@ namespace DevilSoup
         private const int numberOfAreas = 8;
         private Vector3 origin;
         private SingleArea[] singleAreas;
+        private bool[] killWithAnimation;
         private float radius;
         private Combo combo;
         public float escape_height = 51.0f;
@@ -33,6 +34,8 @@ namespace DevilSoup
             this.radius = cauldron.radius / 2.5f;
             this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
+            killWithAnimation = new bool[numberOfAreas];
+            for (int i = 0; i < numberOfAreas; i++) killWithAnimation[i] = false;
             player = Player.getPlayer();
             combo = Combo.createCombo();
         }
@@ -79,10 +82,11 @@ namespace DevilSoup
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
-                if (singleAreas[i] != null && singleAreas[i].ifSoulIsAlive)
+                if (singleAreas[i] != null && singleAreas[i].soul != null && singleAreas[i].ifSoulIsAlive)
                 {
                     Vector3 newPos = singleAreas[i].soulPosition;
-                    newPos.Y += 0.05f;
+                    if (this.singleAreas[i].soul.lifes > 0)
+                        newPos.Y += 0.05f;
                     //Console.WriteLine("y " + newPos.Y);
                     singleAreas[i].moveSoul(newPos);
                     if (newPos.Y >= escape_height)
@@ -91,7 +95,7 @@ namespace DevilSoup
                         singleAreas[i].soul.killSoul();
                         singleAreas[i] = null;
                     }
-                    else if (singleAreas[i].soul != null && singleAreas[i].soul.lifes <= 0)
+                    else if (singleAreas[i].soul != null && singleAreas[i].soul.lifes < 0)
                     {
                         this.Killed();
                         singleAreas[i].soul.killSoul();
@@ -108,16 +112,21 @@ namespace DevilSoup
             for (int i = 0; i < numberOfAreas; i++)
             {
                 if (singleAreas[i] != null)
+                {
                     singleAreas[i].updateSoul(view, projection);
+                    if (this.killWithAnimation[i])
+                    {
+                        singleAreas[i].killWithAnimation(view, projection);
+                        this.killWithAnimation[i] = false;
+                    }
+                }
             }
-
         }
 
         public void Escaped(int power)
         {
             player = Player.getPlayer();
             player.hp -= power;
-
         }
 
         public void Killed()
@@ -135,6 +144,15 @@ namespace DevilSoup
             if (ifKilled)
                 this.Killed();
         }
+
+        private void takeAllSoulHP(int id)
+        {
+            if (singleAreas[id] != null)
+                killWithAnimation[id] = true;
+
+            this.Killed();
+        }
+
         //WoodLog Methods
         public void createLog(ContentManager content)
         {
@@ -184,14 +202,13 @@ namespace DevilSoup
 
         private void comboFunction(int areaPressed)
         {
-            if(combo.getIfComboIsActive())
+            if (combo.getIfComboIsActive())
             {
                 int[] killedSoulIds = combo.areaPressed(areaPressed);
                 if (killedSoulIds != null)
                 {
                     foreach (int index in killedSoulIds)
-                        for (int i = 0; i < 4; i++)
-                            this.hurtSoul(index);
+                        this.takeAllSoulHP(index);
                 }
             }
         }
@@ -250,7 +267,7 @@ namespace DevilSoup
                 hurtSoul((int)SingleAreasIndexes.BottomLeft);
                 comboFunction((int)SingleAreasIndexes.BottomLeft);
             }
-                
+
             if (currentKeyPressed.IsKeyDown(Keys.NumPad2) && pastKeyPressed.IsKeyUp(Keys.NumPad2))
             {
                 hurtSoul((int)SingleAreasIndexes.Bottom);

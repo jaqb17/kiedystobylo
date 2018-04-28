@@ -165,7 +165,7 @@ namespace DevilSoup
                     //gamepad.accelerometerStatus();
                     ifCheckAccelerometer = false;
                     accelTimeDelay = 10;
-                    danceArea.fuelBar.fuelValueChange(-1);
+                   // danceArea.fuelBar.fuelValueChange(-1);
                 }
 
                 if (!ifCheckAccelerometer)

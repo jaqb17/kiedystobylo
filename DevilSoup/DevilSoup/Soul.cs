@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevilSoup
@@ -13,7 +14,6 @@ namespace DevilSoup
         Asset soul;
         Vector3 soulPosition;
         public int lifes { get; set; }
-
 
         public Soul(ContentManager content, String path)
         {
@@ -36,6 +36,7 @@ namespace DevilSoup
 
         private Vector3 defineColor()
         {
+            if (lifes == 0) return new Vector3(255.0f, 0.0f, 0.0f);
             LifeColors color = (LifeColors)Enum.Parse(typeof(LifeColors), Enum.GetName(typeof(LifeColors), lifes));
 
             switch (color)
@@ -57,6 +58,17 @@ namespace DevilSoup
         {
             if (this.soul != null)
                 this.soul.DrawModel(view, projection, defineColor());
+        }
+
+        public void killSoulWithAnimation(Matrix view, Matrix projection)
+        {
+            float xCoord = 1.001f, yCoord = 0.95f, zCoord = 1.001f;
+            for (int i = 0; i < 70; i++)
+            {
+                Thread.Sleep(20);
+                if (this.soul != null)
+                    this.soul.scaleAset(xCoord, yCoord, zCoord);
+            }
         }
 
         public void killSoul()

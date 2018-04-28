@@ -64,7 +64,12 @@ namespace DevilSoup
 
         public void scaleAset(float scale)
         {
-            this.world *= Matrix.CreateScale(scale);
+            this.world = Matrix.CreateScale(scale) * this.world;
+        }
+
+        public void scaleAset(float scaleX, float scaleY, float scaleZ)
+        {
+            this.world = Matrix.CreateScale(scaleX, scaleY, scaleZ) * this.world;
         }
 
         private void computeCenter()

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevilSoup
@@ -33,9 +34,28 @@ namespace DevilSoup
             this.soul.setSoulPosition(this.soulPosition);
         }
 
+        public void killWithAnimation(Matrix view, Matrix projection)
+        {
+            if (this.soul == null) return;
+
+            ThreadStart starter = new ThreadStart(() => { this.soul.killSoulWithAnimation(view, projection); });
+            starter += () => {
+                Console.WriteLine("Killed!");
+
+                this.soul.killSoul();
+                this.soul = null;
+            };
+            Thread animatedKill = new Thread(starter) { IsBackground = true };
+            animatedKill.Name = "Animated killing thread";
+            animatedKill.Start();
+            this.soul.lifes = 0;
+            this.ifSoulIsAlive = false;
+        }
+
         public bool takeSoulLife()
         {
             if (this.soul == null) return true;
+            if (this.soul.lifes == 0) return false;
 
             this.soul.lifes -= 1;
             if (this.soul.lifes <= 0)
