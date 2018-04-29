@@ -89,7 +89,7 @@ namespace DevilSoup
         {
             index = this.correctIndex(index);
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, singleRectWidth, singleRectHeight);
-            
+
 
             Color color = Color.LightYellow;
             if (index == availableCombos[randomedComboIndex][comboPosition]) color = Color.Red;
@@ -101,7 +101,7 @@ namespace DevilSoup
 
             return rect;
         }
-        
+
         public Vector2 getRectangleCoord(GraphicsDeviceManager graphics, int index)
         {
             return computeXY(graphics.GraphicsDevice.Viewport.Width, index);
@@ -151,7 +151,7 @@ namespace DevilSoup
             if (areaId == availableCombos[randomedComboIndex][comboPosition])
             {
                 comboPosition++;
-                if(comboPosition >= availableCombos[randomedComboIndex].Length)
+                if (comboPosition >= availableCombos[randomedComboIndex].Length)
                 {
                     finishCombo();
                     return availableCombos[randomedComboIndex];

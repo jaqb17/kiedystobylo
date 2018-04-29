@@ -112,7 +112,7 @@ namespace DevilSoup
 
             danceArea.currentKeyPressed = Keyboard.GetState();
             int keyPressed = gamepad.getKeyState();
-            
+
 
             // TODO: Add your update logic here
             if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
@@ -143,7 +143,7 @@ namespace DevilSoup
             {
                 danceArea.readKey(keyPressed);
                 danceArea.NumPadHitMapping();
-                
+
                 if (ifCreateSoul)
                 {
                     danceArea.createSoul(Content);
@@ -165,7 +165,7 @@ namespace DevilSoup
                     //gamepad.accelerometerStatus();
                     ifCheckAccelerometer = false;
                     accelTimeDelay = 10;
-                   // danceArea.fuelBar.fuelValueChange(-1);
+                    // danceArea.fuelBar.fuelValueChange(-1);
                 }
 
                 if (!ifCheckAccelerometer)
@@ -250,9 +250,9 @@ namespace DevilSoup
                     danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
             }
 
-           cauldron.DrawModel(camera.view, camera.projection);
+            cauldron.DrawModel(camera.view, camera.projection);
             //cauldron2.DrawModel(camera.view, camera.projection);
-            
+
             base.Draw(gameTime);
         }
 

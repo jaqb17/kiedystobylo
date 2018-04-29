@@ -39,7 +39,8 @@ namespace DevilSoup
             if (this.soul == null) return;
 
             ThreadStart starter = new ThreadStart(() => { this.soul.killSoulWithAnimation(view, projection); });
-            starter += () => {
+            starter += () =>
+            {
                 Console.WriteLine("Killed!");
 
                 this.soul.killSoul();
@@ -70,7 +71,7 @@ namespace DevilSoup
 
         public void updateSoul(Matrix view, Matrix projection)
         {
-            if(soul != null)
+            if (soul != null)
                 this.soul.drawSoul(view, projection);
         }
 
