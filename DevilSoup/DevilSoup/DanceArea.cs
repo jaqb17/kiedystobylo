@@ -82,28 +82,30 @@ namespace DevilSoup
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
-                if (singleAreas[i] != null && singleAreas[i].soul != null && singleAreas[i].ifSoulIsAlive)
+                if (singleAreas[i] != null && singleAreas[i].soul != null)
                 {
-                    Vector3 newPos = singleAreas[i].soulPosition;
-                    if (this.singleAreas[i].soul.lifes > 0)
-                        newPos.Y += 0.05f;
-                    //Console.WriteLine("y " + newPos.Y);
-                    singleAreas[i].moveSoul(newPos);
-                    if (newPos.Y >= escape_height)
+                    if (singleAreas[i].ifSoulIsAlive)
                     {
-                        this.Escaped(singleAreas[i].soul.lifes * 10);
-                        singleAreas[i].soul.killSoul();
-                        singleAreas[i] = null;
-                    }
-                    else if (singleAreas[i].soul.lifes < 0)
-                    {
-                        this.Killed();
-                        singleAreas[i].soul.killSoul();
-                        singleAreas[i] = null;
+                        Vector3 newPos = singleAreas[i].soulPosition;
+                        if (this.singleAreas[i].soul.lifes > 0)
+                            newPos.Y += 0.05f;
+
+                        singleAreas[i].moveSoul(newPos);
+                        if (newPos.Y >= escape_height)
+                        {
+                            this.Escaped(singleAreas[i].soul.lifes * 10);
+                            singleAreas[i].soul.killSoul();
+                            singleAreas[i] = null;
+                        }
+                        else if (singleAreas[i].soul.lifes < 0)
+                        {
+                            this.Killed();
+                            singleAreas[i].soul.killSoul();
+                            singleAreas[i] = null;
+                        }
                     }
                     updateSoul(view, projection);
                 }
-
             }
         }
 
