@@ -63,7 +63,7 @@ namespace DevilSoup
                 {
                     for (int i = 0; i < 20; i++)
                     {
-                        Thread.Sleep(250);
+                        Thread.Sleep(300);
                         transparency -= 0.05f;
                     }
 

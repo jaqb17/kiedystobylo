@@ -37,6 +37,8 @@ namespace DevilSoup
         {
             graphics = new GraphicsDeviceManager(this);
             //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferHeight = 640;
+            graphics.PreferredBackBufferWidth = 1280;
             Content.RootDirectory = "Content";
         }
 
