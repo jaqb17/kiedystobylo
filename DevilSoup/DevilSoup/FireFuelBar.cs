@@ -14,14 +14,14 @@ namespace DevilSoup
         public Rectangle barRectangle;
         public Texture2D texture { get; set; }
         public Vector2 position { get; set; }
-        //int fuelValue;
+        public double fuelValue;
 
         public FireFuelBar(Vector2 _position, string texturePath, ContentManager content)
         {
             position = _position;
             texture = content.Load<Texture2D>(texturePath);
             barRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            //fuelValue = texture.Width;
+            fuelValue = 3;
         }
         public void fuelValueChange (int changeValue)
         {
@@ -35,7 +35,7 @@ namespace DevilSoup
             if (barRectangle.Width > texture.Width)
                 barRectangle.Width = texture.Width;
         }
-        //public float getFuelValue()
+        //public double getFuelValue()
         //{
         //    return fuelValue;
         //}

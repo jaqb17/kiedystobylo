@@ -130,7 +130,7 @@ namespace DevilSoup
         {
             WiimoteState state = wiimote.WiimoteState;
             Point3F accelVector = state.AccelState.Values;
-            return Math.Sqrt(accelVector.X * accelVector.X + accelVector.Z * accelVector.Z);
+            return Math.Sqrt(accelVector.X * accelVector.X + accelVector.Z * accelVector.Z + accelVector.Y * accelVector.Y);
         }
 
         public Vector3 accelerometerStatus()
@@ -138,7 +138,7 @@ namespace DevilSoup
             WiimoteState state = wiimote.WiimoteState;
 
             Point3F accelVector = state.AccelState.Values;
-            
+
             Vector3 result = new Vector3(accelVector.X, accelVector.Y, accelVector.Z);
             if (Math.Abs(result.X) <= 1.1f) result.X = 0f;
             if (Math.Abs(result.Y) <= 1.1f) result.Y = 0f;
@@ -146,6 +146,6 @@ namespace DevilSoup
             Console.WriteLine(result.ToString());
             return result;
         }
-        
+
     }
 }

@@ -25,7 +25,6 @@ namespace DevilSoup
         private Combo combo;
         int timeDelayed = 0;
         bool availableToChange = true;
-
         int createSoulTimeDelay = 0;
         bool ifCreateSoul = true;
         bool ifCheckAccelerometer = true;
@@ -143,9 +142,14 @@ namespace DevilSoup
 
             if (started)
             {
+                if (danceArea.fuelBar.fuelValue < 0)
+                    danceArea.fuelBar.fuelValue = 0;
+                danceArea.fuelBar.fuelValue -= 0.006;
+                danceArea.calculateHeatValue(danceArea.fuelBar.fuelValue);
                 danceArea.readKey(keyPressed);
                 danceArea.NumPadHitMapping();
-
+                if (danceArea.heatValue <= 1)
+                    danceArea.heatValue = 1;
                 if (ifCreateSoul)
                 {
                     danceArea.createSoul(Content);
@@ -188,9 +192,10 @@ namespace DevilSoup
                 {
                     danceArea.moveLog();
                     //danceArea.moveLog(gamepad.accelerometerStatus());
-                    if (gamepad.swung() > 4.0f)
+                    if (gamepad.swung() > 4.0f && danceArea.woodLog.position.Y > 47f)
                         danceArea.woodLogDestroySuccessfulHit(15);
                 }
+                //Console.WriteLine(danceArea.woodLog.position);
             }
 
             danceArea.pastKeyPressed = danceArea.currentKeyPressed;
@@ -208,9 +213,9 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             spriteBatch.Begin();
-            danceArea.DrawFuelBar(spriteBatch);
+            //danceArea.DrawFuelBar(spriteBatch);
             // TODO: Add your drawing code here
-            if (player.hp > 0 && danceArea.fuelBar.isBarEmpty() == false)
+            if (player.hp > 0)
             {
                 switch (danceArea.level)
                 {
@@ -239,6 +244,8 @@ namespace DevilSoup
                 combo.stopComboLoop();
                 started = false;
             }
+            spriteBatch.DrawString(font, "HV: " + danceArea.heatValue, new Vector2(100, 150), Color.Black);
+            spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
             spriteBatch.End();
 
             GraphicsDevice.BlendState = BlendState.Opaque;
@@ -252,9 +259,7 @@ namespace DevilSoup
                     danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
             }
 
-            cauldron.DrawModel(camera.view, camera.projection);
-            //cauldron2.DrawModel(camera.view, camera.projection);
-
+            cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue,1f,1f));
             base.Draw(gameTime);
         }
 

@@ -23,6 +23,7 @@ namespace DevilSoup
         private Combo combo;
         public float escape_height = 51.0f;
         public int level = 0;
+        public double heatValue = 2f;
         private Player player;
         public WoodenLog woodLog { get; set; }
         public FireFuelBar fuelBar { get; set; }
@@ -194,12 +195,20 @@ namespace DevilSoup
             this.woodLog = null;
         }
 
+        public void calculateHeatValue(double _var)
+        {
+            double difference = _var - heatValue;
+
+            heatValue += difference/500;
+        }
+
         public void woodLogDestroySuccessfulHit(int _fuelValueChange)
         {
             //Add fuel to the flames
             isLogCreated = false;
             woodLog.destroyLog();
-            fuelBar.fuelValueChange(_fuelValueChange);
+            //fuelBar.fuelValueChange(_fuelValueChange);
+            fuelBar.fuelValue += 1f;
         }
 
         private void comboFunction(int areaPressed)
@@ -322,7 +331,7 @@ namespace DevilSoup
         }
         public void DrawFuelBar(SpriteBatch _batch)
         {
-            _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
+           _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
         }
     }
 }
