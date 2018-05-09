@@ -12,7 +12,8 @@ namespace DevilSoup
     public class Pad
     {
         DirectInput Input = new DirectInput();
-        Joystick stick;
+        //Joystick stick;
+        Joystick USBMatt;
         Joystick[] Sticks;
         Wiimote wiimote;
         List<int> connectedPadsId;
@@ -27,7 +28,8 @@ namespace DevilSoup
         public Pad()
         {
             //GetSticks();
-            Sticks = GetSticks();
+            //Sticks = GetSticks();
+            USBMatt = USBDanceMattInitialize();
             connectedPadsId = new List<int>();
             wiimote = new Wiimote();
             connectWiiremote();
@@ -43,6 +45,7 @@ namespace DevilSoup
             catch { Console.WriteLine("Can't find a Wiimote"); }
 
         }
+        /*
         private Joystick[] GetSticks()
         {
 
@@ -51,12 +54,13 @@ namespace DevilSoup
 
             foreach (DeviceInstance device in Input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly))
             {
+                
                 // Creates a joystick for each game device in USB Ports
                 try
                 {
                     stick = new Joystick(Input, device.InstanceGuid);
                     stick.Acquire();
-
+                    
                     // Gets the joysticks properties and sets the range for them.
                     foreach (DeviceObjectInstance deviceObject in stick.GetObjects())
                     {
@@ -74,24 +78,54 @@ namespace DevilSoup
             }
             return sticks.ToArray();
         }
+        */
+        private Joystick USBDanceMattInitialize()
+        {
+            foreach (DeviceInstance device in Input.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly))
+            {
+                Joystick _currentlyRead;
+                // Creates a joystick for each game device in USB Ports
+                try
+                {
+                    _currentlyRead = new Joystick(Input, device.InstanceGuid);
+                    _currentlyRead.Acquire();
+
+                    // Gets the joysticks properties and sets the range for them.
+                    foreach (DeviceObjectInstance deviceObject in _currentlyRead.GetObjects())
+                    {
+                        if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
+                            _currentlyRead.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-100, 100);
+                    }
+
+                // Adds how ever many joysticks are connected to the computer into the sticks list.
+                if (_currentlyRead.Information.ProductName == "USB Gamepad ")
+                    return _currentlyRead;
+                    
+                }
+                catch (DirectInputException)
+                {
+                    Console.WriteLine("Blad przy rozpoznawaniu joysticka");
+                }
+            }
+            return null;
+        }
 
         public int getKeyState()
         {
             int result = -1;
-            for (int i = 0; i < Sticks.Length; i++)
-            {
-                result = StickHandlingLogic(Sticks[i]);
-            }
-
+            //for (int i = 0; i < Sticks.Length; i++)
+            //{
+            //    result = StickHandlingLogic(i);
+            //}
+            result = StickHandlingLogic(USBMatt);
             return result;
         }
 
-        private int StickHandlingLogic(Joystick stick)
+        private int StickHandlingLogic(Joystick _var)
         {
             // Creates an object from the class JoystickState.
             JoystickState state = new JoystickState();
-
-            state = stick.GetCurrentState(); //Gets the state of the joystick
+            state = _var.GetCurrentState(); //Gets the state of the joystick
 
             //These are for the thumbstick readings
             yValue = -state.Y;
@@ -108,8 +142,8 @@ namespace DevilSoup
             //Ponizej zamiescilem przyklad obslugi gamepada. Za pomoca id mozna zdefiniowac, z ktorego pada korzystamy.//
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (stick.Information.ProductName == "USB Gamepad ") //stick.Information.ProductName == "USB Gamepad " id==0
-            {
+            //if (_id == 0) //stick.Information.ProductName == "USB Gamepad " id==0
+            //{
                 // This is when button 0 of the gamepad is pressed, the label will change. Button 0 should be the square button.
                 for (int i = 0; i < buttons.Length; i++)
                 {
@@ -120,7 +154,7 @@ namespace DevilSoup
                         return i;
                     }
                 }
-            }
+           // }
 
             lastButtons = buttons;
             return -1;

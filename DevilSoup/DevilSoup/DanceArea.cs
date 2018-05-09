@@ -89,7 +89,7 @@ namespace DevilSoup
                     {
                         Vector3 newPos = singleAreas[i].soulPosition;
                         if (this.singleAreas[i].soul.lifes > 0)
-                            newPos.Y += 0.05f;
+                            newPos.Y += 0.03f*(float)heatValue;
 
                         singleAreas[i].moveSoul(newPos);
                         if (newPos.Y >= escape_height)

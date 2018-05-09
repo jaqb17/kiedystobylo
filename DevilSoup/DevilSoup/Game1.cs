@@ -168,10 +168,8 @@ namespace DevilSoup
 
                 if (ifCheckAccelerometer)
                 {
-                    //gamepad.accelerometerStatus();
                     ifCheckAccelerometer = false;
                     accelTimeDelay = 10;
-                    // danceArea.fuelBar.fuelValueChange(-1);
                 }
 
                 if (!ifCheckAccelerometer)
@@ -192,10 +190,10 @@ namespace DevilSoup
                 {
                     danceArea.moveLog();
                     //danceArea.moveLog(gamepad.accelerometerStatus());
-                    if (gamepad.swung() > 4.0f && danceArea.woodLog.position.Y > 47f)
+                    if (gamepad.swung() > 6.5f && danceArea.woodLog.isDestroyable == true)
                         danceArea.woodLogDestroySuccessfulHit(15);
                 }
-                //Console.WriteLine(danceArea.woodLog.position);
+                
             }
 
             danceArea.pastKeyPressed = danceArea.currentKeyPressed;
@@ -242,7 +240,7 @@ namespace DevilSoup
             {
                 spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
                 combo.stopComboLoop();
-                started = false;
+                //started = false;
             }
             spriteBatch.DrawString(font, "HV: " + danceArea.heatValue, new Vector2(100, 150), Color.Black);
             spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
