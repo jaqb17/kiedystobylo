@@ -21,6 +21,7 @@ namespace DevilSoup
         private bool[] killWithAnimation;
         private float radius;
         private Combo combo;
+        public float baseSoulsSpeed { get; set; }
         public float escape_height = 51.0f;
         public int level = 0;
         public double heatValue = 2f;
@@ -89,7 +90,7 @@ namespace DevilSoup
                     {
                         Vector3 newPos = singleAreas[i].soulPosition;
                         if (this.singleAreas[i].soul.lifes > 0)
-                            newPos.Y += 0.03f*(float)heatValue;
+                            newPos.Y += baseSoulsSpeed*(float)heatValue;
 
                         singleAreas[i].moveSoul(newPos);
                         if (newPos.Y >= escape_height)

@@ -110,10 +110,16 @@ namespace DevilSoup
             //GamePadState xPadState = GamePad.GetState(PlayerIndex.One);
             if (GamePad.GetState(PlayerIndex.Two).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            int keyPressed;
             danceArea.currentKeyPressed = Keyboard.GetState();
-            int keyPressed = gamepad.getKeyState();
-
+            if (gamepad.USBMatt != null)
+            {
+                keyPressed = gamepad.getKeyState();
+            }
+            else
+            {
+                keyPressed = -1;
+            }
 
             // TODO: Add your update logic here
             if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
@@ -218,12 +224,15 @@ namespace DevilSoup
                 switch (danceArea.level)
                 {
                     case 0:
+                        danceArea.baseSoulsSpeed = 0.03f;
                         spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: easy", new Vector2(100, 100), Color.Black);
                         break;
                     case 1:
+                        danceArea.baseSoulsSpeed = 0.04f;
                         spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: medium", new Vector2(100, 100), Color.Black);
                         break;
                     case 2:
+                        danceArea.baseSoulsSpeed = 0.05f;
                         spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: hard", new Vector2(100, 100), Color.Black);
                         break;
                 }
