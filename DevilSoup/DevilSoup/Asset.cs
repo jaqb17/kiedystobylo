@@ -54,7 +54,7 @@ namespace DevilSoup
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
-
+                    
                     if (color != null)
                         effect.DiffuseColor = color ?? new Vector3(0.0f, 0.0f, 0.0f);
                 }

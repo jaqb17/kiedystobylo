@@ -20,7 +20,7 @@ namespace DevilSoup
         {
             position = _position;
             texture = content.Load<Texture2D>(texturePath);
-            barRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+            barRectangle = new Rectangle((int)_position.X, (int)_position.Y, 400, 400);
             fuelValue = 3;
         }
         public void fuelValueChange (int changeValue)

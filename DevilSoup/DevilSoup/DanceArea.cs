@@ -328,7 +328,7 @@ namespace DevilSoup
         }
         public void FuelBarInitialize(ContentManager content)
         {
-            fuelBar = new FireFuelBar(new Vector2(50, 30), "Assets\\FireFuelBar\\bar", content);
+            fuelBar = new FireFuelBar(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
         }
         public void DrawFuelBar(SpriteBatch _batch)
         {

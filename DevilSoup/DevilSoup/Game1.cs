@@ -15,6 +15,7 @@ namespace DevilSoup
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        BasicEffect eff;
         private SpriteFont font;
         private Vector3 cameraPos, cauldronPos;
         private Camera camera;
@@ -23,6 +24,7 @@ namespace DevilSoup
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
+        //private BBRectangle billboardRect;
         int timeDelayed = 0;
         bool availableToChange = true;
         int createSoulTimeDelay = 0;
@@ -51,7 +53,7 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             cameraPos = new Vector3(0, 110, 40);
-            //cameraPos = new Vector3(0f, 0f, 200f);
+            //cameraPos = new Vector3(0f, 0f, 4f);
             cauldronPos = new Vector3(0f, 0f, 0f);
             camera = new Camera();
             camera.setWorldMatrix(cameraPos);
@@ -62,16 +64,15 @@ namespace DevilSoup
             cauldron = new Asset();
             cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-
+            
             gamepad = new Pad();
-
+            
             danceArea = new DanceArea(cauldron);
             font = Content.Load<SpriteFont>("HP");
 
             player = Player.getPlayer();
             combo = Combo.createCombo();
             danceArea.FuelBarInitialize(Content);
-
             base.Initialize();
         }
 
@@ -83,8 +84,8 @@ namespace DevilSoup
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
+            eff = new BasicEffect(GraphicsDevice);
+            //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
 
             // TODO: use this.Content to load your game content here
@@ -197,7 +198,11 @@ namespace DevilSoup
                     danceArea.moveLog();
                     //danceArea.moveLog(gamepad.accelerometerStatus());
                     if (gamepad.swung() > 6.5f && danceArea.woodLog.isDestroyable == true)
+                    {
                         danceArea.woodLogDestroySuccessfulHit(15);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                    }
                 }
                 
             }
@@ -215,7 +220,7 @@ namespace DevilSoup
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
-
+            cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
             spriteBatch.Begin();
             //danceArea.DrawFuelBar(spriteBatch);
             // TODO: Add your drawing code here
@@ -253,20 +258,23 @@ namespace DevilSoup
             }
             spriteBatch.DrawString(font, "HV: " + danceArea.heatValue, new Vector2(100, 150), Color.Black);
             spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
+            //danceArea.DrawFuelBar(spriteBatch);
             spriteBatch.End();
-
+            
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
+            //billboardRect.DrawRect(eff, graphics.GraphicsDevice, camera.view, camera.projection, camera.world);
             if (started)
             {
                 danceArea.moveSoul(camera.view, camera.projection);
                 if (danceArea.isLogCreated == true)
                     danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
+                //if (billboardRect != null)
+                    //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
             }
 
-            cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue,1f,1f));
+            
             base.Draw(gameTime);
         }
 

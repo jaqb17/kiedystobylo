@@ -10,7 +10,7 @@ namespace DevilSoup
 {
     public class WoodenLog
     {
-        Asset log;
+        public Asset log { get; private set; }
         public Vector3 position { get; set; }
         private float fireBoostValue { get; set;}
         public bool isDestroyable { get; set; }
