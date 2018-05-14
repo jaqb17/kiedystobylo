@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,10 @@ namespace DevilSoup
         public Soul soul;
         private String path = "Assets\\Souls\\bryla";
 
-        public SingleArea(ContentManager content, Vector3 areaCenter)
+        public SingleArea(ContentManager content, Vector3 areaCenter, Vector3 cameraPos, GraphicsDevice graphicsDevice)
         {
             this.areaCenter = areaCenter;
-            this.soul = new Soul(content, this.path);
+            this.soul = new Soul(content, this.path, cameraPos, graphicsDevice);
             this.soulPosition = this.areaCenter;
             this.ifSoulIsAlive = true;
         }

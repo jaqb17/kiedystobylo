@@ -16,9 +16,8 @@ namespace DevilSoup
         public Matrix projection { get; set; }
         public Vector3 target { get; } = new Vector3(0, 7.5f, 0);        
         private Matrix lastTransform = Matrix.Identity;
-        
 
-        public Vector3 Position { get; } = new Vector3(0, 7.5f, 20);
+        public Vector3 Position { get; } = new Vector3(0, 110, 40);
 
         public Camera() { }
 

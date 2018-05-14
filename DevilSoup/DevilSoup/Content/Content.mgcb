@@ -82,3 +82,9 @@
 /processorParam:TextureFormat=Color
 /build:Assets/OtherTextures/slashTexture.png
 
+#begin ShaderModules/AnimatedModelShader/AnimatedModelShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:ShaderModules/AnimatedModelShader/AnimatedModelShader.fx
+

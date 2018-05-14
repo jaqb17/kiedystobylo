@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,10 @@ namespace DevilSoup
         Vector3 soulPosition;
         public int lifes { get; set; }
 
-        public Soul(ContentManager content, String path)
+        public Soul(ContentManager content, String path, Vector3 cameraPos, GraphicsDevice graphicsDevice)
         {
             soul = new Asset();
+            soul.cameraPos = cameraPos;
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
             soul.loadModel(content, path);
         }

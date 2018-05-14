@@ -54,13 +54,13 @@ namespace DevilSoup
             return result;
         }
 
-        public void createSoul(ContentManager content)
+        public void createSoul(ContentManager content, Vector3 cameraPos, GraphicsDevice graphicsDevice)
         {
 
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
             if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
-                singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
+                singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i), cameraPos, graphicsDevice);
             }
 
         }
@@ -158,10 +158,10 @@ namespace DevilSoup
         }
 
         //WoodLog Methods
-        public void createLog(ContentManager content)
+        public void createLog(ContentManager content, Vector3 cameraPos, GraphicsDevice graphicsDevice)
         {
             //woodLog = new WoodenLog();
-            woodLog = new WoodenLog(content, "Assets\\Souls\\bryla");
+            woodLog = new WoodenLog(content, "Assets\\Souls\\bryla", cameraPos, graphicsDevice);
         }
         public void moveLog()
         {

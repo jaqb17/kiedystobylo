@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,13 @@ namespace DevilSoup
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
         }
-        public Water(ContentManager content, string path)
+        public Water(ContentManager content, string path, Vector3 cameraPos, GraphicsDevice graphicsDevice)
         {
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
             asset = new Asset();
             asset.loadModel(content, path);
+            asset.cameraPos = cameraPos;
             fireBoostValue = -0.1f;
         }
         public void setPosition(Vector3 _position)
@@ -38,7 +40,7 @@ namespace DevilSoup
         {
             
             if (this.asset != null)
-                this.asset.DrawModel(view, projection,new Vector3(0,255,0));
+                this.asset.DrawModel(view, projection, new Vector3(0,255,0));
         }
         public void destroyWater()
         {
