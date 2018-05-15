@@ -139,6 +139,11 @@ namespace SkinnedModelPipeline
                 // Look up what bone this channel is controlling.
                 int boneIndex;
 
+                /*if (!channel.Key.StartsWith("Base"))
+                {
+                    continue;
+                }*/
+
                 if (!boneMap.TryGetValue(channel.Key, out boneIndex))
                 {
                     throw new InvalidContentException(string.Format(

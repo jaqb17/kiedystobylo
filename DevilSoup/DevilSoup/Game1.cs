@@ -24,7 +24,8 @@ namespace DevilSoup
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
-        //private Asset animTemplate;
+        private Asset animTemplate;
+        private ModelsInstancesClass models;
 
         //private BBRectangle billboardRect;
         int timeDelayed = 0;
@@ -54,6 +55,7 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            models = new ModelsInstancesClass();
             cameraPos = new Vector3(0, 110, 40);
             //cameraPos = new Vector3(0f, 0f, 4f);
             cauldronPos = new Vector3(0f, 0f, 0f);
@@ -64,7 +66,7 @@ namespace DevilSoup
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
             cauldron = new Asset();
-            cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
+            cauldron.loadModel(Content, "Cauldron", "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
             
             gamepad = new Pad();
@@ -77,11 +79,11 @@ namespace DevilSoup
             danceArea.FuelBarInitialize(Content);
 
             /*animTemplate = new Asset();
-            animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
+            animTemplate.loadModel(Content, "Assets\\cyclop_atak\\mixamodemon");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
             animTemplate.scaleAset(0.5f);
-            animTemplate.cameraPos = camera.Position;
-            */
+            animTemplate.cameraPos = camera.Position;*/
+            
             
 
             base.Initialize();
@@ -96,8 +98,7 @@ namespace DevilSoup
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             eff = new BasicEffect(GraphicsDevice);
-
-            //animTemplate.initializeClip("Take 001");
+            
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
 
@@ -206,7 +207,6 @@ namespace DevilSoup
 
                 if (danceArea.isLogCreated == false)
                 {
-                    danceArea.isLogCreated = true;
                     danceArea.createLog(Content);
                 }
                 if (danceArea.isLogCreated == true)
@@ -220,8 +220,10 @@ namespace DevilSoup
                         //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
                     }
                 }
-                
             }
+
+            if (danceArea.isLogCreated == true)
+                danceArea.woodLog.Update(gameTime);
 
             danceArea.pastKeyPressed = danceArea.currentKeyPressed;
             base.Update(gameTime);

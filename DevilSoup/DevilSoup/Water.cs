@@ -24,7 +24,7 @@ namespace DevilSoup
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
             asset = new Asset();
-            asset.loadModel(content, path);
+            asset.loadModel(content, "Water", path);
             fireBoostValue = -0.1f;
         }
         public void setPosition(Vector3 _position)

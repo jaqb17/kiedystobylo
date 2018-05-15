@@ -29,7 +29,15 @@ namespace DevilSoup
         public WoodenLog woodLog { get; set; }
         public FireFuelBar fuelBar { get; set; }
 
-        public bool isLogCreated = false;
+        public bool isLogCreated
+        {
+            get
+            {
+                if (this.woodLog != null)
+                    return woodLog.isLogCreated;
+                else return false;
+            }
+        }
 
         public DanceArea(Asset cauldron)
         {
@@ -56,13 +64,11 @@ namespace DevilSoup
 
         public void createSoul(ContentManager content)
         {
-
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
             if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
                 singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
             }
-
         }
 
         public void reset()
@@ -90,7 +96,7 @@ namespace DevilSoup
                     {
                         Vector3 newPos = singleAreas[i].soulPosition;
                         if (this.singleAreas[i].soul.lifes > 0)
-                            newPos.Y += baseSoulsSpeed*(float)heatValue;
+                            newPos.Y += baseSoulsSpeed * (float)heatValue;
 
                         singleAreas[i].moveSoul(newPos);
                         if (newPos.Y >= escape_height)
@@ -161,10 +167,11 @@ namespace DevilSoup
         public void createLog(ContentManager content)
         {
             //woodLog = new WoodenLog();
-            woodLog = new WoodenLog(content, "Assets\\Souls\\bryla");
+            woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
         }
         public void moveLog()
         {
+            if (woodLog.log.IfPlay) return;
 
             Vector3 newLogPosition = woodLog.position;
 
@@ -192,7 +199,7 @@ namespace DevilSoup
 
         private void woodLogDestroyFailedToHit()
         {
-            isLogCreated = false;
+            this.woodLog.isLogCreated = false;
             this.woodLog = null;
         }
 
@@ -200,13 +207,12 @@ namespace DevilSoup
         {
             double difference = _var - heatValue;
 
-            heatValue += difference/500;
+            heatValue += difference / 500;
         }
 
         public void woodLogDestroySuccessfulHit(int _fuelValueChange)
         {
             //Add fuel to the flames
-            isLogCreated = false;
             woodLog.destroyLog();
             //fuelBar.fuelValueChange(_fuelValueChange);
             fuelBar.fuelValue += 1f;
@@ -321,7 +327,7 @@ namespace DevilSoup
                 if (level > 2)
                     level = 0;
             }
-            if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog.isDestroyable == true)
+            if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog != null && woodLog.isDestroyable == true)
             {
                 woodLogDestroySuccessfulHit(25);
             }
@@ -332,7 +338,7 @@ namespace DevilSoup
         }
         public void DrawFuelBar(SpriteBatch _batch)
         {
-           _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
+            _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
         }
     }
 }

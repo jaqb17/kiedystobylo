@@ -19,7 +19,7 @@ namespace DevilSoup
         {
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
-            soul.loadModel(content, path);
+            soul.loadModel(content, "Soul", path);
         }
 
         private int randomNumber(int range)
