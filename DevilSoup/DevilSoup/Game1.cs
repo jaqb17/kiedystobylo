@@ -24,6 +24,8 @@ namespace DevilSoup
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
+        //private Asset animTemplate;
+
         //private BBRectangle billboardRect;
         int timeDelayed = 0;
         bool availableToChange = true;
@@ -73,6 +75,15 @@ namespace DevilSoup
             player = Player.getPlayer();
             combo = Combo.createCombo();
             danceArea.FuelBarInitialize(Content);
+
+            /*animTemplate = new Asset();
+            animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
+            animTemplate.world = Matrix.CreateTranslation(cauldronPos);
+            animTemplate.scaleAset(0.5f);
+            animTemplate.cameraPos = camera.Position;
+            */
+            
+
             base.Initialize();
         }
 
@@ -85,6 +96,8 @@ namespace DevilSoup
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             eff = new BasicEffect(GraphicsDevice);
+
+            //animTemplate.initializeClip("Take 001");
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
 
@@ -122,9 +135,12 @@ namespace DevilSoup
                 keyPressed = -1;
             }
 
+            //animTemplate.animationUpdate(gameTime.ElapsedGameTime);
+
             // TODO: Add your update logic here
             if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
             {
+                //animTemplate.ifPlay = !animTemplate.ifPlay;
                 started = !started;
                 availableToChange = false;
                 timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
@@ -221,6 +237,9 @@ namespace DevilSoup
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
+
+            //animTemplate.DrawModel(camera.view, camera.projection);
+
             spriteBatch.Begin();
             //danceArea.DrawFuelBar(spriteBatch);
             // TODO: Add your drawing code here
