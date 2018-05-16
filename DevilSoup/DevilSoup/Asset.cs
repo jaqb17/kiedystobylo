@@ -3,11 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Reflection;
 using System;
-using SkinnedModel;
+using MGSkinnedAnimationAux;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DevilSoup
 {
@@ -18,27 +19,56 @@ namespace DevilSoup
         public Vector3 cameraPos { get; set; }
         public Vector3 center { get; private set; }
         public float radius { get; private set; }
-        private bool ifPlay = false;
-
-        public bool IfPlay
-        {
-            get { return this.ifPlay; }
-            set
-            {
-                this.ifPlay = value;
-                if (this.ifPlay)
-                    this.animationStarted = DateTime.Now;
-            }
-        }
-
+        public bool ifPlay { get; set; } = false;
+        public int animationDelay { get; set; } = 0;
+        private int animationDelayCounter { get; set; } = 0;
         public bool ifDamageAfterPlay { get; set; } = false;
-        private AnimationPlayer animationPlayer;
-        public double animationLength { get; private set; }
-        public DateTime animationStarted { get; private set; }
+        public bool finishedAnimation { get; private set; } = false;
+        private ModelExtra modelExtra = null;
 
-        public Asset()
+        /// <summary>
+        /// The model bones
+        /// </summary>
+        private List<Bone> bones = new List<Bone>();
+
+
+        private Matrix[] skeleton;
+
+        private Matrix[] boneTransforms;
+
+        private AnimationPlayer player = null;
+
+        //public double animationLength { get; private set; }
+        //public DateTime animationStarted { get; private set; }
+
+        #region Properties
+
+        /// <summary>
+        /// The actual underlying XNA model
+        /// </summary>
+        public Model Model
         {
+            get { return model; }
         }
+
+        /// <summary>
+        /// The underlying bones for the model
+        /// </summary>
+        public List<Bone> Bones { get { return bones; } }
+
+        /// <summary>
+        /// The model animation clips
+        /// </summary>
+        public List<AnimationClip> Clips { get { return modelExtra.Clips; } }
+
+        public bool HasAnimation()
+        {
+            return modelExtra != null;
+        }
+
+        #endregion
+
+        public Asset(){}
 
         public Asset(Model model, Vector3 cameraPos)
         {
@@ -55,26 +85,74 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public void initializeClip(String clipName)
-        {
-            if (animationPlayer == null)
-                return;
+        #region Bones Management
 
-            SkinningData skinningData = model.Tag as SkinningData;
-            AnimationClip clip = skinningData.AnimationClips[clipName];
-            animationLength = clip.Duration.TotalMilliseconds;
-            animationPlayer.StartClip(clip);
+        /// <summary>
+        /// Get the bones from the model and create a bone class object for
+        /// each bone. We use our bone class to do the real animated bone work.
+        /// </summary>
+        private void ObtainBones()
+        {
+            bones.Clear();
+            foreach (ModelBone bone in model.Bones)
+            {
+                // Create the bone object and add to the heirarchy
+                Bone newBone = new Bone(bone.Name, bone.Transform, bone.Parent != null ? bones[bone.Parent.Index] : null);
+
+                // Add to the bones for this model
+                bones.Add(newBone);
+            }
         }
 
-        public void animationUpdate(TimeSpan timeSpan, bool relativeToCurrentTime = true, Matrix? rootTransform = null)
+        /// <summary>
+        /// Find a bone in this model by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Bone FindBone(string name)
         {
-            if (!ifPlay)
-                return;
+            foreach (Bone bone in Bones)
+            {
+                if (bone.Name == name)
+                    return bone;
+            }
+            return null;
+        }
 
-            if (rootTransform == null)
-                rootTransform = Matrix.Identity;
+        #endregion
 
-            animationPlayer.Update(timeSpan, relativeToCurrentTime, (Matrix)rootTransform);
+        public void animationUpdate(GameTime gameTime)
+        {
+            if(animationDelay > 0)
+            {
+                animationDelayCounter++;
+                if (animationDelayCounter > animationDelay)
+                    animationDelayCounter = 0;
+            }
+
+            if(ifDamageAfterPlay)
+            {
+                if (player?.Position >= player?.Duration)
+                {
+                    this.finishedAnimation = true;
+                }
+            }
+            
+            if (animationDelayCounter == 0)
+                player?.Update(gameTime);
+        }
+
+
+        /// <summary>
+        /// Play an animation clip
+        /// </summary>
+        /// <param name="clip">The clip to play</param>
+        /// <returns>The player that will play this clip</returns>
+        public AnimationPlayer PlayClip(AnimationClip clip, bool looping = true, int keyframestart = 0, int keyframeend = 0, int fps = 24)
+        {
+            // Create a clip player and assign it to this model
+            player = new AnimationPlayer(clip, this, looping, keyframestart, keyframeend, fps);
+            return player;
         }
 
         public void loadModel(ContentManager content, string modelType, String path)
@@ -94,130 +172,17 @@ namespace DevilSoup
             }
             else this.model = ModelsInstancesClass.models[modelType];
 
-            SkinningData skinningData = model.Tag as SkinningData;
+            modelExtra = model.Tag as ModelExtra;
 
-            if (skinningData != null)
+            if (modelExtra != null)
             {
-                animationPlayer = new AnimationPlayer(skinningData);
-                initializeClip("Take 001");
+                ObtainBones();
+
+                boneTransforms = new Matrix[bones.Count];
+                skeleton = new Matrix[modelExtra.Skeleton.Count];
             }
 
             computeCenter();
-        }
-
-        public void LoadContentFile(ContentManager content, string modelType, string filePath)
-        {
-
-            if (ModelsInstancesClass.models[modelType] == null)
-            {
-                string outputDir = Assembly.GetExecutingAssembly().Location.Remove(Assembly.GetExecutingAssembly().Location.Length - Assembly.GetExecutingAssembly().GetName().Name.Length - 4);
-                string filename = filePath.Split('/')[filePath.Split('/').Length - 1];
-
-                string copyPath = outputDir + filename;
-                string[] completePathArr = outputDir.Split('\\');
-
-                string completeFilePath = "";
-
-                for (int i = 0; i < completePathArr.Length - 5; i++)
-                    completeFilePath += completePathArr[i] + "/";
-
-                completeFilePath += "Content/" + filePath;
-
-                string shortFileName = filename.Split('.')[0];
-                string pipeLineFile = "runtimeanimatedmodel.txt";
-
-                Process pProcess = null;
-                Task loadTaskOut = Task.Factory.StartNew(() =>
-                {
-                    //Copy file to directory
-                    {
-                        try
-                        {
-                            if (copyPath != null)
-                                File.Copy(completeFilePath, copyPath);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.WriteLine(e.Message);
-                        }
-                        if (!File.Exists(copyPath)) return;
-                    }
-
-                    //string MGCBpathDirectory = Application.StartupPath + "/Content/MGCB/";
-                    string mgcbPathExe = outputDir + "Content/MGCB/mgcb.exe";
-
-                    completeFilePath = completeFilePath.Replace("\\", "/");
-
-                    bool inProgress = true;
-                    while (inProgress)
-                    {
-
-                        //Create pProcess
-                        pProcess = new Process
-                        {
-                            StartInfo =
-                            {
-                            FileName = mgcbPathExe,
-                            Arguments = "/@:\"Content/mgcb/" + pipeLineFile + "\""
-                            +" /outputDir:\"Content/" +filePath.Remove(filePath.Length - filename.Length) + "\""
-                            +" /build:\"" +filename + "\"",
-                            CreateNoWindow = true,
-                            WorkingDirectory = outputDir,
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true
-                            }
-                        };
-
-                        //Get program output
-                        string stdError;
-                        StringBuilder stdOutput = new StringBuilder();
-                        pProcess.OutputDataReceived += (sender, args) => stdOutput.Append(args.Data);
-
-                        try
-                        {
-                            pProcess.Start();
-                            pProcess.BeginOutputReadLine();
-                            stdError = pProcess.StandardError.ReadToEnd();
-                            pProcess.WaitForExit();
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception("OS error while executing : " + e.Message, e);
-                        }
-
-                        if (pProcess.ExitCode == 0)
-                        {
-                            Console.WriteLine("Udalo sie!");
-                        }
-                        else
-                        {
-                            var message = new StringBuilder();
-                            Console.WriteLine("Nie udalo sie");
-
-                            message.AppendLine(stdError);
-                            message.AppendLine("Std output:");
-                            message.AppendLine(stdOutput.ToString());
-                            Console.WriteLine(message);
-                        }
-
-                        inProgress = false;
-                    }
-
-                    //string path = outputDir + "\\Content\\Runtime\\Textures\\" + shortFileName;
-                    //File.Delete(path + ".xnb");
-
-                    //We should delete the generated .xnb file in the directory now
-
-                    if (copyPath != null)
-                        File.Delete(copyPath);
-
-
-                });
-
-                loadModel(content, modelType, filePath.Split('.')[0]);
-            }
-            else loadModel(content, modelType, "");
         }
 
         public void unloadModel()
@@ -230,14 +195,24 @@ namespace DevilSoup
 
             if (model == null) return;
 
-            Matrix[] bones = null;
-            if (animationPlayer != null)
+            if (modelExtra != null)
             {
-                if (!ifPlay)
-                    animationPlayer.Update(new TimeSpan(0), true, Matrix.Identity);
 
-                bones = animationPlayer.GetSkinTransforms();
+                for (int i = 0; i < bones.Count; i++)
+                {
+                    Bone bone = bones[i];
+                    bone.ComputeAbsoluteTransform();
+
+                    boneTransforms[i] = bone.AbsoluteTransform;
+                }
+
+                for (int s = 0; s < modelExtra.Skeleton.Count; s++)
+                {
+                    Bone bone = bones[modelExtra.Skeleton[s]];
+                    skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
+                }
             }
+
 
             //// Draw the model.
             foreach (ModelMesh modelMesh in model.Meshes)
@@ -261,13 +236,15 @@ namespace DevilSoup
                     {
                         SkinnedEffect seffect = effect as SkinnedEffect;
 
-                        seffect.SetBoneTransforms(bones);
-
+                        seffect.SetBoneTransforms(skeleton);
                         seffect.World = world;
                         seffect.View = view;
                         seffect.Projection = projection;
 
                         seffect.EnableDefaultLighting();
+
+                        if (color != null)
+                            seffect.DiffuseColor = color ?? new Vector3(0.0f, 0.0f, 0.0f);
 
                         seffect.SpecularColor = new Vector3(0.25f);
                         seffect.SpecularPower = 16;

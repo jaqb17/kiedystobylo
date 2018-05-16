@@ -24,7 +24,7 @@ namespace DevilSoup
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
-        private Asset animTemplate;
+        //private Asset animTemplate;
         private ModelsInstancesClass models;
 
         //private BBRectangle billboardRect;
@@ -68,9 +68,9 @@ namespace DevilSoup
             cauldron = new Asset();
             cauldron.loadModel(Content, "Cauldron", "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-            
+
             gamepad = new Pad();
-            
+
             danceArea = new DanceArea(cauldron);
             font = Content.Load<SpriteFont>("HP");
 
@@ -79,12 +79,11 @@ namespace DevilSoup
             danceArea.FuelBarInitialize(Content);
 
             /*animTemplate = new Asset();
-            animTemplate.loadModel(Content, "Assets\\cyclop_atak\\mixamodemon");
+            animTemplate.loadModel(Content, "Cauldron", "Assets\\TestAnim\\muchomorStadnyAtak");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
             animTemplate.scaleAset(0.5f);
-            animTemplate.cameraPos = camera.Position;*/
-            
-            
+            animTemplate.cameraPos = camera.Position;
+            */
 
             base.Initialize();
         }
@@ -98,7 +97,7 @@ namespace DevilSoup
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             eff = new BasicEffect(GraphicsDevice);
-            
+
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
 
@@ -136,12 +135,9 @@ namespace DevilSoup
                 keyPressed = -1;
             }
 
-            //animTemplate.animationUpdate(gameTime.ElapsedGameTime);
-
             // TODO: Add your update logic here
             if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
             {
-                //animTemplate.ifPlay = !animTemplate.ifPlay;
                 started = !started;
                 availableToChange = false;
                 timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
@@ -222,9 +218,6 @@ namespace DevilSoup
                 }
             }
 
-            if (danceArea.isLogCreated == true)
-                danceArea.woodLog.Update(gameTime);
-
             danceArea.pastKeyPressed = danceArea.currentKeyPressed;
             base.Update(gameTime);
         }
@@ -240,7 +233,18 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
 
-            //animTemplate.DrawModel(camera.view, camera.projection);
+            /*animTemplate.DrawModel(camera.view, camera.projection);
+            if (animTemplate.HasAnimation())
+            {
+                if (animTemplate.Clips.Count > 0)
+                    animTemplate.animationUpdate(gameTime);
+
+                if (!animTemplate.ifPlay)
+                {
+                    animTemplate.PlayClip(animTemplate.Clips[0], true);
+                    animTemplate.ifPlay = true;
+                }
+            }*/
 
             spriteBatch.Begin();
             //danceArea.DrawFuelBar(spriteBatch);
@@ -281,7 +285,7 @@ namespace DevilSoup
             spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
             //danceArea.DrawFuelBar(spriteBatch);
             spriteBatch.End();
-            
+
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
@@ -290,12 +294,12 @@ namespace DevilSoup
             {
                 danceArea.moveSoul(camera.view, camera.projection);
                 if (danceArea.isLogCreated == true)
-                    danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
+                    danceArea.woodLog.drawWoodenLog(gameTime, camera.view, camera.projection);
                 //if (billboardRect != null)
-                    //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
+                //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
             }
 
-            
+
             base.Draw(gameTime);
         }
 

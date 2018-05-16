@@ -167,11 +167,12 @@ namespace DevilSoup
         public void createLog(ContentManager content)
         {
             //woodLog = new WoodenLog();
-            woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
+            //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
+            woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
         }
         public void moveLog()
         {
-            if (woodLog.log.IfPlay) return;
+            if (woodLog.log.ifPlay) return;
 
             Vector3 newLogPosition = woodLog.position;
 
@@ -192,6 +193,8 @@ namespace DevilSoup
 
         public void moveLog(Vector3 offset)
         {
+            if (woodLog.log.ifPlay) return;
+
             Vector3 newLogPosition = woodLog.position;
             newLogPosition += offset / 3;
             woodLog.setPosition(newLogPosition);

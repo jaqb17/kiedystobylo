@@ -29,28 +29,32 @@ namespace DevilSoup
             position = new Vector3(100f, 0, 10);
             log = new Asset();
 
-            log.LoadContentFile(content, "Wood", path);
-            //log.loadModel(content, path);
+            //log.LoadContentFile(content, "Wood", path);
+            log.loadModel(content, "Wood", path);
         }
         public void setPosition(Vector3 _position)
         {
+            if (log.ifPlay) return;
+
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
-            this.log.scaleAset(3f);
-            //this.log.scaleAset(0.3f);
+            //this.log.scaleAset(3f);
+            this.log.scaleAset(0.3f);
             //Console.WriteLine(this.position);
         }
-        public void drawWoodenLog(Matrix view, Matrix projection)
+        public void drawWoodenLog(GameTime gameTime, Matrix view, Matrix projection)
         {
             if (this.log != null)
+            {
                 this.log.DrawModel(view, projection);
+                Update(gameTime);
+            }
         }
         public void destroyLog()
         {
             if (this.log == null) return;
 
             Console.WriteLine("Zniszczono");
-            this.log.IfPlay = true;
             this.log.ifDamageAfterPlay = true;
         }
 
@@ -58,15 +62,19 @@ namespace DevilSoup
         {
             if (this.log == null) return;
 
-            if (this.log.IfPlay)
+            if (this.log.HasAnimation())
             {
-                DateTime animationBeginTime = this.log.animationStarted;
-                this.log.animationUpdate(gameTime.ElapsedGameTime);
+                if (this.log.Clips.Count > 0)
+                    this.log.animationUpdate(gameTime);
 
-                if (animationBeginTime.AddMilliseconds(this.log.animationLength) < DateTime.Now)
+                if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
-                    this.log.IfPlay = false;
-                    this.log.ifDamageAfterPlay = false;
+                    this.log.PlayClip(this.log.Clips[0], false);
+                    this.log.ifPlay = true;
+                }
+
+                if (this.log.finishedAnimation && this.log.ifDamageAfterPlay)
+                {
                     this.log.unloadModel();
                     this.log = null;
                     isLogCreated = false;
