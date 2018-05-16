@@ -168,7 +168,7 @@ namespace DevilSoup
         {
             //woodLog = new WoodenLog();
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
-            woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
+            woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
         }
         public void moveLog()
         {

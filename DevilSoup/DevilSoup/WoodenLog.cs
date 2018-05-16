@@ -38,8 +38,7 @@ namespace DevilSoup
 
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
-            //this.log.scaleAset(3f);
-            this.log.scaleAset(0.3f);
+            this.log.scaleAset(4f);
             //Console.WriteLine(this.position);
         }
         public void drawWoodenLog(GameTime gameTime, Matrix view, Matrix projection)
