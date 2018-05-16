@@ -18,6 +18,7 @@ namespace DevilSoup
             models.Add("Ice", null);
             models.Add("Wood", null);
             models.Add("Water", null);
+            models.Add("Test", null);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace DevilSoup
             danceArea.FuelBarInitialize(Content);
 
             /*animTemplate = new Asset();
-            animTemplate.loadModel(Content, "Cauldron", "Assets\\TestAnim\\muchomorStadnyAtak");
+            animTemplate.loadModel(Content, "Test", "Assets\\TestAnim\\muchomorStadnyAtak");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
             animTemplate.scaleAset(0.5f);
             animTemplate.cameraPos = camera.Position;
