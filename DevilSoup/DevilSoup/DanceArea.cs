@@ -27,8 +27,8 @@ namespace DevilSoup
         public double heatValue = 2f;
         private Player player;
         public WoodenLog woodLog { get; set; }
-        public FireFuelBar fuelBar { get; set; }
-
+        public Fireplace fuelBar { get; set; }
+        private Vector3 soulColor, sred, sblue, sgreen;
         public bool isLogCreated
         {
             get
@@ -48,6 +48,9 @@ namespace DevilSoup
             for (int i = 0; i < numberOfAreas; i++) killWithAnimation[i] = false;
             player = Player.getPlayer();
             combo = Combo.createCombo();
+            sred = new Vector3(255.0f, 0.0f, 0.0f);
+            sgreen = new Vector3(0.0f, 255.0f, 0.0f);
+            sblue = new Vector3(0.0f, 0.0f, 255.0f);
         }
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
@@ -123,7 +126,14 @@ namespace DevilSoup
             {
                 if (singleAreas[i] != null)
                 {
-                    singleAreas[i].updateSoul(view, projection);
+                    if (i == 3 || i == 4)
+                        soulColor = sred;
+                    if (i == 2 || i == 5 || i == 7 || i == 0)
+                        soulColor = sgreen;
+                    if (i == 1 || i == 6)
+                        soulColor = sblue;
+                    //singleAreas[i].updateSoul(view, projection);
+                    singleAreas[i].updateColorDefinedSoul(view, projection, soulColor);
                     if (this.killWithAnimation[i])
                     {
                         singleAreas[i].killWithAnimation(view, projection);
@@ -337,7 +347,7 @@ namespace DevilSoup
         }
         public void FuelBarInitialize(ContentManager content)
         {
-            fuelBar = new FireFuelBar(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
+            fuelBar = new Fireplace(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
         }
         public void DrawFuelBar(SpriteBatch _batch)
         {

@@ -26,7 +26,7 @@ namespace DevilSoup
         private Combo combo;
         //private Asset animTemplate;
         private ModelsInstancesClass models;
-
+        private Vector3 red, yellow, orange, standard, currentCauldronColor;
         //private BBRectangle billboardRect;
         int timeDelayed = 0;
         bool availableToChange = true;
@@ -78,6 +78,13 @@ namespace DevilSoup
             combo = Combo.createCombo();
             danceArea.FuelBarInitialize(Content);
 
+            #region Cauldron colors vector3
+            red = new Vector3(6f, 1f, 1f);
+            orange = new Vector3(4f, 2f, 1f);
+            yellow = new Vector3(3f, 3f, 1f);
+            standard = new Vector3(1f, 1f, 1f);
+            currentCauldronColor = yellow;
+            #endregion
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Test", "Assets\\TestAnim\\muchomorStadnyAtak");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
@@ -162,6 +169,17 @@ namespace DevilSoup
 
             if (started)
             {
+                #region Cauldron Color Logic
+                if (danceArea.heatValue < 1.5)
+                    currentCauldronColor = standard;
+                if (danceArea.heatValue > 1.5)
+                    currentCauldronColor = yellow;
+                if (danceArea.heatValue > 3)
+                    currentCauldronColor = orange;
+                if (danceArea.heatValue > 4.5)
+                    currentCauldronColor = red;
+                #endregion
+
                 if (danceArea.fuelBar.fuelValue < 0)
                     danceArea.fuelBar.fuelValue = 0;
                 danceArea.fuelBar.fuelValue -= 0.006;
@@ -231,7 +249,8 @@ namespace DevilSoup
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
+            //cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
+            cauldron.DrawModel(camera.view, camera.projection, currentCauldronColor);
 
             /*animTemplate.DrawModel(camera.view, camera.projection);
             if (animTemplate.HasAnimation())

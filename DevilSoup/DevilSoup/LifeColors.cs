@@ -12,6 +12,6 @@ namespace DevilSoup
         Red = 1,
         Green = 2,
         Blue = 3,
-        Brown = 4
+        Brown = 4,
     }
 }

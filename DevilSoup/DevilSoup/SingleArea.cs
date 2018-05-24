@@ -74,6 +74,10 @@ namespace DevilSoup
             if (soul != null)
                 this.soul.drawSoul(view, projection);
         }
-
+        public void updateColorDefinedSoul(Matrix view, Matrix projection, Vector3 _color)
+        {
+            if (soul != null)
+                this.soul.drawColorDefinedSoul(view, projection, _color);
+        }
     }
 }

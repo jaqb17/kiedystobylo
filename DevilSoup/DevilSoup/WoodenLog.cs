@@ -13,6 +13,7 @@ namespace DevilSoup
         public Asset log { get; private set; }
         public Vector3 position { get; set; }
         private float fireBoostValue { get; set; }
+        public double decayValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isLogCreated { get; set; }
 
@@ -55,6 +56,11 @@ namespace DevilSoup
 
             Console.WriteLine("Zniszczono");
             this.log.ifDamageAfterPlay = true;
+        }
+
+        public void woodenLogDecayChange(double _changeValue)
+        {
+            decayValue -= _changeValue;
         }
 
         public void Update(GameTime gameTime)

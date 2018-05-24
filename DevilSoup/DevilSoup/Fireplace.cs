@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 
 namespace DevilSoup
 {
-    public class FireFuelBar
+    public class Fireplace
     {
         public Rectangle barRectangle;
         public Texture2D texture { get; set; }
         public Vector2 position { get; set; }
+        private List<WoodenLog> LogsUnderCauldron;
         public double fuelValue;
 
-        public FireFuelBar(Vector2 _position, string texturePath, ContentManager content)
+        public Fireplace(Vector2 _position, string texturePath, ContentManager content)
         {
             position = _position;
             texture = content.Load<Texture2D>(texturePath);
             barRectangle = new Rectangle((int)_position.X, (int)_position.Y, 400, 400);
             fuelValue = 3;
+            LogsUnderCauldron = null;
         }
         public void fuelValueChange (int changeValue)
         {
@@ -45,5 +47,31 @@ namespace DevilSoup
                 return true;
             return false;
         }
+        public void addLogUnderCauldron()
+        {
+            //LogsUnderCauldron.Add
+        }
+        public float calculateFireValue()
+        {
+            return LogsUnderCauldron.Count;
+        }
+        public void updateLogDecayRatio()
+        {
+            foreach (var log in LogsUnderCauldron)
+            {
+                log.decayValue -= 0.01;
+                if (log.decayValue <= 0)
+                    LogsUnderCauldron.Remove(log);
+            }
+        }
+
+        /*public void drawWoodenLogs()
+        {
+            foreach (var log in LogsUnderCauldron)
+            {
+                if
+            }
+        }
+        */
     }   
 }

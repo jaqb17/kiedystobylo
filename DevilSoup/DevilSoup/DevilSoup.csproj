@@ -52,7 +52,7 @@
     <Compile Include="Component.cs" />
     <Compile Include="DanceArea.cs" />
     <Compile Include="desiredSingleAreasIndexes.cs" />
-    <Compile Include="FireFuelBar.cs" />
+    <Compile Include="Fireplace.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="LifeColors.cs" />
@@ -67,7 +67,7 @@
     <Compile Include="SingleAreasIndexes.cs" />
     <Compile Include="Soul.cs" />
     <Compile Include="Transform.cs" />
-    <Compile Include="Water.cs" />
+    <Compile Include="Ice.cs" />
     <Compile Include="WoodenLog.cs" />
   </ItemGroup>
   <ItemGroup>

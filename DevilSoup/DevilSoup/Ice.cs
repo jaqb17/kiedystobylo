@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace DevilSoup
 {
-    class Water
+    class Ice
     {
         Asset asset;
         public Vector3 position { get; set; }
         private float fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
-        public Water()
+        public Ice()
         {
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
         }
-        public Water(ContentManager content, string path)
+        public Ice(ContentManager content, string path)
         {
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);

@@ -60,6 +60,12 @@ namespace DevilSoup
                 this.soul.DrawModel(view, projection, defineColor());
         }
 
+        public void drawColorDefinedSoul(Matrix view, Matrix projection, Vector3 _color)
+        {
+            if (this.soul != null)
+                this.soul.DrawModel(view, projection, _color);
+        }
+
         public void killSoulWithAnimation(Matrix view, Matrix projection)
         {
             float xCoord = 1.001f, yCoord = 0.95f, zCoord = 1.001f;
