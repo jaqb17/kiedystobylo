@@ -66,13 +66,18 @@
     <Compile Include="SingleArea.cs" />
     <Compile Include="SingleAreasIndexes.cs" />
     <Compile Include="Soul.cs" />
+    <Compile Include="Sprites.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="Water.cs" />
     <Compile Include="WoodenLog.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MGSkinnedAnimationAux, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationAux.dll</HintPath>
+    </Reference>
     <Reference Include="MGSkinnedAnimationPipeline">
-      <HintPath>Content\mgcb\MGSkinnedAnimationPipeline.dll</HintPath>
+      <HintPath>..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationPipeline.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
@@ -105,12 +110,6 @@
     <None Include="packages.config" />
     <None Include="WiimoteLib_Extras\docs\WiimoteLib.chm" />
     <None Include="WiimoteLib_Extras\samples.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MGSkinnedAnimationAux\MGSkinnedAnimationAux.csproj">
-      <Project>{d1cc382b-7d83-4ab0-9978-dfdafde7f027}</Project>
-      <Name>MGSkinnedAnimationAux</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

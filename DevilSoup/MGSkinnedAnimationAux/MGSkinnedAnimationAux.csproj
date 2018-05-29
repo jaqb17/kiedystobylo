@@ -41,10 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationClip.cs" />
-    <Compile Include="AnimationClipReader.cs" />
     <Compile Include="Bone.cs" />
     <Compile Include="ModelExtra.cs" />
-    <Compile Include="ModelExtraReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

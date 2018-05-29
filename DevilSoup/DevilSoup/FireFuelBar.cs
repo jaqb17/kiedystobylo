@@ -35,6 +35,15 @@ namespace DevilSoup
             if (barRectangle.Width > texture.Width)
                 barRectangle.Width = texture.Width;
         }
+
+        public void Update(GameTime gameTime)
+        {
+            if (fuelValue < 0)
+                fuelValue = 0;
+
+            fuelValue -= 0.006;
+        }
+
         //public double getFuelValue()
         //{
         //    return fuelValue;

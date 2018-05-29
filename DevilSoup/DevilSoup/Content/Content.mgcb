@@ -12,6 +12,8 @@
 
 /reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationAux.dll
 /reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationPipeline.dll
+/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModel.dll
+/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModelPipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -89,7 +91,7 @@
 /processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:DefaultEffect=BasicEffect
 /processorParam:GenerateMipmaps=True
 /processorParam:GenerateTangentFrames=False
 /processorParam:PremultiplyTextureAlpha=True
@@ -108,7 +110,7 @@
 /processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:DefaultEffect=BasicEffect
 /processorParam:GenerateMipmaps=True
 /processorParam:GenerateTangentFrames=False
 /processorParam:PremultiplyTextureAlpha=True

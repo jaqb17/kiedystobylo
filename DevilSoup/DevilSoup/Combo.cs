@@ -22,7 +22,22 @@ namespace DevilSoup
         private static Combo instance;
         private float transparency;
         private Thread comboThread;
+        private SpriteBatch spriteBatch;
+        private Player player;
+        private GraphicsDeviceManager graphics;
+        private bool ifGameStarted = false;
 
+        public bool IfGameStarted
+        {
+            get
+            {
+                return ifGameStarted;
+            }
+            set
+            {
+                ifGameStarted = value;
+            }
+        }
 
         public static Combo createCombo()
         {
@@ -34,6 +49,35 @@ namespace DevilSoup
         private Combo()
         {
             defineCombos();
+        }
+
+        public void Initialize(GraphicsDeviceManager graphics)
+        {
+            player = Player.getPlayer();
+            this.graphics = graphics;
+        }
+
+        public void LoadContent(SpriteBatch spriteBatch)
+        {
+            this.spriteBatch = spriteBatch;
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            if (player.hp > 0)
+            {
+                if (getIfComboIsActive() && ifGameStarted)
+                {
+                    for (int i = 0; i < 9; i++)
+                    {
+                        spriteBatch.Draw(drawMap(graphics, i), getRectangleCoord(graphics, i), getColor());
+                    }
+                }
+            }
+            else
+            {
+                stopComboLoop();
+            }
         }
 
         public void startComboLoop()

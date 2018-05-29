@@ -31,7 +31,6 @@ namespace DevilSoup
         /// </summary>
         private List<Bone> bones = new List<Bone>();
 
-
         private Matrix[] skeleton;
 
         private Matrix[] boneTransforms;
@@ -68,7 +67,7 @@ namespace DevilSoup
 
         #endregion
 
-        public Asset(){}
+        public Asset() { }
 
         public Asset(Model model, Vector3 cameraPos)
         {
@@ -123,21 +122,21 @@ namespace DevilSoup
 
         public void animationUpdate(GameTime gameTime)
         {
-            if(animationDelay > 0)
+            if (animationDelay > 0)
             {
                 animationDelayCounter++;
                 if (animationDelayCounter > animationDelay)
                     animationDelayCounter = 0;
             }
 
-            if(ifDamageAfterPlay)
+            if (ifDamageAfterPlay)
             {
                 if (player?.Position >= player?.Duration)
                 {
                     this.finishedAnimation = true;
                 }
             }
-            
+
             if (animationDelayCounter == 0)
                 player?.Update(gameTime);
         }
@@ -155,10 +154,10 @@ namespace DevilSoup
             return player;
         }
 
-        public void loadModel(ContentManager content, string modelType, String path)
+        public void loadModel(ContentManager content, String path)
         {
 
-            if (ModelsInstancesClass.models[modelType] == null)
+            /*if (ModelsInstancesClass.models[modelType] == null)
             {
                 try
                 {
@@ -170,8 +169,9 @@ namespace DevilSoup
                     Debug.WriteLine("Element o tym kluczu juz byl dodany. Klasa: Asset, Linia: 74");
                 }
             }
-            else this.model = ModelsInstancesClass.models[modelType];
+            else this.model = ModelsInstancesClass.models[modelType];*/
 
+            this.model = content.Load<Model>(path);
             modelExtra = model.Tag as ModelExtra;
 
             if (modelExtra != null)
@@ -190,10 +190,22 @@ namespace DevilSoup
             model = null;
         }
 
-        public void DrawModel(Matrix view, Matrix projection, Vector3? color = null)
+        public void Draw(GameTime gameTime, Matrix view, Matrix projection, Vector3? color = null)
         {
 
             if (model == null) return;
+
+            if (this.HasAnimation())
+            {
+                if (this.Clips.Count > 0)
+                    this.animationUpdate(gameTime);
+
+                if (!this.ifPlay)
+                {
+                    this.PlayClip(this.Clips[0], true);
+                    //this.ifPlay = true;
+                }
+            }
 
             if (modelExtra != null)
             {
@@ -236,10 +248,10 @@ namespace DevilSoup
                     {
                         SkinnedEffect seffect = effect as SkinnedEffect;
 
-                        seffect.SetBoneTransforms(skeleton);
                         seffect.World = world;
                         seffect.View = view;
                         seffect.Projection = projection;
+                        seffect.SetBoneTransforms(skeleton);
 
                         seffect.EnableDefaultLighting();
 

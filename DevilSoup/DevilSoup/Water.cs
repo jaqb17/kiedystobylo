@@ -16,31 +16,39 @@ namespace DevilSoup
         public bool isDestroyable { get; set; }
         public Water()
         {
-            isDestroyable = false;
-            position = new Vector3(150f, 0, 0);
+            Initialize();
         }
+
         public Water(ContentManager content, string path)
         {
-            isDestroyable = false;
-            position = new Vector3(150f, 0, 0);
+            Initialize();
             asset = new Asset();
-            asset.loadModel(content, "Water", path);
-            fireBoostValue = -0.1f;
+            asset.loadModel(content, path);
         }
-        public void setPosition(Vector3 _position)
+
+        public void SetPosition(Vector3 _position)
         {
             this.position = _position;
             //this.log.world = Matrix.CreateTranslation(position);
             //this.log.scaleAset(0.3f);
             //Console.WriteLine(this.position);
         }
-        public void drawWater(Matrix view, Matrix projection)
+
+        public void Initialize()
+        {
+            isDestroyable = false;
+            position = new Vector3(150f, 0, 0);
+            fireBoostValue = -0.1f;
+        }
+
+        public void Draw(GameTime gameTime, Matrix view, Matrix projection)
         {
             
             if (this.asset != null)
-                this.asset.DrawModel(view, projection,new Vector3(0,255,0));
+                this.asset.Draw(gameTime, view, projection,new Vector3(0,255,0));
         }
-        public void destroyWater()
+
+        public void DestroyWater()
         {
             Console.WriteLine("Woda wzieta");
             //this.log.unloadModel();

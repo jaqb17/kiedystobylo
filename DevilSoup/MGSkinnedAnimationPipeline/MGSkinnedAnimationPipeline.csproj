@@ -40,9 +40,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimationClipWriter.cs" />
     <Compile Include="AnimationProcessor.cs" />
-    <Compile Include="ModelExtraWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

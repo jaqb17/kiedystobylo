@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DevilSoup
@@ -18,7 +14,6 @@ namespace DevilSoup
         private const int numberOfAreas = 8;
         private Vector3 origin;
         private SingleArea[] singleAreas;
-        private bool[] killWithAnimation;
         private float radius;
         private Combo combo;
         public float baseSoulsSpeed { get; set; }
@@ -28,6 +23,23 @@ namespace DevilSoup
         private Player player;
         public WoodenLog woodLog { get; set; }
         public FireFuelBar fuelBar { get; set; }
+
+        private Camera camera;
+        private Pad gamepad;
+        private ContentManager content;
+        int timeDelayed = 0;
+        bool availableToChange = true;
+        int createSoulTimeDelay = 0;
+        bool ifCreateSoul = true;
+        bool ifCheckAccelerometer = true;
+        int accelTimeDelay = 0;
+        private bool ifGameStarted = false;
+
+        public bool IfGameStarted
+        {
+            get { return ifGameStarted; }
+            set { ifGameStarted = value; }
+        }
 
         public bool isLogCreated
         {
@@ -44,10 +56,153 @@ namespace DevilSoup
             this.radius = cauldron.radius / 2.5f;
             this.origin = cauldron.center;
             singleAreas = new SingleArea[numberOfAreas];
-            killWithAnimation = new bool[numberOfAreas];
-            for (int i = 0; i < numberOfAreas; i++) killWithAnimation[i] = false;
             player = Player.getPlayer();
             combo = Combo.createCombo();
+        }
+
+        public void Initialize(ContentManager content, Camera camera)
+        {
+            this.content = content;
+            gamepad = new Pad();
+            this.camera = camera;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            int keyPressed;
+            currentKeyPressed = Keyboard.GetState();
+
+            if (gamepad.USBMatt != null)  keyPressed = gamepad.getKeyState();
+            else keyPressed = -1;
+
+            if ((keyPressed == 9 || currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
+            {
+                ifGameStarted = !ifGameStarted;
+                combo.IfGameStarted = ifGameStarted;
+                availableToChange = false;
+                timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
+
+                if (ifGameStarted)
+                {
+                    Player.reset();
+                    player = Player.getPlayer();
+                    combo.startComboLoop();
+                }
+                else this.reset();
+            }
+
+            if (!availableToChange)
+            {
+                timeDelayed--;
+                if (timeDelayed <= 0)
+                {
+                    availableToChange = true;
+                }
+            }
+
+            if (ifGameStarted)
+            {
+                fuelBar.Update(gameTime);
+                calculateHeatValue(fuelBar.fuelValue);
+                readKey(keyPressed);
+                NumPadHitMapping();
+
+                if (heatValue <= 1)
+                    heatValue = 1;
+
+                if (ifCreateSoul)
+                {
+                    createSoul();
+                    ifCreateSoul = false;
+                    createSoulTimeDelay = 60 / (level + 1);
+                }
+
+                if (!ifCreateSoul)
+                {
+                    createSoulTimeDelay--;
+                    if (createSoulTimeDelay <= 0)
+                    {
+                        ifCreateSoul = true;
+                    }
+                }
+
+                if (ifCheckAccelerometer)
+                {
+                    ifCheckAccelerometer = false;
+                    accelTimeDelay = 10;
+                }
+
+                if (!ifCheckAccelerometer)
+                {
+                    accelTimeDelay--;
+                    if (accelTimeDelay <= 0)
+                    {
+                        ifCheckAccelerometer = true;
+                    }
+                }
+
+                if (isLogCreated == false)
+                {
+                    createLog();
+                }
+                if (isLogCreated == true)
+                {
+                    woodLog.Update(gameTime);
+
+                    //danceArea.moveLog(gamepad.accelerometerStatus());
+                    if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true)
+                    {
+                        woodLogDestroySuccessfulHit(15);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                    }
+                }
+            }
+
+            pastKeyPressed = currentKeyPressed;
+        }
+
+        private void moveSouls(GameTime gameTime)
+        {
+            for (int i = 0; i < numberOfAreas; i++)
+            {
+                if (singleAreas[i] != null)
+                {
+                    singleAreas[i].baseSoulsSpeed = baseSoulsSpeed;
+                    singleAreas[i].heatValue = heatValue;
+                    singleAreas[i].Draw(gameTime);
+
+                    if (!singleAreas[i].ifSoulIsAlive && !singleAreas[i].ifSoulIsAnimated)
+                        singleAreas[i] = null;
+
+                }
+            }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            if (ifGameStarted)
+            {
+                moveSouls(gameTime);
+
+                if (isLogCreated == true)
+                    woodLog.Draw(gameTime);
+                //if (billboardRect != null)
+                //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
+            }
+
+            switch (level)
+            {
+                case 0:
+                    baseSoulsSpeed = 0.03f;
+                    break;
+                case 1:
+                    baseSoulsSpeed = 0.04f;
+                    break;
+                case 2:
+                    baseSoulsSpeed = 0.05f;
+                    break;
+            }
         }
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
@@ -62,16 +217,17 @@ namespace DevilSoup
             return result;
         }
 
-        public void createSoul(ContentManager content)
+        private void createSoul()
         {
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
             if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
                 singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
+                singleAreas[i].Initialize(camera);
             }
         }
 
-        public void reset()
+        private void reset()
         {
             for (int i = 0; i < numberOfAreas; i++)
             {
@@ -86,60 +242,8 @@ namespace DevilSoup
             }
             combo.stopComboLoop();
         }
-        public void moveSoul(Matrix view, Matrix projection)
-        {
-            for (int i = 0; i < numberOfAreas; i++)
-            {
-                if (singleAreas[i] != null && singleAreas[i].soul != null)
-                {
-                    if (singleAreas[i].ifSoulIsAlive)
-                    {
-                        Vector3 newPos = singleAreas[i].soulPosition;
-                        if (this.singleAreas[i].soul.lifes > 0)
-                            newPos.Y += baseSoulsSpeed * (float)heatValue;
 
-                        singleAreas[i].moveSoul(newPos);
-                        if (newPos.Y >= escape_height)
-                        {
-                            this.Escaped(singleAreas[i].soul.lifes * 10);
-                            singleAreas[i].soul.killSoul();
-                            singleAreas[i] = null;
-                        }
-                        else if (singleAreas[i].soul.lifes < 0)
-                        {
-                            this.Killed();
-                            singleAreas[i].soul.killSoul();
-                            singleAreas[i] = null;
-                        }
-                    }
-                    updateSoul(view, projection);
-                }
-            }
-        }
-
-        private void updateSoul(Matrix view, Matrix projection)
-        {
-            for (int i = 0; i < numberOfAreas; i++)
-            {
-                if (singleAreas[i] != null)
-                {
-                    singleAreas[i].updateSoul(view, projection);
-                    if (this.killWithAnimation[i])
-                    {
-                        singleAreas[i].killWithAnimation(view, projection);
-                        this.killWithAnimation[i] = false;
-                    }
-                }
-            }
-        }
-
-        public void Escaped(int power)
-        {
-            player = Player.getPlayer();
-            player.hp -= power;
-        }
-
-        public void Killed()
+        private void Killed()
         {
             player = Player.getPlayer();
             player.points += (this.level + 1);
@@ -158,62 +262,31 @@ namespace DevilSoup
         private void takeAllSoulHP(int id)
         {
             if (singleAreas[id] != null)
-                killWithAnimation[id] = true;
+            {
+                singleAreas[id].ifSoulIsAnimated = true;
+                singleAreas[id].killWithAnimation();
+            }
 
             this.Killed();
         }
 
         //WoodLog Methods
-        public void createLog(ContentManager content)
+        private void createLog()
         {
             //woodLog = new WoodenLog();
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
             woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-        }
-        public void moveLog()
-        {
-            if (woodLog.log.ifPlay) return;
-
-            Vector3 newLogPosition = woodLog.position;
-
-            newLogPosition.X -= 1f;
-            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 50;
-            //newLogPosition.Y += 0.1f;
-            //if (newLogPosition.X < 0f)
-            //    newLogPosition.Y -= 0.1f;
-            woodLog.setPosition(newLogPosition);
-            if (woodLog.position.Y > 48.5f)
-                woodLog.isDestroyable = true;
-            else
-                woodLog.isDestroyable = false;
-            if (newLogPosition.X < -100f)
-                woodLogDestroyFailedToHit();
-
+            woodLog.Initialization(camera);
         }
 
-        public void moveLog(Vector3 offset)
-        {
-            if (woodLog.log.ifPlay) return;
-
-            Vector3 newLogPosition = woodLog.position;
-            newLogPosition += offset / 3;
-            woodLog.setPosition(newLogPosition);
-        }
-
-        private void woodLogDestroyFailedToHit()
-        {
-            this.woodLog.isLogCreated = false;
-            this.woodLog = null;
-        }
-
-        public void calculateHeatValue(double _var)
+        private void calculateHeatValue(double _var)
         {
             double difference = _var - heatValue;
 
             heatValue += difference / 500;
         }
 
-        public void woodLogDestroySuccessfulHit(int _fuelValueChange)
+        private void woodLogDestroySuccessfulHit(int _fuelValueChange)
         {
             //Add fuel to the flames
             woodLog.destroyLog();
@@ -235,7 +308,7 @@ namespace DevilSoup
         }
 
         //Keymapping
-        public void readKey(int key)
+        private void readKey(int key)
         {
             switch (key)
             {
@@ -281,7 +354,7 @@ namespace DevilSoup
             }
         }
 
-        public void NumPadHitMapping()
+        private void NumPadHitMapping()
         {
             if (currentKeyPressed.IsKeyDown(Keys.NumPad1) && pastKeyPressed.IsKeyUp(Keys.NumPad1))
             {
@@ -335,10 +408,12 @@ namespace DevilSoup
                 woodLogDestroySuccessfulHit(25);
             }
         }
+
         public void FuelBarInitialize(ContentManager content)
         {
             fuelBar = new FireFuelBar(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
         }
+
         public void DrawFuelBar(SpriteBatch _batch)
         {
             _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
