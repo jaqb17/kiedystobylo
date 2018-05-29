@@ -15,6 +15,7 @@ namespace DevilSoup
         private float fireBoostValue { get; set; }
         public double decayValue { get; set; }
         public bool isDestroyable { get; set; }
+        public bool isDestroyed { get; set; }
         public bool isLogCreated { get; set; }
 
         public WoodenLog()
@@ -23,13 +24,14 @@ namespace DevilSoup
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
         }
-        public WoodenLog(ContentManager content, string path)
+        public WoodenLog(ContentManager content, string path, Vector3 _initialPosition)
         {
             isLogCreated = true;
             isDestroyable = false;
-            position = new Vector3(100f, 0, 10);
+            position = _initialPosition;
             log = new Asset();
-
+            decayValue = 5;
+            isDestroyed = false;
             //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, "Wood", path);
         }

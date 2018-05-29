@@ -178,7 +178,7 @@ namespace DevilSoup
         {
             //woodLog = new WoodenLog();
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
-            woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+            woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", new Vector3(100f, 0, 10));
         }
         public void moveLog()
         {
@@ -227,6 +227,7 @@ namespace DevilSoup
         {
             //Add fuel to the flames
             woodLog.destroyLog();
+            
             //fuelBar.fuelValueChange(_fuelValueChange);
             fuelBar.fuelValue += 1f;
         }

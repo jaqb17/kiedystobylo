@@ -27,6 +27,7 @@ namespace DevilSoup
         //private Asset animTemplate;
         private ModelsInstancesClass models;
         private Vector3 red, yellow, orange, standard, currentCauldronColor;
+        public WoodenLog testLog;
         //private BBRectangle billboardRect;
         int timeDelayed = 0;
         bool availableToChange = true;
@@ -64,11 +65,11 @@ namespace DevilSoup
             camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
-            IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
+            IsFixedTimeStep = true; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
             cauldron = new Asset();
             cauldron.loadModel(Content, "Cauldron", "Assets\\Cauldron\\RictuCauldron");
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-
+            //testLog = new WoodenLog(Content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", new Vector3(0f, 0, 10));
             gamepad = new Pad();
 
             danceArea = new DanceArea(cauldron);
@@ -85,6 +86,7 @@ namespace DevilSoup
             standard = new Vector3(1f, 1f, 1f);
             currentCauldronColor = yellow;
             #endregion
+           
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Test", "Assets\\TestAnim\\muchomorStadnyAtak");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
@@ -182,10 +184,12 @@ namespace DevilSoup
 
                 if (danceArea.fuelBar.fuelValue < 0)
                     danceArea.fuelBar.fuelValue = 0;
-                danceArea.fuelBar.fuelValue -= 0.006;
+                //danceArea.fuelBar.fuelValue -= 0.006;
+                danceArea.fuelBar.calculateFuelValue();
                 danceArea.calculateHeatValue(danceArea.fuelBar.fuelValue);
                 danceArea.readKey(keyPressed);
                 danceArea.NumPadHitMapping();
+                danceArea.fuelBar.updateLogDecayRatio(0.005);
                 if (danceArea.heatValue <= 1)
                     danceArea.heatValue = 1;
                 if (ifCreateSoul)
@@ -227,9 +231,11 @@ namespace DevilSoup
                 {
                     danceArea.moveLog();
                     //danceArea.moveLog(gamepad.accelerometerStatus());
-                    if (gamepad.swung() > 6.5f && danceArea.woodLog.isDestroyable == true)
+                    if (gamepad.swung() > 6.5f && danceArea.woodLog.isDestroyable == true && danceArea.woodLog.isDestroyed == false)
                     {
+                        danceArea.woodLog.isDestroyed = true;
                         danceArea.woodLogDestroySuccessfulHit(15);
+                        danceArea.fuelBar.addLogUnderCauldron(Content);
                         //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
                         //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
                     }
@@ -249,8 +255,9 @@ namespace DevilSoup
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            //testLog.drawWoodenLog(gameTime, camera.view, camera.projection);
             //cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
-            cauldron.DrawModel(camera.view, camera.projection, currentCauldronColor);
+            //cauldron.DrawModel(camera.view, camera.projection, currentCauldronColor);
 
             /*animTemplate.DrawModel(camera.view, camera.projection);
             if (animTemplate.HasAnimation())
@@ -311,6 +318,7 @@ namespace DevilSoup
             //billboardRect.DrawRect(eff, graphics.GraphicsDevice, camera.view, camera.projection, camera.world);
             if (started)
             {
+                //testLog.drawWoodenLog(gameTime, camera.view, camera.projection);
                 danceArea.moveSoul(camera.view, camera.projection);
                 if (danceArea.isLogCreated == true)
                     danceArea.woodLog.drawWoodenLog(gameTime, camera.view, camera.projection);

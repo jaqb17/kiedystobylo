@@ -18,55 +18,81 @@ namespace DevilSoup
         public double fuelValue;
         private const int maxLogsInFire = 4;
 
+        private Vector3[] logsPositions;
+
         public Fireplace(Vector2 _position, string texturePath, ContentManager content)
         {
+            logsPositions = new Vector3[maxLogsInFire];
             position = _position;
             texture = content.Load<Texture2D>(texturePath);
             barRectangle = new Rectangle((int)_position.X, (int)_position.Y, 400, 400);
             fuelValue = 3;
-            LogsUnderCauldron = new WoodenLog[4];
+            LogsUnderCauldron = new WoodenLog[maxLogsInFire];
+            for (int i = 0; i < maxLogsInFire; i++)
+                logsPositions[i] = new Vector3(i * 20f - 30f, 0, 5f);
             for (int i = 0; i < maxLogsInFire; i++)
                 LogsUnderCauldron[i] = null;
+            LogsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[0]);
+            LogsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[1]);
         }
         public void fuelValueChange (int changeValue)
         {
-            //fuelValue += changeValue;
-            //if (fuelValue >= 1)
-            //    fuelValue = 1;
-            //Console.WriteLine("Paliwo "+fuelValue);
-            //Console.WriteLine("Szerokosc " + barRectangle.Width);
-            //fuelValue += changeValue;
             barRectangle.Width += changeValue;
             if (barRectangle.Width > texture.Width)
                 barRectangle.Width = texture.Width;
         }
-        //public double getFuelValue()
-        //{
-        //    return fuelValue;
-        //}
         public bool isBarEmpty()
         {
             if (barRectangle.Width <= 0)
                 return true;
             return false;
         }
-        public void addLogUnderCauldron()
+        public void addLogUnderCauldron(ContentManager content)
         {
-            //LogsUnderCauldron.Add
+            if(LogsUnderCauldron[0]==null)
+            {
+                LogsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[0]);
+                return;
+            }
+            if (LogsUnderCauldron[1] == null)
+            {
+                LogsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[1]);
+                return;
+            }
+            if (LogsUnderCauldron[2] == null)
+            {
+                LogsUnderCauldron[2] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[2]);
+                return;
+            }
+            if (LogsUnderCauldron[3] == null)
+            {
+                LogsUnderCauldron[3] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", logsPositions[3]);
+                return;
+            }
         }
-        //public float calculateFireValue()
-        //{
-        //    return LogsUnderCauldron.Count;
-        //}
-        //public void updateLogDecayRatio()
-        //{
-        //    foreach (var log in LogsUnderCauldron)
-        //    {
-        //        log.decayValue -= 0.01;
-        //        if (log.decayValue <= 0)
-        //            LogsUnderCauldron.Remove(log);
-        //    }
-        //}
+        public void calculateFuelValue()
+        {
+            double fireValue=0;
+            for(int i = 0;i<maxLogsInFire;i++)
+            {
+                if (LogsUnderCauldron[i] != null)
+                    fireValue += 2;
+            }
+            fuelValue = fireValue;
+        }
+        public void updateLogDecayRatio(double _decayTick)
+        {
+            for(int i=0;i<maxLogsInFire;i++)
+            {
+                if (LogsUnderCauldron[i] != null)
+                {
+                    LogsUnderCauldron[i].decayValue -= _decayTick;
+                    if (LogsUnderCauldron[i].decayValue <= 0)
+                        LogsUnderCauldron[i] = null;
+                }
+            }
+         
+        }
 
         public void drawWoodenLogs(GameTime gameTime, Matrix view, Matrix projection)
         {
