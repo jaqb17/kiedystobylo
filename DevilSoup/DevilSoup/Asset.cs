@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Reflection;
 using System;
-using MGSkinnedAnimationAux;
+using SkinnedModel;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
@@ -24,48 +24,18 @@ namespace DevilSoup
         private int animationDelayCounter { get; set; } = 0;
         public bool ifDamageAfterPlay { get; set; } = false;
         public bool finishedAnimation { get; private set; } = false;
-        private ModelExtra modelExtra = null;
+        private AnimationPlayer animationPlayer = null;
 
-        /// <summary>
-        /// The model bones
-        /// </summary>
-        private List<Bone> bones = new List<Bone>();
-
-        private Matrix[] skeleton;
-
-        private Matrix[] boneTransforms;
-
-        private AnimationPlayer player = null;
+        public bool HasAnimation
+        {
+            get
+            {
+                return animationPlayer != null;
+            }
+        }
 
         //public double animationLength { get; private set; }
         //public DateTime animationStarted { get; private set; }
-
-        #region Properties
-
-        /// <summary>
-        /// The actual underlying XNA model
-        /// </summary>
-        public Model Model
-        {
-            get { return model; }
-        }
-
-        /// <summary>
-        /// The underlying bones for the model
-        /// </summary>
-        public List<Bone> Bones { get { return bones; } }
-
-        /// <summary>
-        /// The model animation clips
-        /// </summary>
-        public List<AnimationClip> Clips { get { return modelExtra.Clips; } }
-
-        public bool HasAnimation()
-        {
-            return modelExtra != null;
-        }
-
-        #endregion
 
         public Asset() { }
 
@@ -84,44 +54,21 @@ namespace DevilSoup
             computeCenter();
         }
 
-        #region Bones Management
-
-        /// <summary>
-        /// Get the bones from the model and create a bone class object for
-        /// each bone. We use our bone class to do the real animated bone work.
-        /// </summary>
-        private void ObtainBones()
+        public void initializeClip(String clipName)
         {
-            bones.Clear();
-            foreach (ModelBone bone in model.Bones)
-            {
-                // Create the bone object and add to the heirarchy
-                Bone newBone = new Bone(bone.Name, bone.Transform, bone.Parent != null ? bones[bone.Parent.Index] : null);
+            if (animationPlayer == null)
+                return;
 
-                // Add to the bones for this model
-                bones.Add(newBone);
-            }
+            SkinningData skinningData = model.Tag as SkinningData;
+            AnimationClip clip = skinningData.AnimationClips[clipName];
+            animationPlayer.StartClip(clip);
         }
 
-        /// <summary>
-        /// Find a bone in this model by name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public Bone FindBone(string name)
+        public void animationUpdate(GameTime gameTime, bool relativeToCurrentTime = true, Matrix? rootTransform = null)
         {
-            foreach (Bone bone in Bones)
-            {
-                if (bone.Name == name)
-                    return bone;
-            }
-            return null;
-        }
+            if (!ifPlay)
+                return;
 
-        #endregion
-
-        public void animationUpdate(GameTime gameTime)
-        {
             if (animationDelay > 0)
             {
                 animationDelayCounter++;
@@ -129,16 +76,19 @@ namespace DevilSoup
                     animationDelayCounter = 0;
             }
 
+            if (rootTransform == null)
+                rootTransform = Matrix.Identity;
+
             if (ifDamageAfterPlay)
             {
-                if (player?.Position >= player?.Duration)
+                /*if (animationPlayer?.Position >= animationPlayer?.Duration)
                 {
                     this.finishedAnimation = true;
-                }
+                }*/
             }
 
             if (animationDelayCounter == 0)
-                player?.Update(gameTime);
+                animationPlayer.Update(gameTime.ElapsedGameTime, relativeToCurrentTime, (Matrix)rootTransform);
         }
 
 
@@ -147,40 +97,22 @@ namespace DevilSoup
         /// </summary>
         /// <param name="clip">The clip to play</param>
         /// <returns>The player that will play this clip</returns>
-        public AnimationPlayer PlayClip(AnimationClip clip, bool looping = true, int keyframestart = 0, int keyframeend = 0, int fps = 24)
+        /*public AnimationPlayer PlayClip(AnimationClip clip, bool looping = true, int keyframestart = 0, int keyframeend = 0, int fps = 24)
         {
             // Create a clip player and assign it to this model
-            player = new AnimationPlayer(clip, this, looping, keyframestart, keyframeend, fps);
-            return player;
-        }
+            //animationPlayer = new AnimationPlayer(clip, this, looping, keyframestart, keyframeend, fps);
+            animationPlayer.StartClip(clip);
+            return animationPlayer;
+        }*/
 
         public void loadModel(ContentManager content, String path)
         {
 
-            /*if (ModelsInstancesClass.models[modelType] == null)
-            {
-                try
-                {
-                    this.model = content.Load<Model>(path);
-                    ModelsInstancesClass.models[modelType] = this.model;
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Element o tym kluczu juz byl dodany. Klasa: Asset, Linia: 74");
-                }
-            }
-            else this.model = ModelsInstancesClass.models[modelType];*/
-
             this.model = content.Load<Model>(path);
-            modelExtra = model.Tag as ModelExtra;
+            SkinningData skinningData = model.Tag as SkinningData;
 
-            if (modelExtra != null)
-            {
-                ObtainBones();
-
-                boneTransforms = new Matrix[bones.Count];
-                skeleton = new Matrix[modelExtra.Skeleton.Count];
-            }
+            if (skinningData != null)
+                animationPlayer = new AnimationPlayer(skinningData);
 
             computeCenter();
         }
@@ -195,36 +127,14 @@ namespace DevilSoup
 
             if (model == null) return;
 
-            if (this.HasAnimation())
+            Matrix[] bones = null;
+            if (this.HasAnimation)
             {
-                if (this.Clips.Count > 0)
-                    this.animationUpdate(gameTime);
+                if (!ifPlay)
+                    animationPlayer.Update(new TimeSpan(0), true, Matrix.Identity);
 
-                if (!this.ifPlay)
-                {
-                    this.PlayClip(this.Clips[0], true);
-                    //this.ifPlay = true;
-                }
+                bones = animationPlayer.GetSkinTransforms();
             }
-
-            if (modelExtra != null)
-            {
-
-                for (int i = 0; i < bones.Count; i++)
-                {
-                    Bone bone = bones[i];
-                    bone.ComputeAbsoluteTransform();
-
-                    boneTransforms[i] = bone.AbsoluteTransform;
-                }
-
-                for (int s = 0; s < modelExtra.Skeleton.Count; s++)
-                {
-                    Bone bone = bones[modelExtra.Skeleton[s]];
-                    skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
-                }
-            }
-
 
             //// Draw the model.
             foreach (ModelMesh modelMesh in model.Meshes)
@@ -248,10 +158,11 @@ namespace DevilSoup
                     {
                         SkinnedEffect seffect = effect as SkinnedEffect;
 
+                        seffect.SetBoneTransforms(bones);
+
                         seffect.World = world;
                         seffect.View = view;
                         seffect.Projection = projection;
-                        seffect.SetBoneTransforms(skeleton);
 
                         seffect.EnableDefaultLighting();
 

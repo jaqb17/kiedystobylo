@@ -30,14 +30,13 @@ namespace DevilSoup
             isDestroyable = false;
             position = new Vector3(100f, 0, 10);
             log = new Asset();
-
-            //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, path);
         }
 
         public void Initialization(Camera camera)
         {
             this.camera = camera;
+            this.log.initializeClip("Take 001");
         }
 
         public void setPosition(Vector3 _position)
@@ -92,29 +91,25 @@ namespace DevilSoup
                 woodLogDestroyFailedToHit();
         }
 
-        private void moveLog(Vector3 offset)
-        {
-            if (log.ifPlay) return;
-
-            Vector3 newLogPosition = position;
-            newLogPosition += offset / 3;
-            setPosition(newLogPosition);
-        }
-
         public void Update(GameTime gameTime)
         {
             if (this.log == null) return;
 
             moveLog();
 
-            if (this.log.HasAnimation())
+            if (this.log.HasAnimation)
             {
-                if (this.log.Clips.Count > 0)
+                //if (this.log.Clips.Count > 0)
+                //    this.log.animationUpdate(gameTime);
+
+
+                if (this.log.ifPlay)
                     this.log.animationUpdate(gameTime);
 
                 if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
-                    this.log.PlayClip(this.log.Clips[0], false);
+                    //this.log.PlayClip(this.log.Clips[0], false);
+                    this.log.initializeClip("Take 001");
                     this.log.ifPlay = true;
                 }
 
