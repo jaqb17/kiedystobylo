@@ -25,6 +25,7 @@ namespace DevilSoup
         public bool ifDamageAfterPlay { get; set; } = false;
         public bool finishedAnimation { get; private set; } = false;
         private AnimationPlayer animationPlayer = null;
+        private TimeSpan animationLastTime;
 
         public bool HasAnimation
         {
@@ -81,14 +82,17 @@ namespace DevilSoup
 
             if (ifDamageAfterPlay)
             {
-                /*if (animationPlayer?.Position >= animationPlayer?.Duration)
+                if (animationLastTime != null && animationPlayer?.CurrentTime < animationLastTime)
                 {
                     this.finishedAnimation = true;
-                }*/
+                }
             }
 
             if (animationDelayCounter == 0)
+            {
+                animationLastTime = animationPlayer.CurrentTime;
                 animationPlayer.Update(gameTime.ElapsedGameTime, relativeToCurrentTime, (Matrix)rootTransform);
+            }
         }
 
 
