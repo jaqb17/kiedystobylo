@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGSkinnedAnimationPipeline
 {
@@ -40,10 +41,24 @@ namespace MGSkinnedAnimationPipeline
         /// <returns></returns>
         public override ModelContent Process(NodeContent input, ContentProcessorContext context)
         {
+
+            ValidateMesh(input, context, null);
+
             // Process the skeleton for skinned character animation
             BoneContent skeleton = ProcessSkeleton(input);
+            //BoneContent skeleton = MeshHelper.FindSkeleton(input);
 
-            SwapSkinnedMaterial(input);
+           // FlattenTransforms(input, skeleton);
+            //SwapSkinnedMaterial(input);
+
+            IList<BoneContent> bones = MeshHelper.FlattenSkeleton(skeleton);
+
+            if (bones.Count > SkinnedEffect.MaxBones)
+            {
+                throw new InvalidContentException(string.Format(
+                    "Skeleton has {0} bones, but the maximum supported is {1}.",
+                    bones.Count, SkinnedEffect.MaxBones));
+            }
 
             model = base.Process(input, context);
 
@@ -56,6 +71,61 @@ namespace MGSkinnedAnimationPipeline
         }
 
         #region Skeleton Support
+
+        /// <summary>
+        /// Makes sure this mesh contains the kind of data we know how to animate.
+        /// </summary>
+        static void ValidateMesh(NodeContent node, ContentProcessorContext context,
+                                 string parentBoneName)
+        {
+            MeshContent mesh = node as MeshContent;
+
+            if (mesh != null)
+            {
+                // Validate the mesh.
+                if (parentBoneName != null)
+                {
+                    context.Logger.LogWarning(null, null,
+                        "Mesh {0} is a child of bone {1}. SkinnedModelProcessor " +
+                        "does not correctly handle meshes that are children of bones.",
+                        mesh.Name, parentBoneName);
+                }
+
+                if (!MeshHasSkinning(mesh))
+                {
+                    context.Logger.LogWarning(null, null,
+                        "Mesh {0} has no skinning information, so it has been deleted.",
+                        mesh.Name);
+
+                    mesh.Parent.Children.Remove(mesh);
+                    return;
+                }
+            }
+            else if (node is BoneContent)
+            {
+                // If this is a bone, remember that we are now looking inside it.
+                parentBoneName = node.Name;
+            }
+
+            // Recurse (iterating over a copy of the child collection,
+            // because validating children may delete some of them).
+            foreach (NodeContent child in new List<NodeContent>(node.Children))
+                ValidateMesh(child, context, parentBoneName);
+        }
+
+        /// <summary>
+        /// Checks whether a mesh contains skininng information.
+        /// </summary>
+        static bool MeshHasSkinning(MeshContent mesh)
+        {
+            foreach (GeometryContent geometry in mesh.Geometry)
+            {
+                if (!geometry.Vertices.Channels.Contains(VertexChannelNames.Weights()))
+                    return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Process the skeleton in support of skeletal animation...
@@ -142,10 +212,20 @@ namespace MGSkinnedAnimationPipeline
 
                 // This is important: Don't bake in the transforms except
                 // for geometry that is part of a skinned mesh
-                if(IsSkinned(child))
-                {
-                    FlattenAllTransforms(child);
-                }
+                /* if(IsSkinned(child))
+                 {
+                     FlattenAllTransforms(child);
+                 }*/
+
+                // Bake the local transform into the actual geometry.
+                MeshHelper.TransformScene(child, child.Transform);
+
+                // Having baked it, we can now set the local
+                // coordinate system back to identity.
+                child.Transform = Matrix.Identity;
+
+                // Recurse.
+                FlattenTransforms(child, skeleton);
             }
         }
 

@@ -225,7 +225,6 @@ namespace DevilSoup
                 }
             }
 
-
             //// Draw the model.
             foreach (ModelMesh modelMesh in model.Meshes)
             {
