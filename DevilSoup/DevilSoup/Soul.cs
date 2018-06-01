@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +11,21 @@ namespace DevilSoup
 {
     public class Soul
     {
+        Camera camera;
         Asset soul;
         Vector3 soulPosition;
         public int lifes { get; set; }
 
-        public Soul(ContentManager content, String path, Vector3 cameraPos, GraphicsDevice graphicsDevice)
+        public Soul(ContentManager content, String path)
         {
             soul = new Asset();
-            soul.cameraPos = cameraPos;
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
             soul.loadModel(content, path);
+        }
+
+        public void Initialize(Camera camera)
+        {
+            this.camera = camera;
         }
 
         private int randomNumber(int range)
@@ -56,13 +60,13 @@ namespace DevilSoup
             return new Vector3(255.0f, 0.0f, 0.0f);
         }
 
-        public void drawSoul(Matrix view, Matrix projection)
+        public void Draw(GameTime gameTime)
         {
             if (this.soul != null)
-                this.soul.DrawModel(view, projection, defineColor());
+                this.soul.Draw(gameTime, camera.view, camera.projection, defineColor());
         }
 
-        public void killSoulWithAnimation(Matrix view, Matrix projection)
+        public void killSoulWithAnimation()
         {
             float xCoord = 1.001f, yCoord = 0.95f, zCoord = 1.001f;
             for (int i = 0; i < 70; i++)

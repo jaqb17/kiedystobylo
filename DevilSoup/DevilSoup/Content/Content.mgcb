@@ -10,6 +10,10 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationAux.dll
+/reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationPipeline.dll
+/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModel.dll
+/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModelPipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -82,9 +86,41 @@
 /processorParam:TextureFormat=Color
 /build:Assets/OtherTextures/slashTexture.png
 
-#begin ShaderModules/AnimatedModelShader/AnimatedModelShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:ShaderModules/AnimatedModelShader/AnimatedModelShader.fx
+#begin Assets/TestAnim/muchomorStadnyAtak.FBX
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Assets/TestAnim/muchomorStadnyAtak.FBX
+
+#begin Assets/Drewno/DrewnoRozpad/drewnoRoz.fbx
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Assets/Drewno/DrewnoRozpad/drewnoRoz.fbx
 
