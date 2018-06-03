@@ -3,7 +3,8 @@ float4x4 View;
 float4x4 Projection;
 float3 CamPosition = float3(0,0,100);
 
- 
+float Shine = 5;
+
 float4 AmbientColor = float4(1,1,1,1);
 float AmbientIntensity = 0.1;
 float3 LightDirection = float3(0,0,-1);
@@ -99,7 +100,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
     float4 diffuse = saturate(dot(-LightDirection,normal));
     float4 reflect = normalize(2*diffuse*normal-float4(LightDirection,1.0));
-    float4 specular = pow(saturate(dot(reflect,input.View)),5);
+    float4 specular = pow(saturate(dot(reflect,input.View)),Shine);
    
 
     specular = specular*SpecMapColor.x;

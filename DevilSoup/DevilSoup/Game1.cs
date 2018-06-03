@@ -18,13 +18,18 @@ namespace DevilSoup
         BasicEffect eff;
 
         private Vector3 cameraPos, cauldronPos, czachaPos;
+
+       
+        
+
+
         private Camera camera;
         private Asset cauldron;
         private Asset czacha;
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
-       
+      
         private Sprites sprites;
 
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
@@ -67,10 +72,11 @@ namespace DevilSoup
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
             cauldron = new Asset(Content, "Assets/Cauldron/RictuCauldron",
                                             "Assets/Cauldron/RictuCauldronCT",
-                                            "Assets/test/vsn",
+                                            "Assets/test/vsn", //normalki nie bylo
                                             camera
                                             );
-            
+            cauldron.setShine(10f); //less = more shiny ^^
+            cauldron.setSpecularColor(new Vector4(0, 1, 0, 1));
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
         
             czacha = new Asset(Content, "Assets/test/vs",

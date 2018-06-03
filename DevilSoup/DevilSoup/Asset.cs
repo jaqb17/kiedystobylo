@@ -26,7 +26,7 @@ namespace DevilSoup
         public bool finishedAnimation { get; private set; } = false;
         private ModelExtra modelExtra = null;
 
-        private Effect renderEffect;
+        public Effect renderEffect;
 
         private Texture colorMap = null;
         private Texture normalMap = null;
@@ -348,6 +348,43 @@ namespace DevilSoup
             this.world = Matrix.CreateRotationZ(-degreesX * (MathHelper.Pi / 180f)) * this.world;
             this.world = Matrix.CreateRotationX(-degreesY * (MathHelper.Pi / 180f)) * this.world;
             this.world = Matrix.CreateRotationY(-degreesZ * (MathHelper.Pi / 180f)) * this.world;
+        }
+
+        public void setShine(float shine)
+        {
+            renderEffect.Parameters["Shine"].SetValue(shine);
+        }
+
+
+        public void setAmbientColor(Vector4 color)
+        {
+            renderEffect.Parameters["AmbientColor"].SetValue(color);
+        }
+
+        public void setAmbientIntensity(float intensity)
+        {
+            renderEffect.Parameters["AmbientIntensity"].SetValue(intensity);
+        }
+
+        public void setLightDirection(Vector3 direction)
+        {
+            renderEffect.Parameters["LightDirection"].SetValue(direction);
+        }
+
+        public void setDiffuseColor(Vector4 color)
+        {
+            renderEffect.Parameters["DiffuseColor"].SetValue(color);
+        }
+
+        public void setDiffuseIntensity(float intensity)
+        {
+            renderEffect.Parameters["DiffuseIntensity"].SetValue(intensity);
+        }
+
+
+        public void setSpecularColor(Vector4 color)
+        {
+            renderEffect.Parameters["SpecularColor"].SetValue(color);
         }
 
         private void computeCenter()
