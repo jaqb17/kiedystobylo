@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MGSkinnedAnimationAux;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace DevilSoup
 
             //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, path);
+
+            //Asset animModel = new Asset();
+            //animModel.loadModel(content, "Assets\\fbx\\Victoria-hat-dance2");
         }
 
         public void Initialization(Camera camera)
@@ -46,7 +50,7 @@ namespace DevilSoup
 
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
-            this.log.scaleAset(4f);
+            this.log.scaleAset(3.5f);
             //Console.WriteLine(this.position);
         }
 
@@ -109,12 +113,9 @@ namespace DevilSoup
 
             if (this.log.HasAnimation())
             {
-                if (this.log.Clips.Count > 0)
-                    this.log.animationUpdate(gameTime);
 
                 if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
-                    this.log.PlayClip(this.log.Clips[0], false);
                     this.log.ifPlay = true;
                 }
 

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace MGSkinnedAnimationAux
 {
@@ -15,7 +18,7 @@ namespace MGSkinnedAnimationAux
         /// skinned model.
         /// </summary>
         private List<int> skeleton = new List<int>();
-        
+
         /// <summary>
         /// Any associated animation clips
         /// </summary>

@@ -12,14 +12,12 @@
 
 /reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationAux.dll
 /reference:..\..\MGSkinnedAnimationPipeline\bin\Debug\MGSkinnedAnimationPipeline.dll
-/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModel.dll
-/reference:..\..\MGSkinnedModelPipeline\bin\Debug\MGSkinnedModelPipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
 #begin Assets/Cauldron/RictuCauldron.obj
 /importer:OpenAssetImporter
-/processor:ModelProcessor
+/processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
 /processorParam:DefaultEffect=BasicEffect
@@ -38,7 +36,7 @@
 
 #begin Assets/Souls/bryla.obj
 /importer:OpenAssetImporter
-/processor:ModelProcessor
+/processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
 /processorParam:DefaultEffect=BasicEffect
@@ -91,7 +89,7 @@
 /processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:DefaultEffect=BasicEffect
 /processorParam:GenerateMipmaps=True
 /processorParam:GenerateTangentFrames=False
 /processorParam:PremultiplyTextureAlpha=True
@@ -110,7 +108,7 @@
 /processor:AnimationProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=SkinnedEffect
+/processorParam:DefaultEffect=BasicEffect
 /processorParam:GenerateMipmaps=True
 /processorParam:GenerateTangentFrames=False
 /processorParam:PremultiplyTextureAlpha=True
@@ -123,4 +121,23 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Assets/Drewno/DrewnoRozpad/drewnoRoz.fbx
+
+#begin Assets/catwoman-dc-comics/source/Yawn.fbx
+/importer:FbxImporter
+/processor:AnimationProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Assets/catwoman-dc-comics/source/Yawn.fbx
 

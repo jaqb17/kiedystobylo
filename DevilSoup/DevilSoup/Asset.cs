@@ -31,10 +31,6 @@ namespace DevilSoup
         /// </summary>
         private List<Bone> bones = new List<Bone>();
 
-        private Matrix[] skeleton;
-
-        private Matrix[] boneTransforms;
-
         private AnimationPlayer player = null;
 
         //public double animationLength { get; private set; }
@@ -115,6 +111,7 @@ namespace DevilSoup
                 if (bone.Name == name)
                     return bone;
             }
+
             return null;
         }
 
@@ -137,39 +134,29 @@ namespace DevilSoup
                 }
             }
 
-            if (animationDelayCounter == 0)
+            if (ifPlay && animationDelayCounter == 0)
                 player?.Update(gameTime);
         }
 
+
+        #region Animation Management
 
         /// <summary>
         /// Play an animation clip
         /// </summary>
         /// <param name="clip">The clip to play</param>
         /// <returns>The player that will play this clip</returns>
-        public AnimationPlayer PlayClip(AnimationClip clip, bool looping = true, int keyframestart = 0, int keyframeend = 0, int fps = 24)
+        public AnimationPlayer PlayClip(AnimationClip clip)
         {
             // Create a clip player and assign it to this model
-            player = new AnimationPlayer(clip, this, looping, keyframestart, keyframeend, fps);
+            player = new AnimationPlayer(clip, this);
             return player;
         }
 
+        #endregion
+
         public void loadModel(ContentManager content, String path)
         {
-
-            /*if (ModelsInstancesClass.models[modelType] == null)
-            {
-                try
-                {
-                    this.model = content.Load<Model>(path);
-                    ModelsInstancesClass.models[modelType] = this.model;
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Element o tym kluczu juz byl dodany. Klasa: Asset, Linia: 74");
-                }
-            }
-            else this.model = ModelsInstancesClass.models[modelType];*/
 
             this.model = content.Load<Model>(path);
             modelExtra = model.Tag as ModelExtra;
@@ -177,9 +164,6 @@ namespace DevilSoup
             if (modelExtra != null)
             {
                 ObtainBones();
-
-                boneTransforms = new Matrix[bones.Count];
-                skeleton = new Matrix[modelExtra.Skeleton.Count];
             }
 
             computeCenter();
@@ -197,18 +181,24 @@ namespace DevilSoup
 
             if (this.HasAnimation())
             {
+
                 if (this.Clips.Count > 0)
                     this.animationUpdate(gameTime);
 
                 if (!this.ifPlay)
                 {
-                    this.PlayClip(this.Clips[0], true);
+                    this.PlayClip(this.Clips[0]);
                     //this.ifPlay = true;
                 }
+
             }
+
+            Matrix[] boneTransforms = null;
+            Matrix[] skeleton = null;
 
             if (modelExtra != null)
             {
+                boneTransforms = new Matrix[bones.Count];
 
                 for (int i = 0; i < bones.Count; i++)
                 {
@@ -218,6 +208,11 @@ namespace DevilSoup
                     boneTransforms[i] = bone.AbsoluteTransform;
                 }
 
+                //
+                // Determine the skin transforms from the skeleton
+                //
+
+                skeleton = new Matrix[modelExtra.Skeleton.Count];
                 for (int s = 0; s < modelExtra.Skeleton.Count; s++)
                 {
                     Bone bone = bones[modelExtra.Skeleton[s]];
@@ -234,7 +229,7 @@ namespace DevilSoup
                     {
                         BasicEffect beffect = effect as BasicEffect;
 
-                        beffect.World = world;
+                        beffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
                         beffect.View = view;
                         beffect.Projection = projection;
                         //beffect.EnableDefaultLighting();
@@ -247,10 +242,10 @@ namespace DevilSoup
                     {
                         SkinnedEffect seffect = effect as SkinnedEffect;
 
-                        seffect.World = world;
+                        seffect.SetBoneTransforms(skeleton);
+                        seffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
                         seffect.View = view;
                         seffect.Projection = projection;
-                        seffect.SetBoneTransforms(skeleton);
 
                         seffect.EnableDefaultLighting();
 
@@ -259,6 +254,7 @@ namespace DevilSoup
 
                         seffect.SpecularColor = new Vector3(0.25f);
                         seffect.SpecularPower = 16;
+                        seffect.SetBoneTransforms(skeleton);
                     }
                 }
 

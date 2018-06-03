@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using MGSkinnedAnimationAux;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
+
 
 namespace DevilSoup
 {
@@ -47,12 +51,10 @@ namespace DevilSoup
 
         #region Properties
 
-        //[Browsable(false)]
-
         /// <summary>
         /// The position in the animation
         /// </summary>
-
+        [Browsable(false)]
         public float Position
         {
             get { return position; }
@@ -64,7 +66,6 @@ namespace DevilSoup
                 position = value;
                 foreach (BoneInfo bone in boneInfos)
                 {
-
                     bone.SetPosition(position);
                 }
             }
@@ -81,9 +82,6 @@ namespace DevilSoup
         /// </summary>
         [Browsable(false)]
         public float Duration { get { return (float)clip.Duration; } }
-
-        public float StartDuration;
-        public float EndDuration;
 
         /// <summary>
         /// A model this animation is assigned to. It will play on that model.
@@ -105,23 +103,17 @@ namespace DevilSoup
         /// Constructor for the animation player. It makes the 
         /// association between a clip and a model and sets up for playing
         /// </summary>
-        public AnimationPlayer(AnimationClip clip, Asset model, bool looping, int keyframestart = 0, int keyframeend = 0, int fps = 24)
+        /// <param name="clip"></param>
+        public AnimationPlayer(AnimationClip clip, Asset model)
         {
             this.clip = clip;
             this.model = model;
-            Looping = looping;
 
             // Create the bone information classes
             boneCnt = clip.Bones.Count;
             boneInfos = new BoneInfo[boneCnt];
 
-            if (keyframeend != 0)
-            {
-                StartDuration = (float)keyframestart/fps;
-                EndDuration = (float)keyframeend / fps;
-            }
-
-            for(int b=0;  b<boneInfos.Length;  b++)
+            for (int b = 0; b < boneInfos.Length; b++)
             {
                 // Create it
                 boneInfos[b] = new BoneInfo(clip.Bones[b]);
@@ -149,15 +141,9 @@ namespace DevilSoup
         /// <summary>
         /// Update the clip position
         /// </summary>
+        /// <param name="delta"></param>
         public void Update(GameTime gameTime)
         {
-            if (EndDuration > 0)
-            {
-                Position = Position + (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (looping && Position >= EndDuration)
-                    Position = StartDuration;
-            }
-
             Position = Position + (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (looping && Position >= Duration)
                 Position = 0;
@@ -228,7 +214,7 @@ namespace DevilSoup
             /// The bone this animation bone is assigned to in the model
             /// </summary>
             public Bone ModelBone { get { return assignedBone; } }
-            
+
             #endregion
 
             #region Constructor
@@ -313,7 +299,10 @@ namespace DevilSoup
                 if (ClipBone.Keyframes.Count > 0)
                 {
                     Keyframe1 = ClipBone.Keyframes[currentKeyframe];
-                    Keyframe2 = currentKeyframe == ClipBone.Keyframes.Count - 1 ? Keyframe1 : ClipBone.Keyframes[currentKeyframe + 1];
+                    if (currentKeyframe == ClipBone.Keyframes.Count - 1)
+                        Keyframe2 = Keyframe1;
+                    else
+                        Keyframe2 = ClipBone.Keyframes[currentKeyframe + 1];
                 }
                 else
                 {
