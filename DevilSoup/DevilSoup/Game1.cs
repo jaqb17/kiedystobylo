@@ -51,15 +51,16 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
-            cameraPos = new Vector3(0, 0, 40);
+            cameraPos = new Vector3(0, 0, 100);
             
             
             cauldronPos = new Vector3(0f, 0f, 0f);
             czachaPos = cauldronPos;
 
             camera = new Camera();
-            camera.setWorldMatrix(cameraPos);
-            camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
+            
+            camera.setWorldMatrix(camera.Position);
+            camera.view = Matrix.CreateLookAt(camera.Position, cauldronPos, Vector3.UnitY);
             
 
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
@@ -71,7 +72,7 @@ namespace DevilSoup
             czacha = new Asset(Content, "Assets/test/vs",
                                         "Assets/test/vsc",
                                         "Assets/test/vsn",
-                                        "Assets/test/vss",
+                                        
                                         camera);
 
             danceArea = new DanceArea(cauldron);
@@ -145,9 +146,9 @@ namespace DevilSoup
             world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
             czacha.world = world;
             GraphicsDevice.Clear(Color.Black);
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+           // GraphicsDevice.BlendState = BlendState.AlphaBlend;
             //cauldron.Draw(gameTime, camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
-            czacha.SimpleDraw(view, projection);
+            czacha.SimpleDraw(camera.view, camera.projection, new Vector3(1,0,0));
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
 
             spriteBatch.Begin();

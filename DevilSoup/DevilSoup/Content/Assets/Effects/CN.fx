@@ -8,7 +8,9 @@ float4 AmbientColor = float4(1,1,1,1);
 float AmbientIntensity = 0.1;
 float3 LightDirection = float3(0,0,-1);
 
+
 float3 addColor = float3(0,0,0);
+
 
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 0.9;
@@ -52,14 +54,7 @@ sampler2D NormalMapSampler = sampler_state
     MipFilter = linear;
 };
 
-texture2D SpecMap;
-sampler2D SpecMapSampler = sampler_state
-{
-    Texture = <SpecMap>;
-    MinFilter = linear;
-    MagFilter = linear;
-    MipFilter = linear;
-};
+
 
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input, float3 Normal : NORMAL)
@@ -95,14 +90,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
     float4 normal = float4(normalMap,1.0);
  
-    float4 SpecMapColor = tex2D(SpecMapSampler, input.TexCoord);
-
+   
     float4 diffuse = saturate(dot(-LightDirection,normal));
     float4 reflect = normalize(2*diffuse*normal-float4(LightDirection,1.0));
     float4 specular = pow(saturate(dot(reflect,input.View)),5);
    
 
-    specular = specular*SpecMapColor.x;
+    specular = specular;
 
     float4 final =   color * AmbientColor * AmbientIntensity + 
             color * DiffuseIntensity * DiffuseColor * diffuse + 
