@@ -17,17 +17,19 @@ namespace DevilSoup
         SpriteBatch spriteBatch;
         BasicEffect eff;
 
-        private Vector3 cameraPos, cauldronPos;
+        private Vector3 cameraPos, cauldronPos, czachaPos;
         private Camera camera;
         private Asset cauldron;
+        private Asset czacha;
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
-        //private Asset animTemplate;
-        //private ModelsInstancesClass models;
+       
         private Sprites sprites;
 
-        //private BBRectangle billboardRect;
+        Matrix world = Matrix.CreateTranslation(0, 0, 0);
+        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f/64f, 0.1f, 1000000000f);
 
         public Game1()
         {
@@ -35,6 +37,7 @@ namespace DevilSoup
             //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferHeight = 640;
             graphics.PreferredBackBufferWidth = 1280;
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
         }
 
@@ -48,18 +51,33 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
-            cameraPos = new Vector3(0, 110, 40);
-            //cameraPos = new Vector3(0f, 0f, 4f);
+            cameraPos = new Vector3(0, 100, 60);
+            
+            
             cauldronPos = new Vector3(0f, 0f, 0f);
+            czachaPos = cauldronPos;
+
             camera = new Camera();
-            camera.setWorldMatrix(cameraPos);
-            camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
-            //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
+            camera.Position = cameraPos;
+            camera.setWorldMatrix(camera.Position);
+            camera.view = Matrix.CreateLookAt(camera.Position, cauldronPos, Vector3.UnitY);
+            
+
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
-            cauldron = new Asset();
-            cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
+            cauldron = new Asset(Content, "Assets/Cauldron/RictuCauldron",
+                                            "Assets/Cauldron/RictuCauldronCT",
+                                            "Assets/test/vsn",
+                                            camera
+                                            );
+            
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
+        
+            czacha = new Asset(Content, "Assets/test/vs",
+                                        "Assets/test/vsc",
+                                        "Assets/test/vsn",
+                                        "Assets/test/vss",
+                                        camera);
 
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera);
@@ -70,7 +88,7 @@ namespace DevilSoup
             combo = Combo.createCombo();
             combo.Initialize(graphics);
             danceArea.FuelBarInitialize(Content);
-
+           
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
             animTemplate.world = Matrix.CreateTranslation(cauldronPos);
@@ -91,6 +109,7 @@ namespace DevilSoup
             combo.LoadContent(spriteBatch);
             sprites.LoadContent(spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
+
 
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
@@ -128,13 +147,14 @@ namespace DevilSoup
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            cauldron.Draw(gameTime, camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
-
+          //  world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+           // czacha.world = world;
+            GraphicsDevice.Clear(Color.DimGray);
+            cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
+           // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
 
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
             spriteBatch.Begin();
             //danceArea.DrawFuelBar(spriteBatch);
             danceArea.Draw(gameTime);
@@ -143,11 +163,11 @@ namespace DevilSoup
             sprites.Draw(danceArea);
 
             //danceArea.DrawFuelBar(spriteBatch);
-            spriteBatch.End();
+           spriteBatch.End();
 
-            GraphicsDevice.BlendState = BlendState.Opaque;
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+           GraphicsDevice.BlendState = BlendState.Opaque;
+           GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+           GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             //billboardRect.DrawRect(eff, graphics.GraphicsDevice, camera.view, camera.projection, camera.world);
 
 

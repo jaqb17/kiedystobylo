@@ -26,6 +26,12 @@ namespace DevilSoup
         public bool finishedAnimation { get; private set; } = false;
         private ModelExtra modelExtra = null;
 
+        private Effect renderEffect;
+
+        private Texture colorMap = null;
+        private Texture normalMap = null;
+        private Texture specMap = null;
+
         /// <summary>
         /// The model bones
         /// </summary>
@@ -79,6 +85,47 @@ namespace DevilSoup
             this.world = camera.world;
             computeCenter();
         }
+
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string SpecTexturePath, Camera camera,string effectPath= "Assets/Effects/CNS")
+        {
+
+            this.colorMap = content.Load<Texture>(colorTexturePath);
+            this.normalMap = content.Load<Texture>(normalTexturePath);
+            this.specMap = content.Load<Texture>(SpecTexturePath);
+
+            this.renderEffect = content.Load<Effect>(effectPath);
+            this.model = content.Load<Model>(modelPath);
+
+            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+            renderEffect.Parameters["NormalMap"].SetValue(normalMap);
+            renderEffect.Parameters["SpecMap"].SetValue(specMap);
+
+            this.cameraPos = camera.Position;
+
+            computeCenter();
+        }
+
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath,  Camera camera, string effectPath = "Assets/Effects/CN")
+        {
+
+            this.colorMap = content.Load<Texture>(colorTexturePath);
+            this.normalMap = content.Load<Texture>(normalTexturePath);
+            
+
+            this.renderEffect = content.Load<Effect>(effectPath);
+            this.model = content.Load<Model>(modelPath);
+
+            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+            renderEffect.Parameters["NormalMap"].SetValue(normalMap);
+           
+
+            this.cameraPos = camera.Position;
+
+            computeCenter();
+        }
+
+       
+
 
         #region Bones Management
 
@@ -259,6 +306,30 @@ namespace DevilSoup
                 }
 
                 modelMesh.Draw();
+            }
+        }
+
+        public void SimpleDraw( Matrix view, Matrix projection, Vector3? addColor=null)
+        {
+            Vector4 diff = new Vector4(1, 1, 1, 1);
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    part.Effect = renderEffect;
+                    if (addColor != null)
+                    {
+                        renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
+                    }
+                    renderEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    renderEffect.Parameters["View"].SetValue(view);
+                    renderEffect.Parameters["Projection"].SetValue(projection);
+                    renderEffect.Parameters["CamPosition"].SetValue(cameraPos);
+                    Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
+                    // effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+                    
+                }
+                mesh.Draw();
             }
         }
 
