@@ -38,6 +38,11 @@ namespace DevilSoup
         int accelTimeDelay = 0;
         private bool ifGameStarted = false;
 
+        //Cauldron Colors
+        private Vector3 standard, yellow, orange, red;
+        public Vector3 currentColor { get; set; }
+        
+
         //Sounds
         private Song boil;
         private bool isBoilingSoundActive;
@@ -75,14 +80,21 @@ namespace DevilSoup
             player = Player.getPlayer();
             combo = Combo.createCombo();
             isBoilingSoundActive = false;
+            #region Vectors cauldron colors 
+            standard = new Vector3(0f, 0f, 0f);
+            yellow = new Vector3(0.1f, 0.1f, 0);
+            orange = new Vector3(0.2f, 0.05f, 0);
+            red = new Vector3(0.3f, 0f, 0f);
+            #endregion
         }
 
         public void Initialize(ContentManager content, Camera camera)
         {
+            
             this.content = content;
             gamepad = new Pad();
             this.camera = camera;
-
+            currentColor = yellow;
             boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
             MediaPlayer.IsRepeating = true;
         }
@@ -91,7 +103,7 @@ namespace DevilSoup
         {
             int keyPressed;
             currentKeyPressed = Keyboard.GetState();
-
+            cauldronColorLogic();
             if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
@@ -217,6 +229,7 @@ namespace DevilSoup
             }
         }
 
+
         public void Draw(GameTime gameTime)
         {
             if (ifGameStarted)
@@ -243,6 +256,18 @@ namespace DevilSoup
                     baseSoulsSpeed = 0.05f;
                     break;
             }
+        }
+
+        private void cauldronColorLogic()
+        {
+            if (heatValue < 2)
+                currentColor = standard;
+            if (heatValue > 2 && heatValue < 4)
+                currentColor = yellow;
+            if (heatValue > 4 && heatValue < 7)
+                currentColor = orange;
+            if (heatValue > 7 && heatValue < 11)
+                currentColor = red;
         }
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
@@ -317,7 +342,7 @@ namespace DevilSoup
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
 
             //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
-            //woodLog = new WoodenLog(content, "Assets\\Ice\\lodAnim");
+            //woodLog = new WoodenLog(content, "Assets\\Ice\\lodStable");
             woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
             woodLog.Initialization(camera);
         }

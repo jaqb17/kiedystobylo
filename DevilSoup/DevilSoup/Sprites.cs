@@ -29,7 +29,7 @@ namespace DevilSoup
         public void Draw(DanceArea danceArea)
         {
             Player player = Player.getPlayer();
-            if (player.hp > 0)
+            if (player.hp > 0 && danceArea.heatValue > 0 && danceArea.heatValue <8.5)
             {
                 switch (danceArea.level)
                 {

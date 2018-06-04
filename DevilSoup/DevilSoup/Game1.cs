@@ -159,8 +159,9 @@ namespace DevilSoup
           //  world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
            // czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
-            cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
-           // czacha.SimpleDraw(camera.view, camera.projection);
+            //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
+            cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
+            // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
 
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
