@@ -22,6 +22,7 @@ namespace DevilSoup
         public double heatValue = 2f;
         private Player player;
         public WoodenLog woodLog { get; set; }
+        public Ice iceCube { get; set; }
         public FireFuelBar fuelBar { get; set; }
 
         private Camera camera;
@@ -50,7 +51,15 @@ namespace DevilSoup
                 else return false;
             }
         }
-
+        public bool isIceCreated
+        {
+            get
+            {
+                if (this.iceCube != null)
+                    return iceCube.isIceCreated;
+                else return false;
+            }
+        }
         public DanceArea(Asset cauldron)
         {
             this.radius = cauldron.radius / 2.5f;
@@ -141,22 +150,32 @@ namespace DevilSoup
                     }
                 }
 
-                if (isLogCreated == false)
+                if(isIceCreated == false)
                 {
-                    createLog();
+                    createIce();
                 }
-                if (isLogCreated == true)
+                if(isIceCreated == true)
                 {
-                    woodLog.Update(gameTime);
+                    iceCube.Update(gameTime);
+                }
+                // tymczasowo wylaczone
 
-                    //danceArea.moveLog(gamepad.accelerometerStatus());
-                    if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true)
-                    {
-                        woodLogDestroySuccessfulHit(15);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
-                    }
-                }
+                //if (isLogCreated == false)
+                //{
+                //    createLog();
+                //}
+                //if (isLogCreated == true)
+                //{
+                //    woodLog.Update(gameTime);
+
+                //    //danceArea.moveLog(gamepad.accelerometerStatus());
+                //    if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true)
+                //    {
+                //        woodLogDestroySuccessfulHit(15);
+                //        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
+                //        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                //    }
+                //}
             }
 
             pastKeyPressed = currentKeyPressed;
@@ -187,6 +206,8 @@ namespace DevilSoup
 
                 if (isLogCreated == true)
                     woodLog.Draw(gameTime);
+                if (isIceCreated == true)
+                    iceCube.Draw(gameTime);
                 //if (billboardRect != null)
                 //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
             }
@@ -277,11 +298,15 @@ namespace DevilSoup
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
 
             //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
-            //woodLog = new WoodenLog(content, "Assets\\catwoman-dc-comics\\source\\Yawn");
+            //woodLog = new WoodenLog(content, "\\Assets\\Ice\\lodStable");
             woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
             woodLog.Initialization(camera);
         }
-
+        private void createIce()
+        {
+            iceCube = new Ice(content, "Assets\\Souls\\bryla");
+            iceCube.Initialization(camera);
+        }
         private void calculateHeatValue(double _var)
         {
             double difference = _var - heatValue;

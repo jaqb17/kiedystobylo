@@ -13,7 +13,7 @@ namespace DevilSoup
     {
         public Asset log { get; private set; }
         public Vector3 position { get; set; }
-        private float fireBoostValue { get; set; }
+        private double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isLogCreated { get; set; }
         private Camera camera;
@@ -31,6 +31,7 @@ namespace DevilSoup
             isDestroyable = false;
             position = new Vector3(100f, 0, 10);
             log = new Asset();
+            fireBoostValue = 2;
 
             //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, path);

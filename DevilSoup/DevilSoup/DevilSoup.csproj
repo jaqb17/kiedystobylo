@@ -69,7 +69,7 @@
     <Compile Include="Soul.cs" />
     <Compile Include="Sprites.cs" />
     <Compile Include="Transform.cs" />
-    <Compile Include="Water.cs" />
+    <Compile Include="Ice.cs" />
     <Compile Include="WoodenLog.cs" />
   </ItemGroup>
   <ItemGroup>
