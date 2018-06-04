@@ -276,7 +276,7 @@ namespace DevilSoup
                     {
                         BasicEffect beffect = effect as BasicEffect;
 
-                        beffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
+                        beffect.World = world;
                         beffect.View = view;
                         beffect.Projection = projection;
                         //beffect.EnableDefaultLighting();

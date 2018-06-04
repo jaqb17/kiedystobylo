@@ -62,7 +62,7 @@ namespace DevilSoup
         {
             if (isLogCreated && this.log != null)
             {
-                this.log.Draw(gameTime, camera.view, camera.projection);
+               this.log.Draw(gameTime, camera.view, camera.projection);
             }
         }
 

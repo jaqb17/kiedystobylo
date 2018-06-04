@@ -20,10 +20,6 @@ namespace DevilSoup
 
         private Vector3 cameraPos, cauldronPos, czachaPos;
 
-       
-        
-
-
         private Camera camera;
         private Asset cauldron;
         private Asset czacha;
