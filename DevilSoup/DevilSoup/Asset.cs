@@ -389,8 +389,22 @@ namespace DevilSoup
 
         private void computeCenter()
         {
-            center = model.Meshes[0].BoundingSphere.Center;
-            radius = model.Meshes[0].BoundingSphere.Radius;
+            if(model.Meshes.Count > 0)
+            {
+                center = model.Meshes[0].BoundingSphere.Center;
+                radius = model.Meshes[0].BoundingSphere.Radius;
+            }
+            else
+            {
+                for(int i = 0; i < model.Bones.Count; i++)
+                {
+                    if(model.Bones[i].Meshes.Count > 0)
+                    {
+                        center = model.Meshes[0].BoundingSphere.Center;
+                        radius = model.Meshes[0].BoundingSphere.Radius;
+                    }
+                }
+            }
         }
     }
 }
