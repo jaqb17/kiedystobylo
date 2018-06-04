@@ -1,28 +1,20 @@
-//-  ----------------------------- TEXTURE PROPERTIES ----------------------------
-// This is the texture that SpriteBatch will try to set before drawing
-texture ScreenTexture;
+sampler TextureSampler : register(s0);
+Texture2D <float4> myTex2D;
  
-// Our sampler for the texture, which is just going to be pretty simple
-sampler TextureSampler = sampler_state
+float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 texCoord : TEXCOORD0) : SV_TARGET0
 {
-    Texture = <ScreenTexture>;
-};
- 
-//------------------------ PIXEL SHADER ----------------------------------------
-// This pixel shader will simply look up the color of the texture at the
-// requested point
-float4 PixelShaderFunction(float2 TextureCoordinate : TEXCOORD0) : COLOR0
-{
-    float4 color = tex2D(TextureSampler, TextureCoordinate);    
-    return color;
+    float4 tex;
+    tex = myTex2D.Sample(TextureSampler, texCoord.xy) * .6f;
+    tex += myTex2D.Sample(TextureSampler, texCoord.xy + (0.005)) * .2f;
+    tex.r=1.0;
+    return tex;
 }
- 
-//-------------------------- TECHNIQUES ----------------------------------------
-// This technique is pretty simple - only one pass, and only a pixel shader
-technique Plain
+
+
+technique Technique1
 {
     pass Pass1
     {
-        PixelShader = compile ps_4_0 PixelShaderFunction();
+        PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();  
     }
 }
