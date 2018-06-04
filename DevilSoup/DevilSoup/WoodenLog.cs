@@ -1,5 +1,4 @@
-﻿using MGSkinnedAnimationAux;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
@@ -16,13 +15,18 @@ namespace DevilSoup
         public double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isLogCreated { get; set; }
+
         public bool isLogDestroyed { get; set; }
+
+        public bool isWoodActive { get; set; }
+
         private Camera camera;
         public double decayValue { get; set; }
         public WoodenLog()
         {
             isLogCreated = true;
             isDestroyable = false;
+            isWoodActive = false;
             position = new Vector3(150f, 0, 0);
             fireBoostValue = 2;
             decayValue = 3;
@@ -32,15 +36,18 @@ namespace DevilSoup
         {
             isLogCreated = true;
             isDestroyable = false;
+            isWoodActive = false;
             position = new Vector3(100f, 0, 10);
             log = new Asset();
             fireBoostValue = 2;
             decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, path);
+
             isLogDestroyed = false;
             //Asset animModel = new Asset();
             //animModel.loadModel(content, "Assets\\fbx\\Victoria-hat-dance2");
+
         }
 
         public void Initialization(Camera camera)
@@ -50,17 +57,17 @@ namespace DevilSoup
 
         public void setPosition(Vector3 _position)
         {
-            if (log.ifPlay) return;
+            if (log.ifPlay || !this.isWoodActive) return;
 
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
-            this.log.scaleAset(3.5f);
+            this.log.scaleAset(4f);
             //Console.WriteLine(this.position);
         }
 
         public void Draw(GameTime gameTime)
         {
-            if (isLogCreated && this.log != null)
+            if (isLogCreated && isWoodActive && this.log != null)
             {
                this.log.Draw(gameTime, camera.view, camera.projection);
             }
@@ -68,9 +75,9 @@ namespace DevilSoup
 
         public void destroyLog()
         {
-            if (this.log == null) return;
+            if (this.log == null || !this.isWoodActive) return;
 
-            Console.WriteLine("Zniszczono");
+            Console.WriteLine("Zniszczono drewno");
             this.log.ifDamageAfterPlay = true;
         }
 
@@ -81,7 +88,7 @@ namespace DevilSoup
 
         private void moveLog()
         {
-            if (log.ifPlay) return;
+            if (log.ifPlay || !this.isWoodActive) return;
 
             Vector3 newLogPosition = position;
 
@@ -102,7 +109,7 @@ namespace DevilSoup
 
         private void moveLog(Vector3 offset)
         {
-            if (log.ifPlay) return;
+            if (log.ifPlay || !this.isWoodActive) return;
 
             Vector3 newLogPosition = position;
             newLogPosition += offset / 3;
@@ -116,15 +123,18 @@ namespace DevilSoup
 
         public void Update(GameTime gameTime)
         {
-            if (this.log == null) return;
+            if (this.log == null || !this.isWoodActive) return;
 
             moveLog();
 
             if (this.log.HasAnimation())
             {
+                if (this.log.Clips.Count > 0)
+                    this.log.animationUpdate(gameTime);
 
                 if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
+                    this.log.PlayClip(this.log.Clips[0]);
                     this.log.ifPlay = true;
                 }
 

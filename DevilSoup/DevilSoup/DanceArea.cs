@@ -26,6 +26,9 @@ namespace DevilSoup
         public WoodenLog woodLog { get; set; }
         public Ice iceCube { get; set; }
         public Fireplace fuelBar { get; set; }
+        public int stage = 1;
+        
+
 
         private Camera camera;
         private Pad gamepad;
@@ -72,6 +75,24 @@ namespace DevilSoup
                 else return false;
             }
         }
+        public bool isFlyingObjCreated
+        {
+            get
+            {
+                if (this.woodLog != null && !woodLog.isLogCreated)
+                {
+                    iceCube.isIceCreated = false;
+                    return woodLog.isLogCreated;
+                }                    
+                else if (this.iceCube != null && !iceCube.isIceCreated)
+                {
+                    woodLog.isLogCreated = false;
+                    return iceCube.isIceCreated;
+                }
+                    
+                else return false;
+            }
+        }
         public DanceArea(Asset cauldron)
         {
             this.radius = cauldron.radius / 2.5f;
@@ -104,6 +125,46 @@ namespace DevilSoup
             int keyPressed;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
+            stage =( player.points /10) +1;
+            if (stage == 1 && heatValue <= 1f)
+                stage += 1;
+            if (stage > 5)
+                stage = 5;
+            switch (stage)
+            {
+                case 1:
+                    if (this.woodLog != null)
+                        woodLog.isWoodActive = false;
+                    else if (this.iceCube != null)
+                        iceCube.isIceActive = true;
+                    break;
+                case 2:
+                    if (this.woodLog != null)
+                        woodLog.isWoodActive = true;
+                    else if (this.iceCube != null)
+                        iceCube.isIceActive = true;
+                    break;
+                case 3:
+                    if (this.woodLog != null)
+                        woodLog.isWoodActive = true;
+                    else if (this.iceCube != null)
+                        iceCube.isIceActive = true;
+                    break;
+                case 4:
+                    if (this.woodLog != null)
+                        woodLog.isWoodActive = true;
+                    else if (this.iceCube != null)
+                        iceCube.isIceActive = true;
+                    baseSoulsSpeed = 0.035f;
+                    break;
+                case 5:
+                    if (this.woodLog != null)
+                        woodLog.isWoodActive = true;
+                    else if (this.iceCube != null)
+                        iceCube.isIceActive = true;
+                    baseSoulsSpeed = 0.04f;
+                    break;
+            }
             if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
@@ -178,14 +239,14 @@ namespace DevilSoup
                     }
                 }
 
-                //if(isIceCreated == false)
-                //{
-                //    createIce();
-                //}
-                //if(isIceCreated == true)
-                //{
-                //    iceCube.Update(gameTime);
-                //}
+                if(isIceCreated == false )
+                {
+                    createIce();
+                }
+                if(isIceCreated == true)
+                {
+                    iceCube.Update(gameTime);
+                }
                 // tymczasowo wylaczone
 
                 if (isLogCreated == false)
@@ -343,13 +404,19 @@ namespace DevilSoup
 
             //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
             //woodLog = new WoodenLog(content, "Assets\\Ice\\lodStable");
-            woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-            woodLog.Initialization(camera);
+            if (heatValue > 0f && heatValue < 5f || heatValue == 5)                
+            {
+                woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+                woodLog.Initialization(camera);
+            }            
         }
         private void createIce()
         {
-            iceCube = new Ice(content, "Assets\\Souls\\bryla");
-            iceCube.Initialization(camera);
+            if (heatValue > 5f && heatValue <= 10f || heatValue == 5)
+            {
+                iceCube = new Ice(content, "Assets\\Souls\\bryla");
+                iceCube.Initialization(camera);
+            }            
         }
         private void calculateHeatValue(double _var)
         {
