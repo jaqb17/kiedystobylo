@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace DevilSoup
 {
@@ -23,7 +25,7 @@ namespace DevilSoup
         private Player player;
         public WoodenLog woodLog { get; set; }
         public Ice iceCube { get; set; }
-        public FireFuelBar fuelBar { get; set; }
+        public Fireplace fuelBar { get; set; }
 
         private Camera camera;
         private Pad gamepad;
@@ -35,6 +37,11 @@ namespace DevilSoup
         bool ifCheckAccelerometer = true;
         int accelTimeDelay = 0;
         private bool ifGameStarted = false;
+
+        //Sounds
+        private Song boil;
+        private bool isBoilingSoundActive;
+
 
         public bool IfGameStarted
         {
@@ -67,6 +74,7 @@ namespace DevilSoup
             singleAreas = new SingleArea[numberOfAreas];
             player = Player.getPlayer();
             combo = Combo.createCombo();
+            isBoilingSoundActive = false;
         }
 
         public void Initialize(ContentManager content, Camera camera)
@@ -74,6 +82,9 @@ namespace DevilSoup
             this.content = content;
             gamepad = new Pad();
             this.camera = camera;
+
+            boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
+            MediaPlayer.IsRepeating = true;
         }
 
         public void Update(GameTime gameTime)
@@ -81,7 +92,7 @@ namespace DevilSoup
             int keyPressed;
             currentKeyPressed = Keyboard.GetState();
 
-            if (gamepad.USBMatt != null)  keyPressed = gamepad.getKeyState();
+            if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
             if ((keyPressed == 9 || currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
@@ -111,6 +122,11 @@ namespace DevilSoup
 
             if (ifGameStarted)
             {
+                if (isBoilingSoundActive == false)
+                {
+                    MediaPlayer.Play(boil);
+                    isBoilingSoundActive = !isBoilingSoundActive;
+                }
                 fuelBar.Update(gameTime);
                 calculateHeatValue(fuelBar.fuelValue);
                 readKey(keyPressed);
@@ -150,32 +166,35 @@ namespace DevilSoup
                     }
                 }
 
-                if(isIceCreated == false)
-                {
-                    createIce();
-                }
-                if(isIceCreated == true)
-                {
-                    iceCube.Update(gameTime);
-                }
+                //if(isIceCreated == false)
+                //{
+                //    createIce();
+                //}
+                //if(isIceCreated == true)
+                //{
+                //    iceCube.Update(gameTime);
+                //}
                 // tymczasowo wylaczone
 
-                //if (isLogCreated == false)
-                //{
-                //    createLog();
-                //}
-                //if (isLogCreated == true)
-                //{
-                //    woodLog.Update(gameTime);
+                if (isLogCreated == false)
+                {
+                    createLog();
+                }
+                if (isLogCreated == true)
+                {
+                    woodLog.Update(gameTime);
 
-                //    //danceArea.moveLog(gamepad.accelerometerStatus());
-                //    if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true)
-                //    {
-                //        woodLogDestroySuccessfulHit(15);
-                //        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
-                //        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
-                //    }
-                //}
+                    //danceArea.moveLog(gamepad.accelerometerStatus());
+                    if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
+                    {
+                        fuelBar.addLogBeneathCauldron();
+                        woodLog.isLogDestroyed = true;
+                        woodLogDestroySuccessfulHit();
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                    }
+                }
+                fuelBar.Update(gameTime);
             }
 
             pastKeyPressed = currentKeyPressed;
@@ -298,7 +317,7 @@ namespace DevilSoup
             //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
 
             //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
-            //woodLog = new WoodenLog(content, "\\Assets\\Ice\\lodStable");
+            //woodLog = new WoodenLog(content, "Assets\\Ice\\lodAnim");
             woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
             woodLog.Initialization(camera);
         }
@@ -314,12 +333,12 @@ namespace DevilSoup
             heatValue += difference / 500;
         }
 
-        private void woodLogDestroySuccessfulHit(int _fuelValueChange)
+        private void woodLogDestroySuccessfulHit()
         {
             //Add fuel to the flames
             woodLog.destroyLog();
             //fuelBar.fuelValueChange(_fuelValueChange);
-            fuelBar.fuelValue += 1f;
+            //fuelBar.fuelValue += 1f;
         }
 
         private void comboFunction(int areaPressed)
@@ -431,20 +450,19 @@ namespace DevilSoup
                 if (level > 2)
                     level = 0;
             }
-            if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog != null && woodLog.isDestroyable == true)
+            if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog != null && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
             {
-                woodLogDestroySuccessfulHit(25);
+                woodLog.isLogDestroyed = true;
+                fuelBar.addLogBeneathCauldron();
+                woodLogDestroySuccessfulHit();
             }
         }
 
         public void FuelBarInitialize(ContentManager content)
         {
-            fuelBar = new FireFuelBar(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
+            fuelBar = new Fireplace(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
         }
 
-        public void DrawFuelBar(SpriteBatch _batch)
-        {
-            _batch.Draw(fuelBar.texture, fuelBar.barRectangle, Color.White);
-        }
+
     }
 }

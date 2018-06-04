@@ -13,16 +13,19 @@ namespace DevilSoup
     {
         public Asset log { get; private set; }
         public Vector3 position { get; set; }
-        private double fireBoostValue { get; set; }
+        public double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isLogCreated { get; set; }
+        public bool isLogDestroyed { get; set; }
         private Camera camera;
-
+        public double decayValue { get; set; }
         public WoodenLog()
         {
             isLogCreated = true;
             isDestroyable = false;
             position = new Vector3(150f, 0, 0);
+            fireBoostValue = 2;
+            decayValue = 3;
         }
 
         public WoodenLog(ContentManager content, string path)
@@ -32,10 +35,10 @@ namespace DevilSoup
             position = new Vector3(100f, 0, 10);
             log = new Asset();
             fireBoostValue = 2;
-
+            decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
             log.loadModel(content, path);
-
+            isLogDestroyed = false;
             //Asset animModel = new Asset();
             //animModel.loadModel(content, "Assets\\fbx\\Victoria-hat-dance2");
         }
@@ -105,6 +108,11 @@ namespace DevilSoup
             newLogPosition += offset / 3;
             setPosition(newLogPosition);
         }
+        
+        //public void decayChange(double _value)
+        //{
+        //    decayValue -= _value;
+        //}
 
         public void Update(GameTime gameTime)
         {
@@ -128,5 +136,6 @@ namespace DevilSoup
                 }
             }
         }
+        
     }
 }
