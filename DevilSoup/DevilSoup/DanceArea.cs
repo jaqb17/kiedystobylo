@@ -40,6 +40,8 @@ namespace DevilSoup
         bool ifCheckAccelerometer = true;
         int accelTimeDelay = 0;
         private bool ifGameStarted = false;
+        private double xD = 0;
+        private bool balance = true;
 
         //Cauldron Colors
         private Vector3 standard, yellow, orange, red;
@@ -123,9 +125,10 @@ namespace DevilSoup
         public void Update(GameTime gameTime)
         {
             int keyPressed;
+            int Val = 10;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
-            stage =( player.points /10) +1;
+            stage =( player.points / Val) +1;
             if (stage == 1 && heatValue <= 1f)
                 stage += 1;
             if (stage > 5)
@@ -155,16 +158,26 @@ namespace DevilSoup
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
-                    baseSoulsSpeed = 0.035f;
+                    if(balance)
+                    {
+                        baseSoulsSpeed += 0.005f;
+                        balance = !balance;
+                    }                    
                     break;
                 case 5:
                     if (this.woodLog != null)
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
-                    baseSoulsSpeed = 0.04f;
+                    if (balance)
+                    {
+                        baseSoulsSpeed += 0.005f;
+                        balance = !balance;
+                    }
                     break;
             }
+            if (((player.points / Val) + 1) == 1)
+                balance = true;                
             if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
