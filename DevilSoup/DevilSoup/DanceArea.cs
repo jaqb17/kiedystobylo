@@ -335,9 +335,12 @@ namespace DevilSoup
         public void Draw(GameTime gameTime)
         {
             //woodLog2.Draw(gameTime);
+            if (fuelBar.logsUnderCauldron[0] != null)
+                fuelBar.logsUnderCauldron[0].Draw(gameTime);
             if (ifGameStarted)
             {
-                
+                if (fuelBar.logsUnderCauldron[0] != null)
+                    fuelBar.logsUnderCauldron[0].Draw(gameTime);
                 moveSouls(gameTime);
                 //fuelBar.Draw(gameTime,camera);
                 if (isLogCreated == true)

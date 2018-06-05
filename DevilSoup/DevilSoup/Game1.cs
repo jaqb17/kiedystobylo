@@ -81,8 +81,9 @@ namespace DevilSoup
                                             , "Assets/Cauldron/hKociol/kociol1d_Specular",
                                             camera
                                             );
-            cauldron.setShine(10f); //less = more shiny ^^
-            cauldron.setSpecularColor(new Vector4(0, 1, 0, 1));
+            cauldron.setShine(5f); //less = more shiny ^^
+            
+            
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
 
             //czacha = new Asset(Content, "Assets/test/vs",
@@ -110,7 +111,7 @@ namespace DevilSoup
 
             CCPP = Content.Load<Effect>("Assets/Effects/CC");
 
-            CCPP.Parameters["colorMul"].SetValue(new Vector3(1.2f, .8f, 1));
+            //CCPP.Parameters["colorMul"].SetValue(new Vector3(1.2f, .8f, 1));
 
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
@@ -161,6 +162,7 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
+          //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
             base.Update(gameTime);
         }
 
@@ -181,10 +183,10 @@ namespace DevilSoup
             // czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
             //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
+           // cauldron.world = world;
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
-            danceArea.fuelBar.logsUnderCauldron[0].Draw(gameTime);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             // Drop the render target
