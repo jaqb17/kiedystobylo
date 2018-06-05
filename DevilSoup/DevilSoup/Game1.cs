@@ -19,7 +19,7 @@ namespace DevilSoup
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
-        Effect bwPP;
+        Effect CCPP;
 
         RenderTarget2D renderTarget;
         Texture2D screenTexture;
@@ -107,7 +107,9 @@ namespace DevilSoup
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
 
-            bwPP = Content.Load<Effect>("Assets/Effects/bw");
+            CCPP = Content.Load<Effect>("Assets/Effects/CC");
+
+            CCPP.Parameters["colorMul"].SetValue(new Vector3(1.2f, .8f, 1));
 
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
@@ -185,14 +187,9 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             // Drop the render target
-            GraphicsDevice.SetRenderTarget(null);
-            
+            spriteBatch.Begin();
 
-            //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
-            bwPP.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
+          
 
             //danceArea.DrawFuelBar(spriteBatch);
             danceArea.Draw(gameTime);
@@ -201,6 +198,18 @@ namespace DevilSoup
             sprites.Draw(danceArea);
 
             //danceArea.DrawFuelBar(spriteBatch);
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            
+
+            //spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            CCPP.CurrentTechnique.Passes[0].Apply();
+            spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
+
+     
             spriteBatch.End();
 
             GraphicsDevice.BlendState = BlendState.Opaque;
