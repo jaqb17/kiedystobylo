@@ -289,25 +289,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/Ice/lodAn.fbx
 
-#begin Assets/Souls/Walking.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:Assets/Souls/Walking.fbx
-
 #begin Assets/Souls/Walking1.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -364,44 +345,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Assets/Souls/zombie.fbx
-
-#begin Assets/Souls/zombie.obj
-/importer:OpenAssetImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:Assets/Souls/zombie.obj
-
-#begin Assets/Cauldron/hKociol/kociol.obj
-/importer:OpenAssetImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:Assets/Cauldron/hKociol/kociol.obj
 
 #begin Assets/Cauldron/hKociol/kociol1d.fbx
 /importer:FbxImporter
@@ -513,25 +456,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/Cauldron/hKociol/kociol2d.fbx
 
-#begin Assets/Cauldron/hKociol/krawedzKotla.obj
-/importer:OpenAssetImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:Assets/Cauldron/hKociol/krawedzKotla.obj
-
 #begin Assets/Cauldron/hKociol/RictuCauldron.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -562,4 +486,102 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Assets/Cauldron/hKociol/kociolF.fbx
+
+#begin Assets/Souls/grzesznikT/grzesznik_Albedo.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Souls/grzesznikT/grzesznik_Albedo.tga
+
+#begin Assets/Souls/grzesznikT/grzesznik_Emission.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Souls/grzesznikT/grzesznik_Emission.tga
+
+#begin Assets/Souls/grzesznikT/grzesznik_Height.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Souls/grzesznikT/grzesznik_Height.tga
+
+#begin Assets/Souls/grzesznikT/grzesznik_Normal.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Souls/grzesznikT/grzesznik_Normal.tga
+
+#begin Assets/Souls/grzesznikT/grzesznik_Occlusion.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Souls/grzesznikT/grzesznik_Occlusion.tga
+
+#begin Assets/Souls/grzesznikT/T-Pose.fbx
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Assets/Souls/grzesznikT/T-Pose.fbx
+
+#begin Assets/Souls/grzesznikT/TreadingWater.fbx
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Assets/Souls/grzesznikT/TreadingWater.fbx
 
