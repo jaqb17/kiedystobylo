@@ -12,9 +12,10 @@ namespace DevilSoup
     {
         public Asset iceModel { get; private set; }
         public Vector3 position { get; set; }
-        private double fireBoostValue { get; set; }
+        public double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isIceCreated { get; set; }
+        public bool isIceDestroyed { get; set; }
         public bool isIceActive { get; set; }
         private Camera camera;
 
@@ -31,10 +32,12 @@ namespace DevilSoup
             isIceCreated = true;
             isDestroyable = false;
             isIceActive = true;
+            isIceDestroyed = false;
             position = new Vector3(100f, 0, 10);
             iceModel = new Asset();
             fireBoostValue = -1.5;
             iceModel.loadModel(content, path);
+            
 
             
         }
@@ -65,7 +68,7 @@ namespace DevilSoup
         public void destroyIce()
         {
             if (this.iceModel == null || !this.isIceActive) return;
-
+            isIceCreated = false;
             Console.WriteLine("Zniszczono lod");
             this.iceModel.ifDamageAfterPlay = true;
         }

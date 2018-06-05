@@ -242,10 +242,20 @@ namespace DevilSoup
                 if(isIceCreated == false )
                 {
                     createIce();
+
                 }
                 if(isIceCreated == true)
                 {
                     iceCube.Update(gameTime);
+                    if (gamepad.swung() > 6.5f && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
+                    {
+                        iceCube.isIceDestroyed = true;
+                        heatValue = -iceCube.fireBoostValue;
+                        iceCube.destroyIce();
+
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
+                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                    }
                 }
                 // tymczasowo wylaczone
 
@@ -414,7 +424,7 @@ namespace DevilSoup
         {
             if (heatValue > 5f && heatValue <= 10f || heatValue == 5)
             {
-                iceCube = new Ice(content, "Assets\\Souls\\bryla");
+                iceCube = new Ice(content, "Assets\\Ice\\lodAn");
                 iceCube.Initialization(camera);
             }            
         }
@@ -429,8 +439,7 @@ namespace DevilSoup
         {
             //Add fuel to the flames
             woodLog.destroyLog();
-            //fuelBar.fuelValueChange(_fuelValueChange);
-            //fuelBar.fuelValue += 1f;
+
         }
 
         private void comboFunction(int areaPressed)
@@ -547,6 +556,12 @@ namespace DevilSoup
                 woodLog.isLogDestroyed = true;
                 fuelBar.addLogBeneathCauldron();
                 woodLogDestroySuccessfulHit();
+            }
+            if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && iceCube != null && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
+            {
+                iceCube.isIceDestroyed = true;
+                iceCube.destroyIce();
+                heatValue += iceCube.fireBoostValue;
             }
         }
 
