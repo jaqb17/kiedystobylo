@@ -196,12 +196,6 @@
 /processorParam:TextureFormat=Color
 /build:Assets/test/vss.png
 
-#begin Assets/Effects/CNS.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Assets/Effects/CNS.fx
-
 #begin Assets/Effects/CN.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -603,4 +597,10 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Assets/Cauldron/hKociol/kociol.obj
+
+#begin Assets/Effects/CNS.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Assets/Effects/CNS.fx
 

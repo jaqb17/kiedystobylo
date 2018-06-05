@@ -7,14 +7,14 @@ float Shine = 5;
 
 float4 AmbientColor = float4(1,1,1,1);
 float AmbientIntensity = 0.1;
-float3 LightDirection = float3(0,0,-1);
+float3 LightDirection = float3(0,-.6,-1);
 
 float3 addColor = float3(0,0,0);
 
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 0.9;
 
-float4 SpecularColor = float4(1,1,0,1);
+float4 SpecularColor = float4(1,1,1,1);
 
 
 struct VertexShaderInput
@@ -109,19 +109,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
             color * DiffuseIntensity * DiffuseColor * diffuse + 
             color * SpecularColor*specular;
 
-    float4 outputColor = final;
+    
 
-   //Sepia
-  //  outputColor.r = (final.r * 0.393) + (final.g * 0.769) + (final.b * 0.189);
-  //  outputColor.g = (final.r * 0.349) + (final.g * 0.686) + (final.b * 0.168);    
-  //  outputColor.b = (final.r * 0.272) + (final.g * 0.534) + (final.b * 0.131);
 
-  //Negative
-  // outputColor.r = 1.0-final.r;
-  // outputColor.g = 1.0-final.g;
-  // outputColor.b = 1.0-final.b;
  
-    return outputColor + float4(addColor,0);
+    return final + float4(addColor,0);
 
 }
 
