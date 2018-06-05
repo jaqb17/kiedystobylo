@@ -125,7 +125,7 @@ namespace DevilSoup
         public void Update(GameTime gameTime)
         {
             int keyPressed;
-            int Val = 10;
+            int Val = 30;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
             stage =( player.points / Val) +1;
