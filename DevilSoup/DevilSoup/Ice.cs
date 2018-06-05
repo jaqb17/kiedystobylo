@@ -15,12 +15,14 @@ namespace DevilSoup
         private double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isIceCreated { get; set; }
+        public bool isIceActive { get; set; }
         private Camera camera;
 
         public Ice()
         {
             isIceCreated = true;
             isDestroyable = false;
+            isIceActive = true;
             position = new Vector3(150f, 0, 0);
         }
 
@@ -28,6 +30,7 @@ namespace DevilSoup
         {
             isIceCreated = true;
             isDestroyable = false;
+            isIceActive = true;
             position = new Vector3(100f, 0, 10);
             iceModel = new Asset();
             fireBoostValue = -1.5;
@@ -43,7 +46,7 @@ namespace DevilSoup
 
         public void setPosition(Vector3 _position)
         {
-            if (iceModel.ifPlay) return;
+            if (iceModel.ifPlay || !this.isIceActive) return;
 
             this.position = _position;
             this.iceModel.world = Matrix.CreateTranslation(position);
@@ -53,7 +56,7 @@ namespace DevilSoup
 
         public void Draw(GameTime gameTime)
         {
-            if (isIceCreated && this.iceModel != null)
+            if (isIceCreated && isIceActive && this.iceModel != null)
             {
                 this.iceModel.Draw(gameTime, camera.view, camera.projection);
             }
@@ -61,9 +64,9 @@ namespace DevilSoup
 
         public void destroyIce()
         {
-            if (this.iceModel == null) return;
+            if (this.iceModel == null || !this.isIceActive) return;
 
-            Console.WriteLine("Zniszczono");
+            Console.WriteLine("Zniszczono lod");
             this.iceModel.ifDamageAfterPlay = true;
         }
 
@@ -74,7 +77,7 @@ namespace DevilSoup
 
         private void moveIce()
         {
-            if (iceModel.ifPlay) return;
+            if (iceModel.ifPlay || !this.isIceActive) return;
 
             Vector3 newIcePosition = position;
 
@@ -95,7 +98,7 @@ namespace DevilSoup
 
         private void moveIce(Vector3 offset)
         {
-            if (iceModel.ifPlay) return;
+            if (iceModel.ifPlay || !this.isIceActive) return;
 
             Vector3 newLogPosition = position;
             newLogPosition += offset / 3;
@@ -104,7 +107,7 @@ namespace DevilSoup
 
         public void Update(GameTime gameTime)
         {
-            if (this.iceModel == null) return;
+            if (this.iceModel == null || !this.isIceActive) return;
 
             moveIce();
 
