@@ -14,6 +14,7 @@ namespace DevilSoup
         private Camera camera;
         public Soul soul;
         private String path = "Assets\\Souls\\bryla";
+        //private String path = "Assets\\Souls\\T-pose";
         private float escape_height = 51.0f;
         private Player player;
         public float baseSoulsSpeed { get; set; }

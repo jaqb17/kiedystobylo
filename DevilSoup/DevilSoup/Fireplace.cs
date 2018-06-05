@@ -16,14 +16,16 @@ namespace DevilSoup
         public WoodenLog[] logsUnderCauldron { get; set; }
         public double fuelValue { get; set; }
         public const int maxLogsUnderCauldron = 5;
+        private Vector3 position1;
 
-        public Fireplace(Vector2 _position, string texturePath, ContentManager content)
+        public Fireplace(ContentManager content)
         {
+            position1 = new Vector3(60f, 0f, 0f);
             logsUnderCauldron = new WoodenLog[maxLogsUnderCauldron];
             for (int i = 0; i < maxLogsUnderCauldron; i++)
                 logsUnderCauldron[i] = null;//logsUnderCauldron[i] = new WoodenLog();
-                //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-            logsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+                                            //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+            logsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", position1);
             logsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
 
         }
@@ -75,6 +77,16 @@ namespace DevilSoup
             decay(0.001);
             removeLog();
         }
+
+        //public void Draw(GameTime gameTime, Camera _camera)
+        //{
+        //    for (int i = 0; i < maxLogsUnderCauldron; i++)
+        //    {
+        //        if (logsUnderCauldron[i] != null)
+        //            logsUnderCauldron[i].DrawForFireplace(gameTime, _camera);
+        //    }
+
+        //}
 
     }
 }

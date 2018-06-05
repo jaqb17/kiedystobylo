@@ -5,6 +5,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using DPSF;
 
 namespace DevilSoup
 {
@@ -24,9 +25,11 @@ namespace DevilSoup
         public double heatValue = 2f;
         private Player player;
         public WoodenLog woodLog { get; set; }
+        //public WoodenLog woodLog2 { get; set; }
         public Ice iceCube { get; set; }
         public Fireplace fuelBar { get; set; }
         public int stage = 1;
+        
         
 
 
@@ -50,6 +53,9 @@ namespace DevilSoup
 
         //Sounds
         private Song boil;
+        private SoundEffect soulDeath;
+        private const int woodChopSounds = 3;
+        private SoundEffect[] woodChopSoundTable;
         private bool isBoilingSoundActive;
 
 
@@ -103,6 +109,8 @@ namespace DevilSoup
             player = Player.getPlayer();
             combo = Combo.createCombo();
             isBoilingSoundActive = false;
+            woodChopSoundTable = new SoundEffect[woodChopSounds];
+            //woodLog2 = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", new Vector3(0f, 0f, 0f));
             #region Vectors cauldron colors 
             standard = new Vector3(0f, 0f, 0f);
             yellow = new Vector3(0.1f, 0.1f, 0);
@@ -117,15 +125,21 @@ namespace DevilSoup
             this.content = content;
             gamepad = new Pad();
             this.camera = camera;
+            fuelBar = new Fireplace(content);
             currentColor = yellow;
             boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
+            soulDeath = content.Load<SoundEffect>("Assets\\Sounds\\SoulDeath\\soulDeath1");
+            for (int i = 0; i < woodChopSounds; i++)
+                woodChopSoundTable[i] = content.Load<SoundEffect>("Assets\\Sounds\\WoodChop\\wood" + (i+1));
             MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.3f;
         }
 
         public void Update(GameTime gameTime)
         {
+            //woodLog2.Initialization(camera);
             int keyPressed;
-            int Val = 30;
+            int Val = 23;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
             stage =( player.points / Val) +1;
@@ -286,8 +300,7 @@ namespace DevilSoup
                         fuelBar.addLogBeneathCauldron();
                         woodLog.isLogDestroyed = true;
                         woodLogDestroySuccessfulHit();
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
+                        playAllSoundsInTable(woodChopSoundTable, woodChopSounds);
                     }
                 }
                 fuelBar.Update(gameTime);
@@ -313,13 +326,20 @@ namespace DevilSoup
             }
         }
 
+        private void playAllSoundsInTable(SoundEffect[] _var, int _maxCount)
+        {
+            for (int i = 0; i < _maxCount; i++)
+                _var[i].Play();
+        }
 
         public void Draw(GameTime gameTime)
         {
+            //woodLog2.Draw(gameTime);
             if (ifGameStarted)
             {
+                
                 moveSouls(gameTime);
-
+                //fuelBar.Draw(gameTime,camera);
                 if (isLogCreated == true)
                     woodLog.Draw(gameTime);
                 if (isIceCreated == true)
@@ -356,7 +376,7 @@ namespace DevilSoup
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
         {
-            origin.X += 7f;
+            origin.X += 3.5f;
             Vector3 result = origin;
 
             float angle = (float)(id * 360.0f / numberOfAreas * Math.PI / 180.0f);
@@ -394,6 +414,7 @@ namespace DevilSoup
 
         private void Killed()
         {
+            soulDeath.Play();
             player = Player.getPlayer();
             player.points += (this.level + 1);
         }
@@ -569,6 +590,7 @@ namespace DevilSoup
                 woodLog.isLogDestroyed = true;
                 fuelBar.addLogBeneathCauldron();
                 woodLogDestroySuccessfulHit();
+                playAllSoundsInTable(woodChopSoundTable, woodChopSounds);
             }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && iceCube != null && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
             {
@@ -580,7 +602,7 @@ namespace DevilSoup
 
         public void FuelBarInitialize(ContentManager content)
         {
-            fuelBar = new Fireplace(new Vector2(100, 60), "Assets\\OtherTextures\\slashTexture", content);
+            fuelBar = new Fireplace(content);
         }
 
 

@@ -604,3 +604,27 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/Cauldron/hKociol/kociol.obj
 
+#begin Assets/Sounds/SoulDeath/soulDeath1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Sounds/SoulDeath/soulDeath1.wav
+
+#begin Assets/Sounds/WoodChop/wood1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Sounds/WoodChop/wood1.wav
+
+#begin Assets/Sounds/WoodChop/wood2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Sounds/WoodChop/wood2.wav
+
+#begin Assets/Sounds/WoodChop/wood3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Sounds/WoodChop/wood3.wav
+

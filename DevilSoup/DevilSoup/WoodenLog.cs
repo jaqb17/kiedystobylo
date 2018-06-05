@@ -37,7 +37,7 @@ namespace DevilSoup
             isLogCreated = true;
             isDestroyable = false;
             isWoodActive = false;
-            position = new Vector3(100f, 0, 10);
+            position = new Vector3(110f, 0, 10);
             log = new Asset();
             fireBoostValue = 2;
             decayValue = 3;
@@ -45,9 +45,22 @@ namespace DevilSoup
             log.loadModel(content, path);
 
             isLogDestroyed = false;
-            //Asset animModel = new Asset();
-            //animModel.loadModel(content, "Assets\\fbx\\Victoria-hat-dance2");
+        }
 
+        public WoodenLog(ContentManager content, string path, Vector3 _position)
+        {
+            isLogCreated = true;
+            isDestroyable = false;
+            isWoodActive = false;
+            //position = new Vector3(100f, 0, 10);
+            log = new Asset();
+            fireBoostValue = 2;
+            decayValue = 3;
+            //log.LoadContentFile(content, "Wood", path);
+            log.loadModel(content, path);
+
+            isLogDestroyed = false;
+            position = _position;
         }
 
         public void Initialization(Camera camera)
@@ -62,7 +75,7 @@ namespace DevilSoup
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
             this.log.scaleAset(4f);
-            //Console.WriteLine(this.position);
+            
         }
 
         public void Draw(GameTime gameTime)
@@ -70,6 +83,15 @@ namespace DevilSoup
             if (isLogCreated && isWoodActive && this.log != null)
             {
                this.log.Draw(gameTime, camera.view, camera.projection);
+            }
+        }
+
+        public void DrawForFireplace(GameTime gameTime, Camera _camera)
+        {
+            Initialization(_camera);
+            if (isLogCreated && this.log != null)
+            {
+                this.log.Draw(gameTime, camera.view, camera.projection);
             }
         }
 
@@ -94,16 +116,13 @@ namespace DevilSoup
 
             newLogPosition.X -= 1f;
             newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 50;
-            //newLogPosition.Y += 0.1f;
-            //if (newLogPosition.X < 0f)
-            //    newLogPosition.Y -= 0.1f;
             setPosition(newLogPosition);
             if (position.Y > 48.5f)
                 isDestroyable = true;
             else
                 isDestroyable = false;
 
-            if (newLogPosition.X < -100f)
+            if (newLogPosition.X < -110f)
                 woodLogDestroyFailedToHit();
         }
 
@@ -115,11 +134,7 @@ namespace DevilSoup
             newLogPosition += offset / 3;
             setPosition(newLogPosition);
         }
-        
-        //public void decayChange(double _value)
-        //{
-        //    decayValue -= _value;
-        //}
+
 
         public void Update(GameTime gameTime)
         {

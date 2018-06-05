@@ -61,7 +61,7 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
-            cameraPos = new Vector3(0, 100, 60);
+            cameraPos = new Vector3(0, 130, 65);
 
 
             cauldronPos = new Vector3(0f, 0f, 0f);
@@ -184,7 +184,7 @@ namespace DevilSoup
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
-
+            danceArea.fuelBar.logsUnderCauldron[0].Draw(gameTime);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             // Drop the render target

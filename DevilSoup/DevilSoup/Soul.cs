@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
 
 namespace DevilSoup
 {
@@ -14,6 +15,7 @@ namespace DevilSoup
         Camera camera;
         Asset soul;
         Vector3 soulPosition;
+        
         public int lifes { get; set; }
 
         public Soul(ContentManager content, String path)
@@ -21,6 +23,7 @@ namespace DevilSoup
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
             soul.loadModel(content, path);
+            
         }
 
         public void Initialize(Camera camera)
