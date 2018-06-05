@@ -86,11 +86,11 @@ namespace DevilSoup
             
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
 
-            //czacha = new Asset(Content, "Assets/test/vs",
-            //                            "Assets/test/vsc",
-            //                            "Assets/test/vsn",
-            //                            "Assets/test/vss",
-            //                            camera);
+            czacha = new Asset(Content, "Assets/test/vs",
+                                        "Assets/test/vsc",
+                                        "Assets/test/vsn",
+                                        "Assets/test/vss",
+                                        camera);
 
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera);

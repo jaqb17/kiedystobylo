@@ -96,9 +96,7 @@ namespace DevilSoup
             this.renderEffect = content.Load<Effect>(effectPath);
             this.model = content.Load<Model>(modelPath);
 
-            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
-            renderEffect.Parameters["NormalMap"].SetValue(normalMap);
-            renderEffect.Parameters["SpecMap"].SetValue(specMap);
+            
 
             this.cameraPos = camera.Position;
 
@@ -320,6 +318,14 @@ namespace DevilSoup
                     if (addColor != null)
                     {
                         renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
+                    }
+
+                    renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+                    renderEffect.Parameters["NormalMap"].SetValue(normalMap);
+
+                    if (specMap != null)
+                    {
+                        renderEffect.Parameters["SpecMap"].SetValue(specMap);
                     }
                     renderEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
                     renderEffect.Parameters["View"].SetValue(view);
