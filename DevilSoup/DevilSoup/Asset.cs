@@ -39,6 +39,14 @@ namespace DevilSoup
 
         private AnimationPlayer player = null;
 
+        private Vector4 ambientColor;
+        private float ambientIntensity = 0.1f;
+        private Vector3 LightDirection;
+        private Vector4 diffuseColor;
+        private float diffuseIntesity=0.9f;
+        private Vector4 specularColor;
+        private float shine = 5f;
+
         //public double animationLength { get; private set; }
         //public DateTime animationStarted { get; private set; }
 
@@ -99,7 +107,7 @@ namespace DevilSoup
             
 
             this.cameraPos = camera.Position;
-
+            initShaderData();
             computeCenter();
         }
 
@@ -118,8 +126,16 @@ namespace DevilSoup
            
 
             this.cameraPos = camera.Position;
-
+            initShaderData();
             computeCenter();
+        }
+
+        private void initShaderData()
+        {
+            ambientColor = new Vector4(1, 1, 1, 1);
+            LightDirection = new Vector3(0, 0, -1);
+            specularColor = new Vector4(1, 1, 1, 1);
+            diffuseColor = new Vector4(1, 1, 1, 1);
         }
 
        
@@ -333,7 +349,15 @@ namespace DevilSoup
                     renderEffect.Parameters["CamPosition"].SetValue(cameraPos);
                     Matrix worldInverseTransposeMatrix = Matrix.Transpose(Matrix.Invert(mesh.ParentBone.Transform * world));
                     // effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
-                    
+
+                    renderEffect.Parameters["AmbientColor"].SetValue(ambientColor);
+                    renderEffect.Parameters["AmbientIntensity"].SetValue(ambientIntensity);
+                    renderEffect.Parameters["LightDirection"].SetValue(LightDirection);
+                    renderEffect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+                    renderEffect.Parameters["DiffuseIntensity"].SetValue(diffuseIntesity);
+                    renderEffect.Parameters["SpecularColor"].SetValue(specularColor);
+                    renderEffect.Parameters["Shine"].SetValue(shine);
+
                 }
                 mesh.Draw();
             }
@@ -364,33 +388,33 @@ namespace DevilSoup
 
         public void setAmbientColor(Vector4 color)
         {
-            renderEffect.Parameters["AmbientColor"].SetValue(color);
+            ambientColor = color; 
         }
 
         public void setAmbientIntensity(float intensity)
         {
-            renderEffect.Parameters["AmbientIntensity"].SetValue(intensity);
+            ambientIntensity = intensity;
         }
 
         public void setLightDirection(Vector3 direction)
         {
-            renderEffect.Parameters["LightDirection"].SetValue(direction);
+            LightDirection = direction;
         }
 
         public void setDiffuseColor(Vector4 color)
         {
-            renderEffect.Parameters["DiffuseColor"].SetValue(color);
+            diffuseColor = color;
         }
 
         public void setDiffuseIntensity(float intensity)
         {
-            renderEffect.Parameters["DiffuseIntensity"].SetValue(intensity);
+            diffuseIntesity = intensity;
         }
 
 
         public void setSpecularColor(Vector4 color)
         {
-            renderEffect.Parameters["SpecularColor"].SetValue(color);
+            specularColor = color;
         }
 
         private void computeCenter()

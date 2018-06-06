@@ -14,7 +14,7 @@ float3 addColor = float3(0,0,0);
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 0.9;
 
-float4 SpecularColor = float4(1,1,0,1);
+float4 SpecularColor = float4(1,1,1,1);
 
 
 struct VertexShaderInput

@@ -28,6 +28,7 @@ namespace DevilSoup
 
         private Camera camera;
         private Asset cauldron;
+        private Asset zupa;
         private Asset czacha;
         private DanceArea danceArea;
         private Player player;
@@ -82,15 +83,24 @@ namespace DevilSoup
                                             camera
                                             );
             cauldron.setShine(5f); //less = more shiny ^^
-            
+
+            Vector3 zupyPosition = new Vector3(0, 0, 0);
+            zupa = new Asset(Content, "Assets/Soup/zupaModel",
+                                       "Assets/Soup/zupa_Albedo",
+                                       "Assets/Soup/zupa_Normal",
+                                       "Assets/Soup/zupa_Metallic",
+                                       camera);
             
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
+            zupa.world = Matrix.CreateTranslation(zupyPosition);
+            zupa.scaleAset(3f);
+            zupa.setAmbientIntensity(.5f);
 
-            czacha = new Asset(Content, "Assets/test/vs",
-                                        "Assets/test/vsc",
-                                        "Assets/test/vsn",
-                                        "Assets/test/vss",
-                                        camera);
+            //czacha = new Asset(Content, "Assets/test/vs",
+            //                            "Assets/test/vsc",
+            //                            "Assets/test/vsn",
+            //                            "Assets/test/vss",
+            //                            camera);
 
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera);
@@ -164,7 +174,7 @@ namespace DevilSoup
             danceArea.Update(gameTime);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
+           // CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
             base.Update(gameTime);
         }
 
@@ -182,11 +192,12 @@ namespace DevilSoup
 
             // Draw the scene
               world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
-             czacha.world = world;
+             //czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
             //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
            // cauldron.world = world;
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
+            zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
