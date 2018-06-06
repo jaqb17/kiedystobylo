@@ -44,7 +44,7 @@ namespace DevilSoup
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = 640;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
@@ -111,7 +111,7 @@ namespace DevilSoup
 
             CCPP = Content.Load<Effect>("Assets/Effects/CC");
 
-            //CCPP.Parameters["colorMul"].SetValue(new Vector3(1.2f, .8f, 1));
+           // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
 
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
@@ -162,7 +162,9 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
-          //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
+            //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
+
+            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
             base.Update(gameTime);
         }
 
@@ -179,8 +181,8 @@ namespace DevilSoup
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             // Draw the scene
-            //  world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
-            // czacha.world = world;
+              world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+             czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
             //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
            // cauldron.world = world;
@@ -208,7 +210,8 @@ namespace DevilSoup
 
             //spriteBatch.Begin();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
+            
+            
             CCPP.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
 
