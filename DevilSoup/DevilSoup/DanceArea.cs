@@ -27,7 +27,7 @@ namespace DevilSoup
         public Ice iceCube { get; set; }
         public Fireplace fuelBar { get; set; }
         public int stage = 1;
-        
+
 
 
         private Camera camera;
@@ -46,7 +46,7 @@ namespace DevilSoup
         //Cauldron Colors
         private Vector3 standard, yellow, orange, red;
         public Vector3 currentColor { get; set; }
-        
+
 
         //Sounds
         private Song boil;
@@ -88,13 +88,13 @@ namespace DevilSoup
                 {
                     iceCube.isIceCreated = false;
                     return woodLog.isLogCreated;
-                }                    
+                }
                 else if (this.iceCube != null && !iceCube.isIceCreated)
                 {
                     woodLog.isLogCreated = false;
                     return iceCube.isIceCreated;
                 }
-                    
+
                 else return false;
             }
         }
@@ -106,6 +106,7 @@ namespace DevilSoup
             player = Player.getPlayer();
             combo = Combo.createCombo();
             isBoilingSoundActive = false;
+            woodChopSoundTable = new SoundEffect[woodChopSounds];
             #region Vectors cauldron colors 
             standard = new Vector3(0f, 0f, 0f);
             yellow = new Vector3(0.1f, 0.1f, 0);
@@ -116,7 +117,7 @@ namespace DevilSoup
 
         public void Initialize(ContentManager content, Camera camera)
         {
-            
+
             this.content = content;
             gamepad = new Pad();
             this.camera = camera;
@@ -126,7 +127,7 @@ namespace DevilSoup
             boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
             soulDeath = content.Load<SoundEffect>("Assets\\Sounds\\SoulDeath\\soulDeath1");
             for (int i = 0; i < woodChopSounds; i++)
-                woodChopSoundTable[i] = content.Load<SoundEffect>("Assets\\Sounds\\WoodChop\\wood" + (i+1));
+                woodChopSoundTable[i] = content.Load<SoundEffect>("Assets\\Sounds\\WoodChop\\wood" + (i + 1));
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.3f;
         }
@@ -137,7 +138,7 @@ namespace DevilSoup
             int Val = 100;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
-            stage =( player.points / Val) +1;
+            stage = (player.points / Val) + 1;
             if (stage == 1 && heatValue <= 1f)
                 stage += 1;
             if (stage > 5)
@@ -167,11 +168,11 @@ namespace DevilSoup
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
-                    if(balance)
+                    if (balance)
                     {
                         baseSoulsSpeed += 0.005f;
                         balance = !balance;
-                    }                    
+                    }
                     break;
                 case 5:
                     if (this.woodLog != null)
@@ -186,7 +187,7 @@ namespace DevilSoup
                     break;
             }
             if (((player.points / Val) + 1) == 1)
-                balance = true;                
+                balance = true;
             if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
@@ -261,12 +262,12 @@ namespace DevilSoup
                     }
                 }
 
-                if(isIceCreated == false )
+                if (isIceCreated == false)
                 {
                     createIce();
 
                 }
-                if(isIceCreated == true)
+                if (isIceCreated == true)
                 {
                     iceCube.Update(gameTime);
                     if (gamepad.swung() > 6.5f && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
@@ -286,7 +287,7 @@ namespace DevilSoup
                 {
                     woodLog.Update(gameTime);
 
-                    
+
                     if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
                     {
                         fuelBar.addLogBeneathCauldron(content, camera);
@@ -432,11 +433,11 @@ namespace DevilSoup
 
             //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
             //woodLog = new WoodenLog(content, "Assets\\Ice\\lodStable");
-            if (heatValue > 0f && heatValue < 5f || heatValue == 5)                
+            if (heatValue > 0f && heatValue < 5f || heatValue == 5)
             {
                 woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
                 woodLog.Initialization(camera);
-            }            
+            }
         }
         private void createIce()
         {
@@ -444,7 +445,7 @@ namespace DevilSoup
             {
                 iceCube = new Ice(content, "Assets\\Ice\\lodAn");
                 iceCube.Initialization(camera);
-            }            
+            }
         }
         private void calculateHeatValue(double _var)
         {
