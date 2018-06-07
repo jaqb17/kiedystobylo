@@ -5,7 +5,6 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using DPSF;
 
 namespace DevilSoup
 {
@@ -25,11 +24,9 @@ namespace DevilSoup
         public double heatValue = 2f;
         private Player player;
         public WoodenLog woodLog { get; set; }
-        //public WoodenLog woodLog2 { get; set; }
         public Ice iceCube { get; set; }
         public Fireplace fuelBar { get; set; }
         public int stage = 1;
-        
         
 
 
@@ -109,8 +106,6 @@ namespace DevilSoup
             player = Player.getPlayer();
             combo = Combo.createCombo();
             isBoilingSoundActive = false;
-            woodChopSoundTable = new SoundEffect[woodChopSounds];
-            //woodLog2 = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", new Vector3(0f, 0f, 0f));
             #region Vectors cauldron colors 
             standard = new Vector3(0f, 0f, 0f);
             yellow = new Vector3(0.1f, 0.1f, 0);
@@ -126,6 +121,7 @@ namespace DevilSoup
             gamepad = new Pad();
             this.camera = camera;
             fuelBar = new Fireplace(content);
+            fuelBar.Initialization(camera);
             currentColor = yellow;
             boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
             soulDeath = content.Load<SoundEffect>("Assets\\Sounds\\SoulDeath\\soulDeath1");
@@ -137,9 +133,8 @@ namespace DevilSoup
 
         public void Update(GameTime gameTime)
         {
-            //woodLog2.Initialization(camera);
             int keyPressed;
-            int Val = 23;
+            int Val = 100;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
             stage =( player.points / Val) +1;
@@ -279,9 +274,6 @@ namespace DevilSoup
                         iceCube.isIceDestroyed = true;
                         heatValue = -iceCube.fireBoostValue;
                         iceCube.destroyIce();
-
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
                     }
                 }
                 // tymczasowo wylaczone
@@ -294,16 +286,15 @@ namespace DevilSoup
                 {
                     woodLog.Update(gameTime);
 
-                    //danceArea.moveLog(gamepad.accelerometerStatus());
+                    
                     if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
                     {
-                        fuelBar.addLogBeneathCauldron();
+                        fuelBar.addLogBeneathCauldron(content, camera);
                         woodLog.isLogDestroyed = true;
                         woodLogDestroySuccessfulHit();
-                        playAllSoundsInTable(woodChopSoundTable, woodChopSounds);
                     }
                 }
-                fuelBar.Update(gameTime);
+                //fuelBar.Update(gameTime);
             }
 
             pastKeyPressed = currentKeyPressed;
@@ -326,23 +317,14 @@ namespace DevilSoup
             }
         }
 
-        private void playAllSoundsInTable(SoundEffect[] _var, int _maxCount)
-        {
-            for (int i = 0; i < _maxCount; i++)
-                _var[i].Play();
-        }
 
         public void Draw(GameTime gameTime)
         {
-            //woodLog2.Draw(gameTime);
-            if (fuelBar.logsUnderCauldron[0] != null)
-                fuelBar.logsUnderCauldron[0].Draw(gameTime);
             if (ifGameStarted)
             {
-                if (fuelBar.logsUnderCauldron[0] != null)
-                    fuelBar.logsUnderCauldron[0].Draw(gameTime);
                 moveSouls(gameTime);
-                //fuelBar.Draw(gameTime,camera);
+                fuelBar.Draw(gameTime, camera);
+
                 if (isLogCreated == true)
                     woodLog.Draw(gameTime);
                 if (isIceCreated == true)
@@ -354,13 +336,13 @@ namespace DevilSoup
             switch (level)
             {
                 case 0:
-                    baseSoulsSpeed = 0.03f;
+                    baseSoulsSpeed = 0.02f;
                     break;
                 case 1:
-                    baseSoulsSpeed = 0.04f;
+                    baseSoulsSpeed = 0.03f;
                     break;
                 case 2:
-                    baseSoulsSpeed = 0.05f;
+                    baseSoulsSpeed = 0.04f;
                     break;
             }
         }
@@ -417,9 +399,8 @@ namespace DevilSoup
 
         private void Killed()
         {
-            soulDeath.Play();
             player = Player.getPlayer();
-            player.points += (this.level + 1);
+            player.points += (this.level + 10);
         }
 
         private void hurtSoul(int id)
@@ -591,9 +572,8 @@ namespace DevilSoup
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog != null && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
             {
                 woodLog.isLogDestroyed = true;
-                fuelBar.addLogBeneathCauldron();
+                fuelBar.addLogBeneathCauldron(content, camera);
                 woodLogDestroySuccessfulHit();
-                playAllSoundsInTable(woodChopSoundTable, woodChopSounds);
             }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && iceCube != null && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
             {

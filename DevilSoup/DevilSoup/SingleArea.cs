@@ -76,7 +76,7 @@ namespace DevilSoup
         private void Killed()
         {
             player = Player.getPlayer();
-            player.points += (this.level + 1);
+            player.points += (this.level + 10 );
         }
 
         private void Escaped(int power)

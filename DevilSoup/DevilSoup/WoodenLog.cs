@@ -78,20 +78,12 @@ namespace DevilSoup
             
         }
 
+
         public void Draw(GameTime gameTime)
         {
             if (isLogCreated && isWoodActive && this.log != null)
             {
                this.log.Draw(gameTime, camera.view, camera.projection);
-            }
-        }
-
-        public void DrawForFireplace(GameTime gameTime, Camera _camera)
-        {
-            Initialization(_camera);
-            if (isLogCreated && this.log != null)
-            {
-                this.log.Draw(gameTime, camera.view, camera.projection);
             }
         }
 
@@ -135,6 +127,36 @@ namespace DevilSoup
             setPosition(newLogPosition);
         }
 
+        private void toDraw()
+        {
+            this.log.world = Matrix.CreateTranslation(position);
+            this.log.scaleAset((float)decayValue);
+        }
+
+        public void StaticUpdate(GameTime gameTime)
+        {
+            if (this.log == null || !this.isWoodActive) return;
+            toDraw();
+            if (this.log.HasAnimation())
+            {
+                if (this.log.Clips.Count > 0)
+                    this.log.animationUpdate(gameTime);
+
+                if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
+                {
+                    this.log.PlayClip(this.log.Clips[0]);
+                    this.log.ifPlay = true;
+                }
+
+                if (this.log.finishedAnimation && this.log.ifDamageAfterPlay)
+                {
+                    this.log.unloadModel();
+                    this.log = null;
+                    isLogCreated = false;
+                }
+            }
+
+        }
 
         public void Update(GameTime gameTime)
         {

@@ -16,32 +16,55 @@ namespace DevilSoup
         public WoodenLog[] logsUnderCauldron { get; set; }
         public double fuelValue { get; set; }
         public const int maxLogsUnderCauldron = 5;
-        private Vector3 position1;
+        private Vector3[] positionVectors;
+        private Vector3 position1, position2, position3, position4, position5;
 
         public Fireplace(ContentManager content)
         {
-            position1 = new Vector3(60f, 0f, 0f);
+            #region Positions for logs under Cauldron
+            positionVectors = new Vector3[maxLogsUnderCauldron];
+            positionVectors[0] = new Vector3(-30f, 0f, 35f);
+            positionVectors[1] = new Vector3(-20f, 0f, 44f);
+            positionVectors[2] = new Vector3(0, 0, 50f);
+            positionVectors[3] = new Vector3(20f, 0f, 44f);
+            positionVectors[4] = new Vector3(30f, 0f, 35f);
+            #endregion
             logsUnderCauldron = new WoodenLog[maxLogsUnderCauldron];
             for (int i = 0; i < maxLogsUnderCauldron; i++)
                 logsUnderCauldron[i] = null;//logsUnderCauldron[i] = new WoodenLog();
                                             //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-            logsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", position1);
-            logsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-
+            logsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", positionVectors[0]);
+            logsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz",positionVectors[1]);
+            logsUnderCauldron[0].isWoodActive = true;
+            logsUnderCauldron[1].isWoodActive = true;
         }
 
-        public void addLogBeneathCauldron()
+        public void addLogBeneathCauldron(ContentManager content, Camera camera)
         {
             for (int i = 0; i < maxLogsUnderCauldron; i++)
             {
                 if (logsUnderCauldron[i] == null)
                 {
-                    //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-                    logsUnderCauldron[i] = new WoodenLog();
+                    logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz",positionVectors[i]);
+                    logsUnderCauldron[i].isWoodActive = true;
+                    logsUnderCauldron[i].Initialization(camera);
                     break;
                 }
             }
         }
+
+        public void Initialization(Camera camera)
+        {
+            for (int i = 0; i < maxLogsUnderCauldron; i++)
+            {
+                if (logsUnderCauldron[i] != null)
+                {
+                    //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+                    logsUnderCauldron[i].Initialization(camera);
+                }
+            }
+        }
+
         private void fuelValueChange()
         {
             double _value = 0;
@@ -66,27 +89,37 @@ namespace DevilSoup
         {
             for (int i = 0; i < maxLogsUnderCauldron; i++)
             {
-                if (logsUnderCauldron[i] != null && logsUnderCauldron[i].decayValue < 0)
+                if (logsUnderCauldron[i] != null && logsUnderCauldron[i].decayValue < 2)
                     logsUnderCauldron[i] = null;
             }
         }
 
         public void Update(GameTime gameTime)
         {
+            for (int i = 0; i < maxLogsUnderCauldron; i++)
+            {
+                if (logsUnderCauldron[i] != null)
+                {
+                    logsUnderCauldron[i].StaticUpdate(gameTime);
+                }
+            }
             fuelValueChange();
             decay(0.001);
             removeLog();
         }
 
-        //public void Draw(GameTime gameTime, Camera _camera)
-        //{
-        //    for (int i = 0; i < maxLogsUnderCauldron; i++)
-        //    {
-        //        if (logsUnderCauldron[i] != null)
-        //            logsUnderCauldron[i].DrawForFireplace(gameTime, _camera);
-        //    }
+        public void Draw(GameTime gameTime, Camera _camera)
+        {
+            for (int i = 0; i < maxLogsUnderCauldron; i++)
+            {
+                if (logsUnderCauldron[i] != null)
+                {
+                    logsUnderCauldron[i].Initialization(_camera);
+                    logsUnderCauldron[i].Draw(gameTime);
+                }
+            }
 
-        //}
+        }
 
     }
 }
