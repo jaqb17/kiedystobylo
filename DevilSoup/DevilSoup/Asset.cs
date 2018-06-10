@@ -364,8 +364,6 @@ namespace DevilSoup
 
             if (specMap != null) renderEffect.Parameters["SpecMap"].SetValue(specMap);
             renderEffect.Parameters["ViewProj"].SetValue(view * projection);
-            renderEffect.Parameters["WorldIT"].SetValue(world);
-            renderEffect.Parameters["World"].SetValue(world);
             renderEffect.Parameters["View"].SetValue(view);
             renderEffect.Parameters["Projection"].SetValue(projection);
             renderEffect.Parameters["Bones"].SetValue(skeleton);
@@ -382,6 +380,8 @@ namespace DevilSoup
 
             foreach (ModelMesh mesh in model.Meshes)
             {
+                renderEffect.Parameters["WorldIT"].SetValue(boneTransforms[mesh.ParentBone.Index] * world);
+                renderEffect.Parameters["World"].SetValue(boneTransforms[mesh.ParentBone.Index] * world);
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
                     DrawMeshPart(part, renderEffect.Techniques["Skinned"]);
