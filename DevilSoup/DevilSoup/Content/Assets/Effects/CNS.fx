@@ -41,6 +41,10 @@ struct Skinned_VertexShaderInput
     float3 Binormal : BINORMAL0;
     float3 Tangent : TANGENT0;
 };
+struct Skybox_VertexShaderInput
+{
+    float4 Position : POSITION0;
+};
  
 struct VertexShaderOutput
 {
@@ -48,6 +52,13 @@ struct VertexShaderOutput
     float2 TexCoord : TEXCOORD0;
     float3 View : TEXCOORD1;
     float3x3 WorldToTangentSpace : TEXCOORD2;
+};
+
+ 
+struct Skybox_VertexShaderOutput
+{
+    float4 Position : POSITION0;
+    float3 TexCoord : TEXCOORD0;
 };
 
 texture2D ColorMap;
@@ -75,6 +86,17 @@ sampler2D SpecMapSampler = sampler_state
     MinFilter = linear;
     MagFilter = linear;
     MipFilter = linear;
+};
+
+Texture SkyBoxTexture; 
+samplerCUBE SkyBoxSampler = sampler_state 
+{ 
+   Texture = <SkyBoxTexture>; 
+   MagFilter = linear; 
+   MinFilter = linear; 
+   MipFilter = linear; 
+   AddressU = Mirror; 
+   AddressV = Mirror; 
 };
 
 void SkinNormal(inout Skinned_VertexShaderInput vin, uniform int boneCount)
@@ -134,6 +156,21 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input, float3 Normal :
     return output;
 }
 
+VertexShaderOutput Skybox_VertexShaderFunction(Skybox_VertexShaderInput input)
+{
+    VertexShaderOutput output;
+ 
+    float4 worldPosition = mul(input.Position, World);
+    float4 viewPosition = mul(worldPosition, View);
+    output.Position = mul(viewPosition, Projection);
+ 
+    float4 VertexPosition = mul(input.Position, World);
+    output.TexCoord = VertexPosition - float4(CamPosition,1.0);
+ 
+    return output;
+}
+
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 
@@ -173,6 +210,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 }
 
+
+float4 Skybox_PixelShaderFunction(Skybox_VertexShaderOutput input) : COLOR0
+{
+    return texCUBE(SkyBoxSampler, normalize(input.TexCoord));
+}
+
+
 technique NotSkinned
 {
     pass Pass1
@@ -188,5 +232,14 @@ technique Skinned
     {
         VertexShader = compile vs_4_0 Skinned_VertexShaderFunction();
         PixelShader = compile ps_4_0 PixelShaderFunction();
+    }
+}
+
+technique Skybox
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_4_0 Skybox_VertexShaderFunction();
+        PixelShader = compile ps_4_0 Skybox_PixelShaderFunction();
     }
 }
