@@ -627,3 +627,15 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Ice/lod_Height.tga
 
+#begin Assets/handTipAnim/animation.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/handTipAnim/animation.png
+

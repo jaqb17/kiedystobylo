@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -39,8 +40,6 @@ namespace DevilSoup
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
         Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f / 64f, 0.1f, 1000000000f);
-
-
 
         public Game1()
         {
@@ -90,7 +89,7 @@ namespace DevilSoup
                                        "Assets/Soup/zupa_Normal",
                                        "Assets/Soup/zupa_Metallic",
                                        camera);
-            
+
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
             zupa.world = Matrix.CreateTranslation(zupyPosition);
             zupa.scaleAset(3f);
@@ -121,7 +120,7 @@ namespace DevilSoup
 
             CCPP = Content.Load<Effect>("Assets/Effects/CC");
 
-           // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
+            // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
 
             /*animTemplate = new Asset();
             animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
@@ -143,7 +142,6 @@ namespace DevilSoup
             combo.LoadContent(spriteBatch);
             sprites.LoadContent(spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
-
 
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
@@ -174,7 +172,7 @@ namespace DevilSoup
             danceArea.Update(gameTime);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-           // CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
+            // CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
             base.Update(gameTime);
         }
 
@@ -185,27 +183,26 @@ namespace DevilSoup
         protected override void Draw(GameTime gameTime)
         {
 
-
             GraphicsDevice.SetRenderTarget(renderTarget);
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             // Draw the scene
-              world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
-             //czacha.world = world;
+            world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+            //czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
             //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
-           // cauldron.world = world;
+            // cauldron.world = world;
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
-           // GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            // GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             // Drop the render target
             spriteBatch.Begin();
 
-          
+
 
             //danceArea.DrawFuelBar(spriteBatch);
             danceArea.Draw(gameTime);
@@ -217,16 +214,16 @@ namespace DevilSoup
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
-            
+
 
             //spriteBatch.Begin();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            
-            
+
+
             CCPP.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
 
-     
+
             spriteBatch.End();
 
             GraphicsDevice.BlendState = BlendState.Opaque;

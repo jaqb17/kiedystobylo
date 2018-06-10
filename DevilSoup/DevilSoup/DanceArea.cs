@@ -27,8 +27,7 @@ namespace DevilSoup
         public Ice iceCube { get; set; }
         public Fireplace fuelBar { get; set; }
         public int stage = 1;
-
-
+        public bool ifLogHaveFlownAlready = false;
 
         private Camera camera;
         private Pad gamepad;
@@ -41,6 +40,8 @@ namespace DevilSoup
         int accelTimeDelay = 0;
         private bool ifGameStarted = false;
         private bool balance = true;
+        private bool isWoodEnabled = false;
+        private bool isIceEnabled = false;
 
         //Cauldron Colors
         private Vector3 standard, yellow, orange, red;
@@ -147,24 +148,32 @@ namespace DevilSoup
             switch (stage)
             {
                 case 1:
+                    isWoodEnabled = false;
+                    isIceEnabled = false;
                     if (this.woodLog != null)
                         woodLog.isWoodActive = false;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
                     break;
                 case 2:
+                    isWoodEnabled = true;
+                    isIceEnabled = false;
                     if (this.woodLog != null)
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
                     break;
                 case 3:
+                    isWoodEnabled = true;
+                    isIceEnabled = true;
                     if (this.woodLog != null)
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
                         iceCube.isIceActive = true;
                     break;
                 case 4:
+                    isWoodEnabled = true;
+                    isIceEnabled = true;
                     if (this.woodLog != null)
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
@@ -176,6 +185,8 @@ namespace DevilSoup
                     }
                     break;
                 case 5:
+                    isWoodEnabled = true;
+                    isIceEnabled = true;
                     if (this.woodLog != null)
                         woodLog.isWoodActive = true;
                     else if (this.iceCube != null)
@@ -263,7 +274,7 @@ namespace DevilSoup
                     }
                 }
 
-                if (isIceCreated == false)
+                if (isIceCreated == false && isIceEnabled)
                 {
                     createIce();
 
@@ -280,7 +291,7 @@ namespace DevilSoup
                 }
                 // tymczasowo wylaczone
 
-                if (isLogCreated == false)
+                if (isLogCreated == false && isWoodEnabled)
                 {
                     createLog();
                 }
@@ -429,12 +440,7 @@ namespace DevilSoup
         //WoodLog Methods
         private void createLog()
         {
-            //woodLog = new WoodenLog();
-            //woodLog = new WoodenLog(content, "Assets/Ice/lodAnim.fbx");
-
-            //woodLog = new WoodenLog(content, "Assets\\TestAnim\\muchomorStadnyAtak");
-            //woodLog = new WoodenLog(content, "Assets\\Ice\\lodStable");
-            if (heatValue > 0f && heatValue < 5f || heatValue == 5)
+            if (heatValue > 0f && heatValue <= 4.8f)
             {
                 string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
                 string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
@@ -442,11 +448,12 @@ namespace DevilSoup
                 string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
                 woodLog = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 woodLog.Initialization(camera);
+                ifLogHaveFlownAlready = true;
             }
         }
         private void createIce()
         {
-            if (heatValue > 5f && heatValue <= 10f || heatValue == 5)
+            if (heatValue > 5.2f && heatValue <= 10f)
             {
                 string modelPath = "Assets\\Ice\\lodAn";
                 string colorTexturePath = "Assets\\Ice\\lod_Albedo";
@@ -454,8 +461,10 @@ namespace DevilSoup
                 string specularTexturePath = "Assets\\Ice\\lod_Metallic";
                 iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 iceCube.Initialization(camera);
+                ifLogHaveFlownAlready = true;
             }
         }
+
         private void calculateHeatValue(double _var)
         {
             double difference = _var - heatValue;

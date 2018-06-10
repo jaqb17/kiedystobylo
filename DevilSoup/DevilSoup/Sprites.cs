@@ -13,22 +13,38 @@ namespace DevilSoup
     {
         private SpriteFont font;
         private SpriteBatch spriteBatch;
+        private HandTip handTip;
+        private ContentManager content;
+        private bool ifLogHaveFlownAlready = false;
 
-        public Sprites() { }
+        public Sprites()
+        {
+            handTip = new HandTip(2);
+        }
 
         public void Initialize(ContentManager content)
         {
+            this.content = content;
             this.font = content.Load<SpriteFont>("HP");
         }
 
         public void LoadContent(SpriteBatch spriteBatch)
         {
+            this.handTip.LoadContent(content, spriteBatch);
             this.spriteBatch = spriteBatch;
         }
 
         public void Draw(DanceArea danceArea)
         {
             Player player = Player.getPlayer();
+            if (!ifLogHaveFlownAlready && danceArea.ifLogHaveFlownAlready)
+            {
+                handTip.DisplayTip = true;
+                ifLogHaveFlownAlready = true;
+            }
+
+            handTip.Draw();
+
             if (player.hp > 0 && danceArea.heatValue > 0 && danceArea.heatValue <8.5)
             {
                 switch (danceArea.level)
