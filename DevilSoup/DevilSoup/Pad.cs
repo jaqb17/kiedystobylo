@@ -14,7 +14,7 @@ namespace DevilSoup
         DirectInput Input = new DirectInput();
         //Joystick stick;
         public Joystick USBMatt { get; }
-        Joystick[] Sticks;
+        //Joystick[] Sticks;
         Wiimote wiimote;
         List<int> connectedPadsId;
         bool[] lastButtons;

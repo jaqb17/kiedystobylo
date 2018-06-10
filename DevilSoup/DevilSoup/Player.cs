@@ -10,7 +10,8 @@ namespace DevilSoup
     {
         public int hp = 100;
         public int points = 0;
-        private static Player instance =null;
+        private static Player instance = null;
+
         public static Player getPlayer()
         {
             if (instance == null)
@@ -24,6 +25,7 @@ namespace DevilSoup
             this.hp = 100;
             this.points = 0;
         }
+
         public static void reset()
         {
             instance = new Player();

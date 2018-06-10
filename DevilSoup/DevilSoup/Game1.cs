@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using WiimoteLib;
 
@@ -13,33 +14,41 @@ namespace DevilSoup
     /// </summary>
     public class Game1 : Game
     {
+        private int width = 1280;
+        private int height = 640;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
-        private SpriteFont font;
-        private Vector3 cameraPos, cauldronPos;
+        Effect CCPP;
+
+        RenderTarget2D renderTarget;
+        Texture2D screenTexture;
+
+        private Vector3 cameraPos, cauldronPos, czachaPos;
+
         private Camera camera;
         private Asset cauldron;
-        private Pad gamepad;
+        private Asset zupa;
+        private Asset czacha;
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
-        //private BBRectangle billboardRect;
-        int timeDelayed = 0;
-        bool availableToChange = true;
-        int createSoulTimeDelay = 0;
-        bool ifCreateSoul = true;
-        bool ifCheckAccelerometer = true;
-        int accelTimeDelay = 0;
 
-        private bool started = false;
+        private Sprites sprites;
+
+        Matrix world = Matrix.CreateTranslation(0, 0, 0);
+        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f / 64f, 0.1f, 1000000000f);
+
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = 640;
             graphics.PreferredBackBufferWidth = 1280;
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
         }
 
@@ -52,27 +61,74 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            cameraPos = new Vector3(0, 110, 40);
-            //cameraPos = new Vector3(0f, 0f, 4f);
+            //models = new ModelsInstancesClass();
+            cameraPos = new Vector3(0, 130, 65);
+
+
             cauldronPos = new Vector3(0f, 0f, 0f);
+            czachaPos = cauldronPos;
+
             camera = new Camera();
-            camera.setWorldMatrix(cameraPos);
-            camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
-            //camera.view = Matrix.CreateLookAt(cameraPos, cauldronPos, Vector3.UnitY);
+            camera.Position = cameraPos;
+            camera.setWorldMatrix(camera.Position);
+            camera.view = Matrix.CreateLookAt(camera.Position, cauldronPos, Vector3.UnitY);
+
+
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
-            cauldron = new Asset();
-            cauldron.loadModel(Content, "Assets\\Cauldron\\RictuCauldron");
+            cauldron = new Asset(Content, "Assets/Cauldron/hKociol/kociol",
+                                            "Assets/Cauldron/hKociol/kociol1d_Albedo",
+                                            "Assets/Cauldron/hKociol/kociol1d_Normal"
+                                            , "Assets/Cauldron/hKociol/kociol1d_Specular",
+                                            camera
+                                            );
+            cauldron.setShine(5f); //less = more shiny ^^
+
+            Vector3 zupyPosition = new Vector3(0, 0, 0);
+            zupa = new Asset(Content, "Assets/Soup/zupaModel",
+                                       "Assets/Soup/zupa_Albedo",
+                                       "Assets/Soup/zupa_Normal",
+                                       "Assets/Soup/zupa_Metallic",
+                                       camera);
+            
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-            
-            gamepad = new Pad();
-            
+            zupa.world = Matrix.CreateTranslation(zupyPosition);
+            zupa.scaleAset(3f);
+            zupa.setAmbientIntensity(.5f);
+
+            //czacha = new Asset(Content, "Assets/test/vs",
+            //                            "Assets/test/vsc",
+            //                            "Assets/test/vsn",
+            //                            "Assets/test/vss",
+            //                            camera);
+
             danceArea = new DanceArea(cauldron);
-            font = Content.Load<SpriteFont>("HP");
+            danceArea.Initialize(Content, camera, GraphicsDevice);
+            sprites = new Sprites();
+            sprites.Initialize(Content);
 
             player = Player.getPlayer();
             combo = Combo.createCombo();
+            combo.Initialize(graphics);
             danceArea.FuelBarInitialize(Content);
+
+            renderTarget = new RenderTarget2D(GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            CCPP = Content.Load<Effect>("Assets/Effects/CC");
+
+           // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
+
+            /*animTemplate = new Asset();
+            animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
+            animTemplate.world = Matrix.CreateTranslation(cauldronPos);
+            animTemplate.scaleAset(0.5f);
+            animTemplate.cameraPos = camera.Position;
+            */
             base.Initialize();
         }
 
@@ -84,9 +140,12 @@ namespace DevilSoup
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            combo.LoadContent(spriteBatch);
+            sprites.LoadContent(spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
-            //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
+
+            //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
@@ -111,103 +170,11 @@ namespace DevilSoup
             //GamePadState xPadState = GamePad.GetState(PlayerIndex.One);
             if (GamePad.GetState(PlayerIndex.Two).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            int keyPressed;
-            danceArea.currentKeyPressed = Keyboard.GetState();
-            if (gamepad.USBMatt != null)
-            {
-                keyPressed = gamepad.getKeyState();
-            }
-            else
-            {
-                keyPressed = -1;
-            }
 
-            // TODO: Add your update logic here
-            if ((keyPressed == 9 || danceArea.currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
-            {
-                started = !started;
-                availableToChange = false;
-                timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
+            danceArea.Update(gameTime);
+            //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-                if (started)
-                {
-                    Player.reset();
-                    player = Player.getPlayer();
-                    combo.startComboLoop();
-                }
-                else danceArea.reset();
-            }
-
-            if (!availableToChange)
-            {
-                timeDelayed--;
-                if (timeDelayed <= 0)
-                {
-                    availableToChange = true;
-                }
-            }
-
-            if (started)
-            {
-                if (danceArea.fuelBar.fuelValue < 0)
-                    danceArea.fuelBar.fuelValue = 0;
-                danceArea.fuelBar.fuelValue -= 0.006;
-                danceArea.calculateHeatValue(danceArea.fuelBar.fuelValue);
-                danceArea.readKey(keyPressed);
-                danceArea.NumPadHitMapping();
-                if (danceArea.heatValue <= 1)
-                    danceArea.heatValue = 1;
-                if (ifCreateSoul)
-                {
-                    danceArea.createSoul(Content);
-                    ifCreateSoul = false;
-                    createSoulTimeDelay = 60 / (danceArea.level + 1);
-                }
-
-                if (!ifCreateSoul)
-                {
-                    createSoulTimeDelay--;
-                    if (createSoulTimeDelay <= 0)
-                    {
-                        ifCreateSoul = true;
-                    }
-                }
-
-                if (ifCheckAccelerometer)
-                {
-                    ifCheckAccelerometer = false;
-                    accelTimeDelay = 10;
-                }
-
-                if (!ifCheckAccelerometer)
-                {
-                    accelTimeDelay--;
-                    if (accelTimeDelay <= 0)
-                    {
-                        ifCheckAccelerometer = true;
-                    }
-                }
-
-                if (danceArea.isLogCreated == false)
-                {
-                    danceArea.isLogCreated = true;
-                    danceArea.createLog(Content);
-                }
-                if (danceArea.isLogCreated == true)
-                {
-                    danceArea.moveLog();
-                    //danceArea.moveLog(gamepad.accelerometerStatus());
-                    if (gamepad.swung() > 6.5f && danceArea.woodLog.isDestroyable == true)
-                    {
-                        danceArea.woodLogDestroySuccessfulHit(15);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position);
-                        //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, danceArea.woodLog.position, graphics.GraphicsDevice);
-                    }
-                }
-                
-            }
-
-            danceArea.pastKeyPressed = danceArea.currentKeyPressed;
+           // CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * .75));
             base.Update(gameTime);
         }
 
@@ -218,63 +185,57 @@ namespace DevilSoup
         protected override void Draw(GameTime gameTime)
         {
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            cauldron.DrawModel(camera.view, camera.projection, new Vector3((float)danceArea.heatValue, 1f, 1f));
-            spriteBatch.Begin();
-            //danceArea.DrawFuelBar(spriteBatch);
-            // TODO: Add your drawing code here
-            if (player.hp > 0)
-            {
-                switch (danceArea.level)
-                {
-                    case 0:
-                        danceArea.baseSoulsSpeed = 0.03f;
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: easy", new Vector2(100, 100), Color.Black);
-                        break;
-                    case 1:
-                        danceArea.baseSoulsSpeed = 0.04f;
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: medium", new Vector2(100, 100), Color.Black);
-                        break;
-                    case 2:
-                        danceArea.baseSoulsSpeed = 0.05f;
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + "\nLEVEL: hard", new Vector2(100, 100), Color.Black);
-                        break;
-                }
 
-                if (combo.getIfComboIsActive() && started)
-                {
-                    for (int i = 0; i < 9; i++)
-                    {
-                        spriteBatch.Draw(combo.drawMap(graphics, i), combo.getRectangleCoord(graphics, i), combo.getColor());
-                    }
-                }
-            }
-            else
-            {
-                spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
-                combo.stopComboLoop();
-                //started = false;
-            }
-            spriteBatch.DrawString(font, "HV: " + danceArea.heatValue, new Vector2(100, 150), Color.Black);
-            spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
+            GraphicsDevice.SetRenderTarget(renderTarget);
+
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+
+            // Draw the scene
+              world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+             //czacha.world = world;
+            GraphicsDevice.Clear(Color.DimGray);
+            //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
+           // cauldron.world = world;
+            cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
+            zupa.SimpleDraw(camera.view, camera.projection);
+            // czacha.SimpleDraw(camera.view, camera.projection);
+            //animTemplate.Draw(gameTime, camera.view, camera.projection);
+           // GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+            // Drop the render target
+            spriteBatch.Begin();
+
+          
+
+            //danceArea.DrawFuelBar(spriteBatch);
+            danceArea.Draw(gameTime);
+            combo.Draw(gameTime);
+
+            sprites.Draw(danceArea);
+
             //danceArea.DrawFuelBar(spriteBatch);
             spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
             
+
+            //spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            
+            
+            CCPP.CurrentTechnique.Passes[0].Apply();
+            spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
+
+     
+            spriteBatch.End();
+
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             //billboardRect.DrawRect(eff, graphics.GraphicsDevice, camera.view, camera.projection, camera.world);
-            if (started)
-            {
-                danceArea.moveSoul(camera.view, camera.projection);
-                if (danceArea.isLogCreated == true)
-                    danceArea.woodLog.drawWoodenLog(camera.view, camera.projection);
-                //if (billboardRect != null)
-                    //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
-            }
 
-            
+
+
             base.Draw(gameTime);
         }
 

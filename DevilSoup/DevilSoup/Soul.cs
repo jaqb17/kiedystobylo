@@ -6,20 +6,38 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DevilSoup
 {
     public class Soul
     {
+        Camera camera;
         Asset soul;
         Vector3 soulPosition;
+        
         public int lifes { get; set; }
 
-        public Soul(ContentManager content, String path)
+        public Soul(ContentManager content, string modelPath)
         {
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
-            soul.loadModel(content, path);
+            soul.loadModel(content, modelPath);
+
+        }
+
+        public Soul(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string shaderPath = "Assets/Effects/CNS")
+        {
+            soul = new Asset();
+            lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
+            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);
+            
+        }
+
+        public void Initialize(Camera camera)
+        {
+            this.camera = camera;
         }
 
         private int randomNumber(int range)
@@ -54,13 +72,13 @@ namespace DevilSoup
             return new Vector3(255.0f, 0.0f, 0.0f);
         }
 
-        public void drawSoul(Matrix view, Matrix projection)
+        public void Draw(GameTime gameTime)
         {
             if (this.soul != null)
-                this.soul.DrawModel(view, projection, defineColor());
+                this.soul.Draw(gameTime, camera.view, camera.projection, defineColor());
         }
 
-        public void killSoulWithAnimation(Matrix view, Matrix projection)
+        public void killSoulWithAnimation()
         {
             float xCoord = 1.001f, yCoord = 0.95f, zCoord = 1.001f;
             for (int i = 0; i < 70; i++)

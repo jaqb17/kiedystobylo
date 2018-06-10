@@ -18,7 +18,7 @@ namespace DevilSoup
         private Matrix lastTransform = Matrix.Identity;
         
 
-        public Vector3 Position { get; } = new Vector3(0, 7.5f, 20);
+        public Vector3 Position { get; set; } = new Vector3(0, 0, 100);
 
         public Camera() { }
 
