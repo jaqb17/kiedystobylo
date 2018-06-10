@@ -37,6 +37,8 @@ namespace DevilSoup
 
         private Sprites sprites;
 
+        Skybox skybox;
+
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
         Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f / 64f, 0.1f, 1000000000f);
@@ -89,6 +91,8 @@ namespace DevilSoup
                                        "Assets/Soup/zupa_Normal",
                                        "Assets/Soup/zupa_Metallic",
                                        camera);
+
+            skybox = new Skybox("Assets/Skybox/Sunset", Content);
 
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
             zupa.world = Matrix.CreateTranslation(zupyPosition);
@@ -143,6 +147,13 @@ namespace DevilSoup
             sprites.LoadContent(spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
 
+
+            skybox = new Skybox("Assets/Skybox/Sunset", Content);
+
+
+
+
+
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -185,6 +196,17 @@ namespace DevilSoup
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.Black);
+
+            RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
+            skybox.Draw(view, projection, cameraPos);
+
+            graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
 
             GraphicsDevice.SetRenderTarget(renderTarget);
 

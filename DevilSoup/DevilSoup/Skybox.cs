@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace DevilSoup
 {
-    class Skybox
+    public class Skybox
     {
         private Model skyBox;
         /// <summary>
@@ -25,16 +25,52 @@ namespace DevilSoup
         /// The size of the cube, used so that we can resize the box
         /// for different sized environments.
         /// </summary>
-        private float size = 50f;
+        private float size = 500f;
         /// <summary>
         /// Creates a new skybox
         /// </summary>
         /// <param name="skyboxTexture">the name of the skybox texture to use</param>
         public Skybox(string skyboxTexture, ContentManager Content)
         {
-            skyBox = Content.Load<Model>("Assets/Skybox/cube");
+            skyBox = Content.Load<Model>("Assets/Skybox/cubee");
             skyBoxTexture = Content.Load<TextureCube>(skyboxTexture);
-            skyBoxEffect = Content.Load<Effect>("Skyboxes/Skybox");
+            skyBoxEffect = Content.Load<Effect>("Assets/Effects/Skybox");
+        }
+
+        /// <summary>
+        /// Does the actual drawing of the skybox with our skybox effect.
+        /// There is no world matrix, because we're assuming the skybox won't
+        /// be moved around.  The size of the skybox can be changed with the size
+        /// variable.
+        /// </summary>
+        /// <param name="view">The view matrix for the effect</param>
+        /// <param name="projection">The projection matrix for the effect</param>
+        /// <param name="cameraPos">The position of the camera</param>
+        public void Draw(Matrix view, Matrix projection, Vector3 cameraPos)
+        {
+            // Go through each pass in the effect, but we know there is only one...
+            foreach (EffectPass pass in skyBoxEffect.CurrentTechnique.Passes)
+            {
+                // Draw all of the components of the mesh, but we know the cube really
+                // only has one mesh
+                foreach (ModelMesh mesh in skyBox.Meshes)
+                {
+                    // Assign the appropriate values to each of the parameters
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        part.Effect = skyBoxEffect;
+                        part.Effect.Parameters["World"].SetValue(
+                            Matrix.CreateScale(size) * Matrix.CreateTranslation(cameraPos));
+                        part.Effect.Parameters["View"].SetValue(view);
+                        part.Effect.Parameters["Projection"].SetValue(projection);
+                        part.Effect.Parameters["SkyBoxTexture"].SetValue(skyBoxTexture);
+                        part.Effect.Parameters["CameraPosition"].SetValue(cameraPos);
+                    }
+
+                    // Draw the mesh with the skybox effect
+                    mesh.Draw();
+                }
+            }
         }
     }
 }
