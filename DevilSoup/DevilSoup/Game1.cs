@@ -194,21 +194,32 @@ namespace DevilSoup
             world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
             //czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
-            //cauldron.SimpleDraw(camera.view,camera.projection, new Vector3((float)danceArea.heatValue/100f, 0f, 0f));
-            // cauldron.world = world;
+          
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
-            //animTemplate.Draw(gameTime, camera.view, camera.projection);
-            // GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            danceArea.Draw(gameTime);
 
-            // Drop the render target
+
+            GraphicsDevice.SetRenderTarget(null);
+
+          
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            CCPP.CurrentTechnique.Passes[0].Apply();
+            spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
+
+            spriteBatch.End();
+
+
+
+            
             spriteBatch.Begin();
 
 
 
             //danceArea.DrawFuelBar(spriteBatch);
-            danceArea.Draw(gameTime);
+            
             combo.Draw(gameTime);
 
             sprites.Draw(danceArea);
@@ -216,26 +227,7 @@ namespace DevilSoup
             //danceArea.DrawFuelBar(spriteBatch);
             spriteBatch.End();
 
-            GraphicsDevice.SetRenderTarget(null);
-
-
-            //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
-
-            CCPP.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
-
-
-            spriteBatch.End();
-
             GraphicsDevice.BlendState = BlendState.Opaque;
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-            //billboardRect.DrawRect(eff, graphics.GraphicsDevice, camera.view, camera.projection, camera.world);
-
-
-
             base.Draw(gameTime);
         }
 
