@@ -622,6 +622,30 @@ namespace DevilSoup
             return intensity;
         }
 
+        public float getHeatAmp()
+        {
+            float amp = 0;
+
+            if (currentColor == standard)
+            {
+                amp = 0.0001f;
+            }
+            else if (currentColor == yellow)
+            {
+                amp = 0.0005f;
+            }
+            else if (currentColor == orange)
+            {
+                amp = 0.001f;
+            }
+            else
+            {
+                amp = 0.004f;
+            }
+
+            return amp;
+        }
+
 
     }
 }

@@ -174,7 +174,10 @@ namespace DevilSoup
             danceArea.Update(gameTime);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * 0.25f));
+            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * danceArea.getHeatIntensity()));
+            CCPP.Parameters["amp"].SetValue((float)danceArea.getHeatAmp());
+
+
             base.Update(gameTime);
         }
 
