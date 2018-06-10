@@ -607,6 +607,54 @@ namespace DevilSoup
             fuelBar = new Fireplace(content, graphicsDevice);
         }
 
+        public float getHeatIntensity()
+        {
+            float intensity = 0;
+
+            if(currentColor == standard)
+            {
+                intensity = 0.05f;
+            }
+            else if(currentColor == yellow)
+            {
+                intensity = 0.15f;
+            }
+            else if(currentColor == orange)
+            {
+                intensity = 0.35f;
+            }
+            else
+            {
+                intensity = 0.5f;
+            }
+
+            return intensity;
+        }
+
+        public float getHeatAmp()
+        {
+            float amp = 0;
+
+            if (currentColor == standard)
+            {
+                amp = 0.0001f;
+            }
+            else if (currentColor == yellow)
+            {
+                amp = 0.0005f;
+            }
+            else if (currentColor == orange)
+            {
+                amp = 0.001f;
+            }
+            else
+            {
+                amp = 0.004f;
+            }
+
+            return amp;
+        }
+
 
     }
 }
