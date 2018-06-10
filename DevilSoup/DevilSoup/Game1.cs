@@ -200,7 +200,7 @@ namespace DevilSoup
             zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
             //animTemplate.Draw(gameTime, camera.view, camera.projection);
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+           // GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             // Drop the render target
             spriteBatch.Begin();
