@@ -639,3 +639,6 @@
 /processorParam:TextureFormat=Color
 /build:Assets/handTipAnim/animation.png
 
+#begin Assets/handTipAnim/animation.txt
+/copy:Assets/handTipAnim/animation.txt
+
