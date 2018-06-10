@@ -17,7 +17,7 @@ namespace DevilSoup
         private Vector3 origin;
         private SingleArea[] singleAreas;
         private float radius;
-        private Combo combo;
+        public Combo combo { get; private set; }
         public float baseSoulsSpeed { get; set; }
         public float escape_height = 51.0f;
         public int level = 0;
@@ -46,7 +46,6 @@ namespace DevilSoup
         //Cauldron Colors
         private Vector3 standard, yellow, orange, red;
         public Vector3 currentColor { get; set; }
-
 
         //Sounds
         private Song boil;
@@ -137,7 +136,7 @@ namespace DevilSoup
         public void Update(GameTime gameTime)
         {
             int keyPressed;
-            int Val = 100;
+            int Val = 10;
             currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
             stage = (player.points / Val) + 1;
@@ -413,7 +412,7 @@ namespace DevilSoup
         private void Killed()
         {
             player = Player.getPlayer();
-            player.points += (this.level + 10);
+            player.points += (this.level + 1);
         }
 
         private void hurtSoul(int id)
@@ -432,9 +431,8 @@ namespace DevilSoup
             {
                 singleAreas[id].ifSoulIsAnimated = true;
                 singleAreas[id].killWithAnimation();
+                this.Killed();
             }
-
-            this.Killed();
         }
 
         //WoodLog Methods
@@ -487,7 +485,9 @@ namespace DevilSoup
                 if (killedSoulIds != null)
                 {
                     foreach (int index in killedSoulIds)
+                    {
                         this.takeAllSoulHP(index);
+                    }
                 }
             }
         }

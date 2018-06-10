@@ -15,15 +15,14 @@ namespace DevilSoup
     /// </summary>
     public class Game1 : Game
     {
-        private int width = 1280;
-        private int height = 640;
+        private const int width = 1280;
+        private const int height = 640;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
         Effect CCPP;
 
         RenderTarget2D renderTarget;
-        Texture2D screenTexture;
 
         private Vector3 cameraPos, cauldronPos, czachaPos;
 
@@ -45,8 +44,8 @@ namespace DevilSoup
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = 640;
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.PreferredBackBufferWidth = width;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
         }
@@ -140,7 +139,7 @@ namespace DevilSoup
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             combo.LoadContent(spriteBatch);
-            sprites.LoadContent(spriteBatch);
+            sprites.LoadContent(this, spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
 
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
@@ -170,11 +169,11 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
+            sprites.Update(gameTime, danceArea);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * danceArea.getHeatIntensity()));
+            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds / 1000.0 * 22 * 3.14159 * danceArea.getHeatIntensity()));
             CCPP.Parameters["amp"].SetValue((float)danceArea.getHeatAmp());
-
 
             base.Update(gameTime);
         }
@@ -194,16 +193,14 @@ namespace DevilSoup
             world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
             //czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
-          
+
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
             danceArea.Draw(gameTime);
 
-
             GraphicsDevice.SetRenderTarget(null);
 
-          
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             CCPP.CurrentTechnique.Passes[0].Apply();
@@ -212,14 +209,8 @@ namespace DevilSoup
             spriteBatch.End();
 
 
-
-            
             spriteBatch.Begin();
 
-
-
-            //danceArea.DrawFuelBar(spriteBatch);
-            
             combo.Draw(gameTime);
 
             sprites.Draw(danceArea);
@@ -230,7 +221,5 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.Opaque;
             base.Draw(gameTime);
         }
-
-
     }
 }
