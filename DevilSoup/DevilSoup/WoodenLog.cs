@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace DevilSoup
             decayValue = 3;
         }
 
-        public WoodenLog(ContentManager content, string path)
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, string shaderPath = "Assets/Effects/CNS")
         {
             isLogCreated = true;
             isDestroyable = false;
@@ -42,12 +43,12 @@ namespace DevilSoup
             fireBoostValue = 2;
             decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
-            log.loadModel(content, path);
+            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath);
 
             isLogDestroyed = false;
         }
 
-        public WoodenLog(ContentManager content, string path, Vector3 _position)
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, Vector3 _position, string shaderPath = "Assets/Effects/CNS")
         {
             isLogCreated = true;
             isDestroyable = false;
@@ -57,7 +58,7 @@ namespace DevilSoup
             fireBoostValue = 2;
             decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
-            log.loadModel(content, path);
+            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath);
 
             isLogDestroyed = false;
             position = _position;
@@ -75,7 +76,7 @@ namespace DevilSoup
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
             this.log.scaleAset(4f);
-            
+
         }
 
 
@@ -83,7 +84,7 @@ namespace DevilSoup
         {
             if (isLogCreated && isWoodActive && this.log != null)
             {
-               this.log.Draw(gameTime, camera.view, camera.projection);
+                this.log.Draw(gameTime, camera.view, camera.projection);
             }
         }
 
@@ -137,10 +138,9 @@ namespace DevilSoup
         {
             if (this.log == null || !this.isWoodActive) return;
             toDraw();
-            if (this.log.HasAnimation())
+            if (this.log.HasAnimation)
             {
-                if (this.log.Clips.Count > 0)
-                    this.log.animationUpdate(gameTime);
+                this.log.animationUpdate(gameTime);
 
                 if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
@@ -164,10 +164,9 @@ namespace DevilSoup
 
             moveLog();
 
-            if (this.log.HasAnimation())
+            if (this.log.HasAnimation)
             {
-                if (this.log.Clips.Count > 0)
-                    this.log.animationUpdate(gameTime);
+                this.log.animationUpdate(gameTime);
 
                 if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
                 {
@@ -183,6 +182,6 @@ namespace DevilSoup
                 }
             }
         }
-        
+
     }
 }

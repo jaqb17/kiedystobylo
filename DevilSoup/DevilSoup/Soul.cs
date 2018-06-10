@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DevilSoup
 {
@@ -18,11 +19,19 @@ namespace DevilSoup
         
         public int lifes { get; set; }
 
-        public Soul(ContentManager content, String path)
+        public Soul(ContentManager content, string modelPath)
         {
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
-            soul.loadModel(content, path);
+            soul.loadModel(content, modelPath);
+
+        }
+
+        public Soul(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, string shaderPath = "Assets/Effects/CNS")
+        {
+            soul = new Asset();
+            lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
+            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath, specularTexturePath);
             
         }
 

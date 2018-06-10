@@ -40,10 +40,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimationClip.cs" />
-    <Compile Include="AnimationClipReader.cs" />
-    <Compile Include="ModelExtra.cs" />
-    <Compile Include="ModelExtraReader.cs" />
+    <Compile Include="MGSkinnedAnimationAux\AnimationClip.cs" />
+    <Compile Include="MGSkinnedAnimationAux\AnimationClipReader.cs" />
+    <Compile Include="MGSkinnedAnimationAux\Bone.cs" />
+    <Compile Include="MGSkinnedAnimationAux\ModelExtra.cs" />
+    <Compile Include="MGSkinnedAnimationAux\ModelExtraReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

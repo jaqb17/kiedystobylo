@@ -13,7 +13,7 @@ namespace DevilSoup
         public bool ifSoulIsAnimated { get; set; } = false;
         private Camera camera;
         public Soul soul;
-        private String path = "Assets\\Souls\\bryla";
+        private String modelPath = "Assets\\Souls\\bryla";
         //private String path = "Assets\\Souls\\T-pose";
         private float escape_height = 51.0f;
         private Player player;
@@ -24,7 +24,7 @@ namespace DevilSoup
         public SingleArea(ContentManager content, Vector3 areaCenter)
         {
             this.areaCenter = areaCenter;
-            this.soul = new Soul(content, this.path);
+            this.soul = new Soul(content, this.modelPath);
             this.soulPosition = this.areaCenter;
             this.ifSoulIsAlive = true;
         }

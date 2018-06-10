@@ -103,7 +103,7 @@ namespace DevilSoup
             //                            camera);
 
             danceArea = new DanceArea(cauldron);
-            danceArea.Initialize(Content, camera);
+            danceArea.Initialize(Content, camera, GraphicsDevice);
             sprites = new Sprites();
             sprites.Initialize(Content);
 

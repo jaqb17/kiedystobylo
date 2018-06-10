@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Reflection;
 using System;
-using MGSkinnedAnimationAux;
+using SkinnedModel;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
@@ -24,7 +24,6 @@ namespace DevilSoup
         private int animationDelayCounter { get; set; } = 0;
         public bool ifDamageAfterPlay { get; set; } = false;
         public bool finishedAnimation { get; private set; } = false;
-        private ModelExtra modelExtra = null;
 
         public Effect renderEffect;
 
@@ -36,6 +35,7 @@ namespace DevilSoup
         /// The model bones
         /// </summary>
         private List<Bone> bones = new List<Bone>();
+        SkinningData skinningData;
 
         private AnimationPlayer player = null;
 
@@ -46,8 +46,6 @@ namespace DevilSoup
         private float diffuseIntesity = 0.9f;
         private Vector4 specularColor;
         private float shine = 5f;
-        private bool shaderAttached = false;
-        private GraphicsDevice graphicsDevice;
 
         //public double animationLength { get; private set; }
         //public DateTime animationStarted { get; private set; }
@@ -70,11 +68,11 @@ namespace DevilSoup
         /// <summary>
         /// The model animation clips
         /// </summary>
-        public List<AnimationClip> Clips { get { return modelExtra.Clips; } }
+        public AnimationClip clip;
 
         public bool HasAnimation
         {
-            get { return modelExtra != null; }
+            get { return clip != null; }
         }
 
         #endregion
@@ -85,7 +83,6 @@ namespace DevilSoup
         {
             this.model = model;
             this.cameraPos = cameraPos;
-            shaderAttached = false;
             computeCenter();
         }
 
@@ -94,16 +91,20 @@ namespace DevilSoup
             this.model = model;
             this.cameraPos = camera.Position;
             this.world = camera.world;
-            shaderAttached = false;
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, Camera camera, string effectPath = "Assets/Effects/CNS")
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string SpecTexturePath, Camera camera, string effectPath = "Assets/Effects/CNS")
         {
-            this.model = content.Load<Model>(modelPath);
+
+            this.colorMap = content.Load<Texture>(colorTexturePath);
+            this.normalMap = content.Load<Texture>(normalTexturePath);
+            this.specMap = content.Load<Texture>(SpecTexturePath);
+
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath, null);
-            shaderAttached = true;
+            this.model = content.Load<Model>(modelPath);
+
+
 
             this.cameraPos = camera.Position;
             initShaderData();
@@ -112,10 +113,18 @@ namespace DevilSoup
 
         public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, Camera camera, string effectPath = "Assets/Effects/CN")
         {
-            this.model = content.Load<Model>(modelPath);
+
+            this.colorMap = content.Load<Texture>(colorTexturePath);
+            this.normalMap = content.Load<Texture>(normalTexturePath);
+
+
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, null, null);
-            shaderAttached = true;
+            this.model = content.Load<Model>(modelPath);
+
+            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+            renderEffect.Parameters["NormalMap"].SetValue(normalMap);
+
+
             this.cameraPos = camera.Position;
             initShaderData();
             computeCenter();
@@ -177,14 +186,14 @@ namespace DevilSoup
 
             if (ifDamageAfterPlay)
             {
-                if (player?.Position >= player?.Duration)
+                if (player?.CurrentTime >= player?.CurrentClip.Duration)
                 {
                     this.finishedAnimation = true;
                 }
             }
 
             if (ifPlay && animationDelayCounter == 0)
-                player?.Update(gameTime);
+                player?.Update(gameTime.ElapsedGameTime, true, Matrix.Identity);
         }
 
 
@@ -198,61 +207,46 @@ namespace DevilSoup
         public AnimationPlayer PlayClip(AnimationClip clip)
         {
             // Create a clip player and assign it to this model
-            player = new AnimationPlayer(clip, this);
+            player.StartClip(clip);
             return player;
         }
 
         #endregion
 
-        public void loadModel(ContentManager content, String modelPath)
-        {
-            shaderAttached = false;
-            this.model = content.Load<Model>(modelPath);
-            modelExtra = model.Tag as ModelExtra;
-
-            if (modelExtra != null)
-            {
-                ObtainBones();
-            }
-
-            computeCenter();
-        }
-
-        private void loadTextures(ContentManager content, string aldeboTexturePath, string normalTexturePath, string specTexturePath, string heightMapPath)
+        public void loadModel(ContentManager content, String path)
         {
 
-            if (aldeboTexturePath != null)
+            this.model = content.Load<Model>(path);
+
+            // Load our custom effect
+            // Load our custom effect
+            Effect customEffect = content.Load<Effect>("shaders/CustomSkinnedEffect");
+
+            // Apply it to the model
+            foreach (ModelMesh mesh in model.Meshes)
             {
-                colorMap = content.Load<Texture>(aldeboTexturePath);
-                renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    SkinnedEffect skinnedEffect = part.Effect as SkinnedEffect;
+                    if (skinnedEffect != null)
+                    {
+                        // Create new custom skinned effect from our base effect
+                        CustomSkinnedEffect custom = new CustomSkinnedEffect(customEffect);
+                        custom.CopyFromSkinnedEffect(skinnedEffect);
+
+                        part.Effect = custom;
+                    }
+                }
             }
 
-            if (normalTexturePath != null)
-            {
-                normalMap = content.Load<Texture>(normalTexturePath);
-                renderEffect.Parameters["NormalMap"].SetValue(normalMap);
-            }
+            skinningData = model.Tag as SkinningData;
 
-            if (specTexturePath != null)
+            if (skinningData != null)
             {
-                specMap = content.Load<Texture>(specTexturePath);
-                renderEffect.Parameters["SpecMap"].SetValue(specMap);
-            }
-        }
+                // Create an animation player, and start decoding an animation clip.
+                player = new AnimationPlayer(skinningData);
 
-        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, string normalTexturePath, string heightMapPath, string shaderPath, string specTexturePath = null)
-        {
-            this.graphicsDevice = graphicsDevice;
-            shaderAttached = true;
-            this.model = content.Load<Model>(modelPath);
-            this.renderEffect = content.Load<Effect>(shaderPath);
-            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath, heightMapPath);
-            initShaderData();
-            modelExtra = model.Tag as ModelExtra;
-
-            if (modelExtra != null)
-            {
-                ObtainBones();
+                clip = skinningData.AnimationClips["Take 001"];
             }
 
             computeCenter();
@@ -271,47 +265,41 @@ namespace DevilSoup
             if (this.HasAnimation)
             {
 
-                if (this.Clips.Count > 0)
-                    this.animationUpdate(gameTime);
+                this.animationUpdate(gameTime);
 
                 if (!this.ifPlay)
                 {
-                    this.PlayClip(this.Clips[0]);
+                    this.PlayClip(this.clip);
+                    //this.ifPlay = true;
                 }
+
             }
 
-            Matrix[] boneTransforms = null;
-            Matrix[] skeleton = null;
+            Matrix[] bones = null;
 
-            if (modelExtra != null)
+            if (skinningData != null)
             {
-                boneTransforms = new Matrix[this.bones.Count];
-
-                for (int i = 0; i < this.bones.Count; i++)
-                {
-                    Bone bone = this.bones[i];
-                    bone.ComputeAbsoluteTransform();
-
-                    boneTransforms[i] = bone.AbsoluteTransform;
-                }
-
-                //
-                // Determine the skin transforms from the skeleton
-                //
-
-                skeleton = new Matrix[modelExtra.Skeleton.Count];
-                for (int s = 0; s < modelExtra.Skeleton.Count; s++)
-                {
-                    Bone bone = this.bones[modelExtra.Skeleton[s]];
-                    skeleton[s] = bone.SkinTransform * bone.AbsoluteTransform;
-                }
+                bones = player.GetSkinTransforms();
             }
 
-            if (!shaderAttached)
-                DrawWithoutShader(view, projection, boneTransforms, skeleton, color);
-            else
+            //// Draw the model.
+            // Render the skinned mesh.
+            foreach (ModelMesh mesh in model.Meshes)
             {
-                AnimatedDraw(view, projection, boneTransforms, skeleton, color);
+                foreach (CustomSkinnedEffect effect in mesh.Effects)
+                {
+                    effect.SetBoneTransforms(bones);
+
+                    effect.View = view;
+                    effect.Projection = projection;
+
+                    effect.EnableDefaultLighting();
+
+                    effect.SpecularColor = new Vector3(0.25f);
+                    effect.SpecularPower = 16;
+                }
+
+                mesh.Draw();
             }
         }
 
@@ -349,99 +337,9 @@ namespace DevilSoup
                     renderEffect.Parameters["DiffuseIntensity"].SetValue(diffuseIntesity);
                     renderEffect.Parameters["SpecularColor"].SetValue(specularColor);
                     renderEffect.Parameters["Shine"].SetValue(shine);
-                    renderEffect.Techniques["NotSkinned"].Passes[0].Apply();
+
                 }
                 mesh.Draw();
-            }
-        }
-
-        private void AnimatedDraw(Matrix view, Matrix projection, Matrix[] boneTransforms, Matrix[] skeleton, Vector3? color = null)
-        {
-            if (color != null) renderEffect.Parameters["addColor"].SetValue(color ?? new Vector3(0.0f, 0.0f, 0.0f));
-
-            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
-            renderEffect.Parameters["NormalMap"].SetValue(normalMap);
-
-            if (specMap != null) renderEffect.Parameters["SpecMap"].SetValue(specMap);
-            renderEffect.Parameters["ViewProj"].SetValue(view * projection);
-            renderEffect.Parameters["WorldIT"].SetValue(world);
-            renderEffect.Parameters["World"].SetValue(world);
-            renderEffect.Parameters["View"].SetValue(view);
-            renderEffect.Parameters["Projection"].SetValue(projection);
-            renderEffect.Parameters["Bones"].SetValue(skeleton);
-            renderEffect.Parameters["CamPosition"].SetValue(cameraPos);
-            // effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
-
-            renderEffect.Parameters["AmbientColor"].SetValue(ambientColor);
-            renderEffect.Parameters["AmbientIntensity"].SetValue(ambientIntensity);
-            renderEffect.Parameters["LightDirection"].SetValue(LightDirection);
-            renderEffect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            renderEffect.Parameters["DiffuseIntensity"].SetValue(diffuseIntesity);
-            renderEffect.Parameters["SpecularColor"].SetValue(specularColor);
-            renderEffect.Parameters["Shine"].SetValue(shine);
-
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                foreach (ModelMeshPart part in mesh.MeshParts)
-                {
-                    DrawMeshPart(part, renderEffect.Techniques["Skinned"]);
-                }
-            }
-        }
-
-        private void DrawMeshPart(ModelMeshPart modelMeshPart, EffectTechnique effectTechnique)
-        {
-            graphicsDevice.SetVertexBuffer(modelMeshPart.VertexBuffer);
-            graphicsDevice.Indices = (modelMeshPart.IndexBuffer);
-            int primitiveCount = modelMeshPart.PrimitiveCount;
-            int vertexOffset = modelMeshPart.VertexOffset;
-            int startIndex = modelMeshPart.StartIndex;
-            effectTechnique.Passes[0].Apply();
-
-            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, vertexOffset, startIndex, primitiveCount);
-        }
-
-        private void DrawWithoutShader(Matrix view, Matrix projection, Matrix[] boneTransforms, Matrix[] skeleton, Vector3? color = null)
-        {
-            //// Draw the model.
-            // Render the skinned mesh.
-            foreach (ModelMesh modelMesh in model.Meshes)
-            {
-                foreach (Effect effect in modelMesh.Effects)
-                {
-                    if (effect is BasicEffect)
-                    {
-                        BasicEffect beffect = effect as BasicEffect;
-
-                        beffect.World = world;
-                        beffect.View = view;
-                        beffect.Projection = projection;
-                        //beffect.EnableDefaultLighting();
-                        beffect.PreferPerPixelLighting = true;
-                        if (color != null)
-                            beffect.DiffuseColor = color ?? new Vector3(0.0f, 0.0f, 0.0f);
-                    }
-
-                    if (effect is SkinnedEffect)
-                    {
-                        SkinnedEffect seffect = effect as SkinnedEffect;
-
-                        seffect.SetBoneTransforms(skeleton);
-                        seffect.World = boneTransforms[modelMesh.ParentBone.Index] * world;
-                        seffect.View = view;
-                        seffect.Projection = projection;
-
-                        seffect.EnableDefaultLighting();
-
-                        if (color != null)
-                            seffect.DiffuseColor = color ?? new Vector3(0.0f, 0.0f, 0.0f);
-
-                        seffect.SpecularColor = new Vector3(0.25f);
-                        seffect.SpecularPower = 16;
-                    }
-                }
-
-                modelMesh.Draw();
             }
         }
 

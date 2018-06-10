@@ -18,8 +18,9 @@ namespace DevilSoup
         public const int maxLogsUnderCauldron = 5;
         private Vector3[] positionVectors;
         private Vector3 position1, position2, position3, position4, position5;
+        GraphicsDevice graphicsDevice;
 
-        public Fireplace(ContentManager content)
+        public Fireplace(ContentManager content, GraphicsDevice graphicsDevice)
         {
             #region Positions for logs under Cauldron
             positionVectors = new Vector3[maxLogsUnderCauldron];
@@ -33,19 +34,34 @@ namespace DevilSoup
             for (int i = 0; i < maxLogsUnderCauldron; i++)
                 logsUnderCauldron[i] = null;//logsUnderCauldron[i] = new WoodenLog();
                                             //logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
-            logsUnderCauldron[0] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz", positionVectors[0]);
-            logsUnderCauldron[1] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz",positionVectors[1]);
+
+            string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
+            string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
+            string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
+            string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
+            string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
+
+            this.graphicsDevice = graphicsDevice;
+            logsUnderCauldron[0] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[0]);
+            logsUnderCauldron[1] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[1]);
             logsUnderCauldron[0].isWoodActive = true;
             logsUnderCauldron[1].isWoodActive = true;
         }
 
         public void addLogBeneathCauldron(ContentManager content, Camera camera)
         {
+
+            string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
+            string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
+            string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
+            string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
+            string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
+
             for (int i = 0; i < maxLogsUnderCauldron; i++)
             {
                 if (logsUnderCauldron[i] == null)
                 {
-                    logsUnderCauldron[i] = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz",positionVectors[i]);
+                    logsUnderCauldron[i] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[i]);
                     logsUnderCauldron[i].isWoodActive = true;
                     logsUnderCauldron[i].Initialization(camera);
                     break;

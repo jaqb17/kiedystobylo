@@ -40,7 +40,6 @@ namespace DevilSoup
         bool ifCheckAccelerometer = true;
         int accelTimeDelay = 0;
         private bool ifGameStarted = false;
-        private double xD = 0;
         private bool balance = true;
 
         //Cauldron Colors
@@ -54,6 +53,7 @@ namespace DevilSoup
         private const int woodChopSounds = 3;
         private SoundEffect[] woodChopSoundTable;
         private bool isBoilingSoundActive;
+        private GraphicsDevice graphicsDevice;
 
 
         public bool IfGameStarted
@@ -115,13 +115,14 @@ namespace DevilSoup
             #endregion
         }
 
-        public void Initialize(ContentManager content, Camera camera)
+        public void Initialize(ContentManager content, Camera camera, GraphicsDevice graphicsDevice)
         {
 
             this.content = content;
             gamepad = new Pad();
             this.camera = camera;
-            fuelBar = new Fireplace(content);
+            this.graphicsDevice = graphicsDevice;
+            fuelBar = new Fireplace(content, graphicsDevice);
             fuelBar.Initialization(camera);
             currentColor = yellow;
             boil = content.Load<Song>("Assets\\Sounds\\BoilingSoup\\boilP");
@@ -435,7 +436,12 @@ namespace DevilSoup
             //woodLog = new WoodenLog(content, "Assets\\Ice\\lodStable");
             if (heatValue > 0f && heatValue < 5f || heatValue == 5)
             {
-                woodLog = new WoodenLog(content, "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz");
+                string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
+                string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
+                string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
+                string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
+                string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
+                woodLog = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath);
                 woodLog.Initialization(camera);
             }
         }
@@ -443,7 +449,12 @@ namespace DevilSoup
         {
             if (heatValue > 5f && heatValue <= 10f || heatValue == 5)
             {
-                iceCube = new Ice(content, "Assets\\Ice\\lodAn");
+                string modelPath = "Assets\\Ice\\lodAn";
+                string colorTexturePath = "Assets\\Ice\\lod_Albedo";
+                string normalTexturePath = "Assets\\Ice\\lod_Normal";
+                string specularTexturePath = "Assets\\Ice\\lod_Metallic";
+                string heightTexturePath = "Assets\\Ice\\lod_Height";
+                iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath);
                 iceCube.Initialization(camera);
             }
         }
@@ -586,7 +597,7 @@ namespace DevilSoup
 
         public void FuelBarInitialize(ContentManager content)
         {
-            fuelBar = new Fireplace(content);
+            fuelBar = new Fireplace(content, graphicsDevice);
         }
 
 

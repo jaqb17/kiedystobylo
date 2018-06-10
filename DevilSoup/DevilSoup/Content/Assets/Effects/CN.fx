@@ -1,3 +1,8 @@
+#define SKINNED_EFFECT_MAX_BONES   72
+float4x3 Bones[SKINNED_EFFECT_MAX_BONES];
+
+float4x4 ViewProj;
+float3x3 WorldIT;
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
@@ -9,9 +14,7 @@ float4 AmbientColor = float4(1,1,1,1);
 float AmbientIntensity = 0.1;
 float3 LightDirection = float3(0,0,-1);
 
-
 float3 addColor = float3(0,0,0);
-
 
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 0.9;
@@ -24,6 +27,17 @@ struct VertexShaderInput
     float4 Position : POSITION0;
     float2 TexCoord : TEXCOORD0;
     float3 Normal : NORMAL0;
+    float3 Binormal : BINORMAL0;
+    float3 Tangent : TANGENT0;
+};
+
+struct Skinned_VertexShaderInput
+{
+	float4 Position : POSITION0;
+	float3 Normal   : NORMAL0;
+	float2 TexCoord : TEXCOORD0;
+	uint4  Indices  : BLENDINDICES0;
+	float4 Weights  : BLENDWEIGHT0;
     float3 Binormal : BINORMAL0;
     float3 Tangent : TANGENT0;
 };
@@ -55,8 +69,39 @@ sampler2D NormalMapSampler = sampler_state
     MipFilter = linear;
 };
 
+void SkinNormal(inout Skinned_VertexShaderInput vin, uniform int boneCount)
+{
+	float4x3 skinning = 0;
 
+	[unroll]
+	for (int i = 0; i < boneCount; i++)
+	{
+		skinning += Bones[vin.Indices[i]] * vin.Weights[i];
+	}
 
+	vin.Position.xyz = mul(vin.Position, skinning);
+	vin.Normal = mul(vin.Normal, (float3x3)skinning);
+	vin.Binormal = mul(vin.Binormal, (float3x3)skinning);
+	vin.Tangent = mul(vin.Tangent, (float3x3)skinning);
+}
+
+//4 weights per vertex
+VertexShaderOutput Skinned_VertexShaderFunction(Skinned_VertexShaderInput input)
+{
+	VertexShaderOutput output;
+	
+	SkinNormal(input, 4);
+
+	float4 worldPosition = mul(input.Position, World);	
+	output.Position = mul(worldPosition, ViewProj);
+	output.WorldToTangentSpace[0] = mul(input.Tangent, WorldIT);
+	output.WorldToTangentSpace[1] = mul(input.Binormal, WorldIT);
+	output.WorldToTangentSpace[2] = mul(input.Normal, WorldIT);
+	output.TexCoord = input.TexCoord;
+	output.View = normalize(float4(CamPosition,1.0) - worldPosition);
+ 
+	return output;
+}
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input, float3 Normal : NORMAL)
 {
@@ -119,11 +164,20 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 }
 
-technique Technique1
+technique NotSkinned
 {
     pass Pass1
     {
         VertexShader = compile vs_4_0 VertexShaderFunction();
+        PixelShader = compile ps_4_0 PixelShaderFunction();
+    }
+}
+
+technique Skinned
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_4_0 Skinned_VertexShaderFunction();
         PixelShader = compile ps_4_0 PixelShaderFunction();
     }
 }

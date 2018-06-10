@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace DevilSoup
             position = new Vector3(150f, 0, 0);
         }
 
-        public Ice(ContentManager content, string path)
+        public Ice(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, string shaderPath = "Assets/Effects/CNS")
         {
             isIceCreated = true;
             isDestroyable = false;
@@ -36,10 +37,7 @@ namespace DevilSoup
             position = new Vector3(100f, 0, 10);
             iceModel = new Asset();
             fireBoostValue = -1.5;
-            iceModel.loadModel(content, path);
-            
-
-            
+            iceModel.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath, specularTexturePath);   
         }
 
         public void Initialization(Camera camera)
@@ -114,7 +112,7 @@ namespace DevilSoup
 
             moveIce();
 
-            if (this.iceModel.HasAnimation())
+            if (this.iceModel.HasAnimation)
             {
 
                 if (!this.iceModel.ifPlay && this.iceModel.ifDamageAfterPlay)
