@@ -27,11 +27,11 @@ namespace DevilSoup
 
         }
 
-        public Soul(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, string shaderPath = "Assets/Effects/CNS")
+        public Soul(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string shaderPath = "Assets/Effects/CNS")
         {
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
-            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath, specularTexturePath);
+            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);
             
         }
 

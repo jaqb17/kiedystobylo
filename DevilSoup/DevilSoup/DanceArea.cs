@@ -440,8 +440,7 @@ namespace DevilSoup
                 string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
                 string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
                 string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
-                string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
-                woodLog = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath);
+                woodLog = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 woodLog.Initialization(camera);
             }
         }
@@ -453,8 +452,7 @@ namespace DevilSoup
                 string colorTexturePath = "Assets\\Ice\\lod_Albedo";
                 string normalTexturePath = "Assets\\Ice\\lod_Normal";
                 string specularTexturePath = "Assets\\Ice\\lod_Metallic";
-                string heightTexturePath = "Assets\\Ice\\lod_Height";
-                iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath);
+                iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 iceCube.Initialization(camera);
             }
         }

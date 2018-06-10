@@ -39,11 +39,10 @@ namespace DevilSoup
             string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
             string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
             string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
-            string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
 
             this.graphicsDevice = graphicsDevice;
-            logsUnderCauldron[0] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[0]);
-            logsUnderCauldron[1] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[1]);
+            logsUnderCauldron[0] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, positionVectors[0]);
+            logsUnderCauldron[1] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, positionVectors[1]);
             logsUnderCauldron[0].isWoodActive = true;
             logsUnderCauldron[1].isWoodActive = true;
         }
@@ -55,13 +54,12 @@ namespace DevilSoup
             string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
             string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
             string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
-            string heightTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Height";
 
             for (int i = 0; i < maxLogsUnderCauldron; i++)
             {
                 if (logsUnderCauldron[i] == null)
                 {
-                    logsUnderCauldron[i] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, heightTexturePath, positionVectors[i]);
+                    logsUnderCauldron[i] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, positionVectors[i]);
                     logsUnderCauldron[i].isWoodActive = true;
                     logsUnderCauldron[i].Initialization(camera);
                     break;

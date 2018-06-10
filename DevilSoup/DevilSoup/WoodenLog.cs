@@ -33,7 +33,7 @@ namespace DevilSoup
             decayValue = 3;
         }
 
-        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, string shaderPath = "Assets/Effects/CNS")
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string shaderPath = "Assets/Effects/CNS")
         {
             isLogCreated = true;
             isDestroyable = false;
@@ -43,12 +43,12 @@ namespace DevilSoup
             fireBoostValue = 2;
             decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
-            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath);
+            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath);
 
             isLogDestroyed = false;
         }
 
-        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string heightMapPath, Vector3 _position, string shaderPath = "Assets/Effects/CNS")
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, Vector3 _position, string shaderPath = "Assets/Effects/CNS")
         {
             isLogCreated = true;
             isDestroyable = false;
@@ -58,7 +58,7 @@ namespace DevilSoup
             fireBoostValue = 2;
             decayValue = 3;
             //log.LoadContentFile(content, "Wood", path);
-            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, heightMapPath, shaderPath);
+            log.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath);
 
             isLogDestroyed = false;
             position = _position;

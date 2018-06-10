@@ -102,7 +102,7 @@ namespace DevilSoup
         {
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath, null);
+            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath);
             shaderAttached = true;
 
             this.cameraPos = camera.Position;
@@ -114,7 +114,7 @@ namespace DevilSoup
         {
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, null, null);
+            loadTextures(content, colorTexturePath, normalTexturePath, null);
             shaderAttached = true;
             this.cameraPos = camera.Position;
             initShaderData();
@@ -218,7 +218,7 @@ namespace DevilSoup
             computeCenter();
         }
 
-        private void loadTextures(ContentManager content, string aldeboTexturePath, string normalTexturePath, string specTexturePath, string heightMapPath)
+        private void loadTextures(ContentManager content, string aldeboTexturePath, string normalTexturePath, string specTexturePath)
         {
 
             if (aldeboTexturePath != null)
@@ -240,13 +240,13 @@ namespace DevilSoup
             }
         }
 
-        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, string normalTexturePath, string heightMapPath, string shaderPath, string specTexturePath = null)
+        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, string normalTexturePath, string shaderPath, string specTexturePath = null)
         {
             this.graphicsDevice = graphicsDevice;
             shaderAttached = true;
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(shaderPath);
-            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath, heightMapPath);
+            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath);
             initShaderData();
             modelExtra = model.Tag as ModelExtra;
 
