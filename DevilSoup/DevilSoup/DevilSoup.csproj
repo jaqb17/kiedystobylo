@@ -122,6 +122,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Content\Assets\handTipAnim\animation.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Icon.ico" />
     <Content Include="WiimoteLib_Extras\docs\copyright.txt" />
     <Content Include="WiimoteLib_Extras\docs\license.txt" />

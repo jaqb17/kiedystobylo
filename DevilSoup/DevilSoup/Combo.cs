@@ -26,6 +26,8 @@ namespace DevilSoup
         private Player player;
         private GraphicsDeviceManager graphics;
         private bool ifGameStarted = false;
+        private int lastPointsHistory = 0;
+        private const int pointsLimitToActivateCombo = 50;
 
         public bool IfGameStarted
         {
@@ -99,8 +101,8 @@ namespace DevilSoup
             {
                 if (!ifComboActive)
                 {
-                    Thread.Sleep(2000);
-                    randomizeIfComboIsActive();
+                    Thread.Sleep(1000);
+                    checkIfComboIsActive();
                     Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
                 }
                 else
@@ -111,8 +113,9 @@ namespace DevilSoup
                         transparency -= 0.05f;
                     }
 
-                    this.finishCombo();
-                    Thread.Sleep(10000);
+                    if (ifComboActive)
+                        this.finishCombo();
+                    //Thread.Sleep(10000);
                 }
             }
         }
@@ -210,15 +213,16 @@ namespace DevilSoup
         }
 
         //Na razie jest 30% szans na rozpoczecie combosa
-        private void randomizeIfComboIsActive()
+        private void checkIfComboIsActive()
         {
-            int number = Randomizer.GetRandomNumber(1, 11);
-            if (number <= 3)
+            player = Player.getPlayer();
+            if (player.points - lastPointsHistory >= pointsLimitToActivateCombo)
             {
                 ifComboActive = true;
                 comboPosition = 0;
                 transparency = 1.0f;
                 randomizeCombo();
+                lastPointsHistory = player.points;
             }
         }
 
