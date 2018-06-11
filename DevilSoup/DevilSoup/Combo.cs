@@ -77,7 +77,7 @@ namespace DevilSoup
                 {
                     for (int i = 0; i < 9; i++)
                     {
-                        spriteBatch.Draw(drawMap(graphics, i), getRectangleCoord(graphics, i), getColor());
+                       // spriteBatch.Draw(drawMap(graphics, i), getRectangleCoord(graphics, i), getColor());
                     }
                 }
             }
