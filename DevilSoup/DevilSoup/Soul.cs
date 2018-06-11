@@ -70,7 +70,7 @@ namespace DevilSoup
         public void Draw(GameTime gameTime)
         {
             if (this.soul != null)
-                this.soul.Draw(gameTime, camera.view, camera.projection, defineColor());
+                this.soul.Draw(gameTime, camera.view, camera.projection, defineColor()*.001f);
         }
 
         public void killSoulWithAnimation()
