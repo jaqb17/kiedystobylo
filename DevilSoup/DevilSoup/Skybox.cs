@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DevilSoup
 {
-    public class Skybox
-    {
+    class Skybox
+    {/// <summary>
+     /// The skybox model, which will just be a cube
+     /// </summary>
         private Model skyBox;
+
         /// <summary>
         /// The actual skybox texture
         /// </summary>
@@ -26,15 +25,16 @@ namespace DevilSoup
         /// for different sized environments.
         /// </summary>
         private float size = 500f;
+
         /// <summary>
         /// Creates a new skybox
         /// </summary>
         /// <param name="skyboxTexture">the name of the skybox texture to use</param>
-        public Skybox(string skyboxTexture, ContentManager Content)
+        public Skybox(ContentManager Content)
         {
             skyBox = Content.Load<Model>("Assets/Skybox/cubee");
-            skyBoxTexture = Content.Load<TextureCube>(skyboxTexture);
-            skyBoxEffect = Content.Load<Effect>("Assets/Effects/Skybox");
+            skyBoxTexture = Content.Load<TextureCube>("Assets/Skybox/helll");
+            skyBoxEffect = Content.Load<Effect>("Assets/Effects/skybox");
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace DevilSoup
         /// </summary>
         /// <param name="view">The view matrix for the effect</param>
         /// <param name="projection">The projection matrix for the effect</param>
-        /// <param name="cameraPos">The position of the camera</param>
-        public void Draw(Matrix view, Matrix projection, Vector3 cameraPos)
+        /// <param name="cameraPosition">The position of the camera</param>
+        public void Draw(Matrix view, Matrix projection, Vector3 cameraPosition)
         {
             // Go through each pass in the effect, but we know there is only one...
             foreach (EffectPass pass in skyBoxEffect.CurrentTechnique.Passes)
@@ -60,11 +60,11 @@ namespace DevilSoup
                     {
                         part.Effect = skyBoxEffect;
                         part.Effect.Parameters["World"].SetValue(
-                            Matrix.CreateScale(size) * Matrix.CreateTranslation(cameraPos));
+                            Matrix.CreateScale(size) * Matrix.CreateTranslation(cameraPosition));
                         part.Effect.Parameters["View"].SetValue(view);
                         part.Effect.Parameters["Projection"].SetValue(projection);
                         part.Effect.Parameters["SkyBoxTexture"].SetValue(skyBoxTexture);
-                        part.Effect.Parameters["CameraPosition"].SetValue(cameraPos);
+                        part.Effect.Parameters["CameraPosition"].SetValue(cameraPosition);
                     }
 
                     // Draw the mesh with the skybox effect

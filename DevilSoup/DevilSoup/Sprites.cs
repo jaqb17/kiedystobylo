@@ -16,6 +16,7 @@ namespace DevilSoup
         private HandTip handTip;
         private ContentManager content;
         private bool ifLogHaveFlownAlready = false;
+        private ProgressBar progressBar;
 
         public Sprites()
         {
@@ -28,10 +29,20 @@ namespace DevilSoup
             this.font = content.Load<SpriteFont>("HP");
         }
 
-        public void LoadContent(SpriteBatch spriteBatch)
+        public void LoadContent(Game game, SpriteBatch spriteBatch)
         {
             this.handTip.LoadContent(content, spriteBatch);
             this.spriteBatch = spriteBatch;
+            progressBar = new ProgressBar(game, new Rectangle(10, 10, 500, 25));
+            progressBar.minimum = 0;
+            progressBar.maximum = 50;
+        }
+        
+        public void Update(GameTime gameTime, DanceArea danceArea)
+        {
+            progressBar.maximum = danceArea.combo.pointsLimitToActivateCombo;
+            progressBar.value = danceArea.combo.comboPointsProgressBar;
+            progressBar.Update(gameTime);
         }
 
         public void Draw(DanceArea danceArea)
@@ -45,20 +56,22 @@ namespace DevilSoup
 
             handTip.Draw();
 
-            if (player.hp > 0 && danceArea.heatValue > 0 && danceArea.heatValue <8.5)
+            progressBar.Draw(spriteBatch);
+
+            if (player.hp > 0 && danceArea.heatValue > 0 && danceArea.heatValue < 8.5)
             {
                 switch (danceArea.level)
                 {
                     case 0:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + 
+                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
                             "\nLEVEL: easy" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
                         break;
                     case 1:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + 
+                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
                             "\nLEVEL: medium" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
                         break;
                     case 2:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points + 
+                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
                             "\nLEVEL: hard" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
                         break;
                 }

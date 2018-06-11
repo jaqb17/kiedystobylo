@@ -15,15 +15,17 @@ namespace DevilSoup
     /// </summary>
     public class Game1 : Game
     {
-        private int width = 1280;
-        private int height = 640;
+        private const int width = 1280;
+        private const int height = 640;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
         Effect CCPP;
 
+ 
+
         RenderTarget2D renderTarget;
-        Texture2D screenTexture;
+        Skybox skybox;
 
         private Vector3 cameraPos, cauldronPos, czachaPos;
 
@@ -37,18 +39,16 @@ namespace DevilSoup
 
         private Sprites sprites;
 
-        Skybox skybox;
-
-        Matrix world = Matrix.CreateTranslation(0, 0, 0);
-        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f / 64f, 0.1f, 1000000000f);
+        //Matrix world = Matrix.CreateTranslation(0, 0, 0);
+        //Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+        //Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 128f / 64f, 0.1f, 1000000000f);
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = 640;
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.PreferredBackBufferWidth = width;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
         }
@@ -92,8 +92,6 @@ namespace DevilSoup
                                        "Assets/Soup/zupa_Metallic",
                                        camera);
 
-            skybox = new Skybox("Assets/Skybox/Sunset", Content);
-
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
             zupa.world = Matrix.CreateTranslation(zupyPosition);
             zupa.scaleAset(3f);
@@ -124,6 +122,8 @@ namespace DevilSoup
 
             CCPP = Content.Load<Effect>("Assets/Effects/CC");
 
+            skybox = new Skybox(Content);
+
             // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
 
             /*animTemplate = new Asset();
@@ -144,15 +144,10 @@ namespace DevilSoup
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             combo.LoadContent(spriteBatch);
-            sprites.LoadContent(spriteBatch);
+            sprites.LoadContent(this, spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
 
-
-            skybox = new Skybox("Assets/Skybox/Sunset", Content);
-
-
-
-
+            
 
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
@@ -181,11 +176,11 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
+            sprites.Update(gameTime, danceArea);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
-            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds   / 1000.0 * 22 * 3.14159 * danceArea.getHeatIntensity()));
+            CCPP.Parameters["timer"].SetValue((float)(gameTime.TotalGameTime.TotalMilliseconds / 1000.0 * 22 * 3.14159 * danceArea.getHeatIntensity()));
             CCPP.Parameters["amp"].SetValue((float)danceArea.getHeatAmp());
-
 
             base.Update(gameTime);
         }
@@ -196,36 +191,33 @@ namespace DevilSoup
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-
-            RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            graphics.GraphicsDevice.RasterizerState = rasterizerState;
-
-            skybox.Draw(view, projection, cameraPos);
-
-            graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
-
 
             GraphicsDevice.SetRenderTarget(renderTarget);
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             // Draw the scene
-            world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+            //world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
             //czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
-          
+
+            RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
+            skybox.Draw(camera.view, camera.projection, camera.Position);
+
+            graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
+
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
             // czacha.SimpleDraw(camera.view, camera.projection);
             danceArea.Draw(gameTime);
 
-
             GraphicsDevice.SetRenderTarget(null);
 
-          
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             CCPP.CurrentTechnique.Passes[0].Apply();
@@ -234,14 +226,8 @@ namespace DevilSoup
             spriteBatch.End();
 
 
-
-            
             spriteBatch.Begin();
 
-
-
-            //danceArea.DrawFuelBar(spriteBatch);
-            
             combo.Draw(gameTime);
 
             sprites.Draw(danceArea);
@@ -252,7 +238,5 @@ namespace DevilSoup
             GraphicsDevice.BlendState = BlendState.Opaque;
             base.Draw(gameTime);
         }
-
-
     }
 }
