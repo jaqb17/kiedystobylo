@@ -135,7 +135,7 @@ namespace DevilSoup
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera, GraphicsDevice);
             sprites = new Sprites();
-            sprites.Initialize(Content);
+            sprites.Initialize(Content, graphics);
 
             player = Player.getPlayer();
             combo = Combo.createCombo();

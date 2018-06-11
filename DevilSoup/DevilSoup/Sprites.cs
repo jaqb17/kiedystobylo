@@ -12,21 +12,30 @@ namespace DevilSoup
     public class Sprites
     {
         private SpriteFont font;
+        private SpriteFont endFont;
         private SpriteBatch spriteBatch;
         private HandTip handTip;
         private ContentManager content;
         private bool ifLogHaveFlownAlready = false;
         private ProgressBar progressBar;
+        private Color textColor = Color.White;
+        private float przesuwanie = 90;
+        private Vector2 center;
+        private Texture2D hpIcon;
 
         public Sprites()
         {
             handTip = new HandTip(2);
         }
 
-        public void Initialize(ContentManager content)
+        public void Initialize(ContentManager content, GraphicsDeviceManager graphics)
         {
             this.content = content;
             this.font = content.Load<SpriteFont>("HP");
+            this.endFont = content.Load<SpriteFont>("CHuj");
+            this.center = getCenterCoord(graphics);
+            this.hpIcon = content.Load<Texture2D>("Assets/HP");
+
         }
 
         public void LoadContent(Game game, SpriteBatch spriteBatch)
@@ -37,7 +46,12 @@ namespace DevilSoup
             progressBar.minimum = 0;
             progressBar.maximum = 50;
         }
-        
+
+        public Vector2 getCenterCoord(GraphicsDeviceManager graphics)
+        {
+            return new Vector2(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2);
+        }
+
         public void Update(GameTime gameTime, DanceArea danceArea)
         {
             progressBar.maximum = danceArea.combo.pointsLimitToActivateCombo;
@@ -60,30 +74,33 @@ namespace DevilSoup
 
             if (player.hp > 0 && danceArea.heatValue > 0 && danceArea.heatValue < 8.5)
             {
+                spriteBatch.Draw(hpIcon, new Vector2(50, przesuwanie - 20), null, Color.White, 0f, new Vector2(0, 0), .6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "" + player.hp, new Vector2(110, przesuwanie + 50), new Color(255, 246, 186));
+                spriteBatch.DrawString(font, "POINTS: " + player.points, new Vector2(50, 137+ przesuwanie), textColor);
                 switch (danceArea.level)
                 {
                     case 0:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
-                            "\nLEVEL: easy" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
+                        spriteBatch.DrawString(font, "LEVEL: easy" , new Vector2(50, 174 + przesuwanie), textColor);
                         break;
                     case 1:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
-                            "\nLEVEL: medium" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
+                        spriteBatch.DrawString(font, "LEVEL: medium", new Vector2(50, 174 + przesuwanie), textColor);
                         break;
                     case 2:
-                        spriteBatch.DrawString(font, "HP: " + player.hp + "\nPOINTS: " + player.points +
-                            "\nLEVEL: hard" + "\nStage: " + danceArea.stage, new Vector2(100, 100), Color.Black);
+                        spriteBatch.DrawString(font, "LEVEL: hard", new Vector2(50, 174 + przesuwanie), textColor);
                         break;
                 }
+                spriteBatch.DrawString(font, "Stage: " + danceArea.stage, new Vector2(50, 211 + przesuwanie), textColor);
+                spriteBatch.DrawString(font, "HV: " + Math.Round(danceArea.heatValue, 1), new Vector2(50, 248 + przesuwanie), textColor);
+                spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(50, 285+ przesuwanie), textColor);
 
             }
             else
             {
-                spriteBatch.DrawString(font, "Przegranko", new Vector2(100, 100), Color.Black);
+                spriteBatch.DrawString(font, "POINTS: " + player.points, new Vector2(50, 137 + przesuwanie), textColor);
+                spriteBatch.DrawString(endFont, "Przegranko", center - new Vector2(185,72), new Color(206, 2, 2));
             }
 
-            spriteBatch.DrawString(font, "\n\nHV: " + danceArea.heatValue, new Vector2(100, 150), Color.Black);
-            spriteBatch.DrawString(font, "\n\nFire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(100, 175), Color.Black);
+          
         }
     }
 }
