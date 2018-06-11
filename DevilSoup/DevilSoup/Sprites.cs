@@ -22,6 +22,7 @@ namespace DevilSoup
         private float przesuwanie = 90;
         private Vector2 center;
         private Texture2D hpIcon;
+        private Texture2D fireIcon;
 
         public Sprites()
         {
@@ -35,6 +36,7 @@ namespace DevilSoup
             this.endFont = content.Load<SpriteFont>("CHuj");
             this.center = getCenterCoord(graphics);
             this.hpIcon = content.Load<Texture2D>("Assets/HP");
+            this.fireIcon = content.Load<Texture2D>("Assets/Fire");
 
         }
 
@@ -91,13 +93,13 @@ namespace DevilSoup
                 }
                 spriteBatch.DrawString(font, "Stage: " + danceArea.stage, new Vector2(50, 211 + przesuwanie), textColor);
                 spriteBatch.DrawString(font, "HV: " + Math.Round(danceArea.heatValue, 1), new Vector2(50, 248 + przesuwanie), textColor);
-                spriteBatch.DrawString(font, "Fire Temperature: " + danceArea.fuelBar.fuelValue, new Vector2(50, 285+ przesuwanie), textColor);
-
+                spriteBatch.DrawString(font, "" + danceArea.fuelBar.fuelValue, new Vector2(110, 390+ przesuwanie), textColor);
+                spriteBatch.Draw(fireIcon, new Vector2(50, 300 + przesuwanie), null, Color.White, 0f, new Vector2(0, 0), .6f, SpriteEffects.None, 0f);
             }
             else
-            {
-                spriteBatch.DrawString(font, "POINTS: " + player.points, new Vector2(50, 137 + przesuwanie), textColor);
-                spriteBatch.DrawString(endFont, "Przegranko", center - new Vector2(185,72), new Color(206, 2, 2));
+            {                
+                spriteBatch.DrawString(endFont, "Przegranko", center - new Vector2(185,82), new Color(206, 2, 2));
+                spriteBatch.DrawString(font, "SCORE: " + player.points, center - new Vector2(60, -10), textColor);
             }
 
           
