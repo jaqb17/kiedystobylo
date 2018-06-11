@@ -33,6 +33,8 @@ namespace DevilSoup
         private Asset cauldron;
         private Asset zupa;
         private Asset czacha;
+
+        private Asset edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8;
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
@@ -83,7 +85,7 @@ namespace DevilSoup
                                             , "Assets/Cauldron/hKociol/kociol1d_Specular",
                                             camera
                                             );
-            cauldron.setShine(5f); //less = more shiny ^^
+            //cauldron.setShine(5f); //less = more shiny ^^
 
             Vector3 zupyPosition = new Vector3(0, 0, 0);
             zupa = new Asset(Content, "Assets/Soup/zupaModel",
@@ -96,6 +98,33 @@ namespace DevilSoup
             zupa.world = Matrix.CreateTranslation(zupyPosition);
             zupa.scaleAset(3f);
             zupa.setAmbientIntensity(.5f);
+
+            //NIE OTWIERAć
+            {
+                string color = " Assets/Cauldron/hKociol/kociol1d_Albedo";
+                string normal = "Assets/Cauldron/hKociol/kociol1d_Normal";
+                string specular = "Assets/Cauldron/hKociol/kociol1d_Specular";
+                
+                //ostrzegałem...
+                edge1 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyG", normal, specular, camera);                
+                edge2 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekG", normal, specular, camera);
+                edge3 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyG", normal, specular, camera);                                
+                edge4 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyBok", normal, specular, camera);
+                edge5 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyBok", normal, specular, camera);
+                edge6 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyD", normal, specular, camera);
+                edge7 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekD", normal, specular, camera);
+                edge8 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyD", normal, specular, camera);
+
+                edge1.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge2.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge3.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge4.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge5.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge6.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge7.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+                edge8.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+
+            }
 
             //czacha = new Asset(Content, "Assets/test/vs",
             //                            "Assets/test/vsc",
@@ -176,6 +205,7 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
+          
             sprites.Update(gameTime, danceArea);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
@@ -213,6 +243,20 @@ namespace DevilSoup
 
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
+            {
+                if (danceArea.combo.ifComboActive)
+                {
+                    edge1.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.UpperLeft));
+                    edge2.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.Up));
+                    edge3.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.UpperRight));
+                    edge4.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.Left));
+                    edge5.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.Right));
+                    edge6.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.BottomLeft));
+                    edge7.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.Bottom));
+                    edge8.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.BottomRight));
+                }
+            }
+           
             // czacha.SimpleDraw(camera.view, camera.projection);
             danceArea.Draw(gameTime);
 

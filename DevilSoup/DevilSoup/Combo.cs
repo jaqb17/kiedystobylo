@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Diagnostics;
 
 namespace DevilSoup
 {
@@ -18,7 +19,7 @@ namespace DevilSoup
         private List<int[]> availableCombos;
         private int randomedComboIndex;
         private int comboPosition; // na ktorym etapie gracz sie znajduje w trakcie combo
-        private bool ifComboActive = false;
+        public bool ifComboActive = false;
         private static Combo instance;
         private float transparency;
         private Thread comboThread;
@@ -27,8 +28,10 @@ namespace DevilSoup
         private GraphicsDeviceManager graphics;
         private bool ifGameStarted = false;
         private int lastPointsHistory = 0;
-        public readonly int pointsLimitToActivateCombo = 15;
+        public readonly int pointsLimitToActivateCombo =15;
         public int comboPointsProgressBar { get; private set; } = 0;
+
+        public Vector3 actualGarnekColor;
 
 
         public bool IfGameStarted
@@ -140,7 +143,7 @@ namespace DevilSoup
             Texture2D rect = new Texture2D(graphics.GraphicsDevice, singleRectWidth, singleRectHeight);
 
 
-            Color color = Color.LightYellow;
+            Color color = Color.Pink;
             if (index == availableCombos[randomedComboIndex][comboPosition]) color = Color.Red;
             else if (availableCombos[randomedComboIndex].Contains<int>(index)) color = Color.YellowGreen;
 
@@ -149,6 +152,26 @@ namespace DevilSoup
             rect.SetData(data);
 
             return rect;
+        }
+
+        public Vector3 getColor(int index)
+        {
+
+            if (index == availableCombos[randomedComboIndex][comboPosition])
+            {
+                
+                return ( new Vector3(0.5f, 0, 0)*transparency);
+            }
+            else if(availableCombos[randomedComboIndex].Contains<int>(index))
+            {
+                
+                return new Vector3(0, 0.5f, 0)*transparency;
+            }
+            else
+            {
+                
+                return actualGarnekColor*transparency;
+            }
         }
 
         public Vector2 getRectangleCoord(GraphicsDeviceManager graphics, int index)

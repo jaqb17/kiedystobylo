@@ -135,6 +135,7 @@ namespace DevilSoup
 
         public void Update(GameTime gameTime)
         {
+            combo.actualGarnekColor = currentColor;
             int keyPressed;
             int Val = 10;
             currentKeyPressed = Keyboard.GetState();
