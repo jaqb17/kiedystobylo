@@ -374,7 +374,7 @@ namespace DevilSoup
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
         {
-            origin.X += 3.5f;
+            //origin.X += 3.5f;
             Vector3 result = origin;
 
             float angle = (float)(id * 360.0f / numberOfAreas * Math.PI / 180.0f);
@@ -389,7 +389,7 @@ namespace DevilSoup
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
             if (singleAreas[i] == null || singleAreas[i].soul == null)
             {
-                singleAreas[i] = new SingleArea(content, computePosition(origin, radius, i));
+                singleAreas[i] = new SingleArea(content, graphicsDevice, computePosition(origin, radius, i));
                 singleAreas[i].Initialize(camera);
             }
         }

@@ -26,7 +26,7 @@ namespace DevilSoup
         {
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
-            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);
+            soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath);
             
         }
 
@@ -44,7 +44,7 @@ namespace DevilSoup
         {
             this.soulPosition = position;
             this.soul.world = Matrix.CreateTranslation(position);
-            this.soul.scaleAset(1.0f);
+            this.soul.scaleAset(0.3f, 0.5f, 0.5f);
         }
 
         private Vector3 defineColor()
