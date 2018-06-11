@@ -321,6 +321,7 @@ namespace DevilSoup
                 {
                     singleAreas[i].baseSoulsSpeed = baseSoulsSpeed;
                     singleAreas[i].heatValue = heatValue;
+                    singleAreas[i].Update(gameTime);
                     singleAreas[i].Draw(gameTime);
 
                     if (!singleAreas[i].ifSoulIsAlive && !singleAreas[i].ifSoulIsAnimated)
@@ -329,7 +330,6 @@ namespace DevilSoup
                 }
             }
         }
-
 
         public void Draw(GameTime gameTime)
         {
@@ -374,12 +374,11 @@ namespace DevilSoup
 
         private Vector3 computePosition(Vector3 origin, float radius, int id)
         {
-            //origin.X += 3.5f;
+            origin.Z -= 5f;
             Vector3 result = origin;
-
             float angle = (float)(id * 360.0f / numberOfAreas * Math.PI / 180.0f);
-            result.X += (float)(radius * Math.Cos(angle));
-            result.Z += (float)(radius * Math.Sin(angle));
+            result.X += (float)(1.0f * radius * Math.Cos(angle));
+            result.Z += (float)(1.0f * radius * Math.Sin(angle));
 
             return result;
         }
@@ -391,6 +390,7 @@ namespace DevilSoup
             {
                 singleAreas[i] = new SingleArea(content, graphicsDevice, computePosition(origin, radius, i));
                 singleAreas[i].Initialize(camera);
+                singleAreas[i].IfPlay = true;
             }
         }
 

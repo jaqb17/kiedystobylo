@@ -22,7 +22,18 @@ namespace DevilSoup
         public bool ifPlay { get; set; } = false;
         public int animationDelay { get; set; } = 0;
         private int animationDelayCounter { get; set; } = 0;
-        public bool ifDamageAfterPlay { get; set; } = false;
+
+        private bool ifDamageAfterPlay = false;
+        public bool IfDamageAfterPlay
+        {
+            get { return ifDamageAfterPlay; }
+            set
+            {
+                ifDamageAfterPlay = value;
+                player.Looping = !ifDamageAfterPlay;
+            }
+        }
+
         public bool finishedAnimation { get; private set; } = false;
         private ModelExtra modelExtra = null;
 
@@ -166,8 +177,10 @@ namespace DevilSoup
 
         #endregion
 
+        #region Animation Management
+
         public void animationUpdate(GameTime gameTime)
-        {
+        {       
             if (animationDelay > 0)
             {
                 animationDelayCounter++;
@@ -184,11 +197,11 @@ namespace DevilSoup
             }
 
             if (ifPlay && animationDelayCounter == 0)
+            {
+                player.Looping = !ifDamageAfterPlay;
                 player?.Update(gameTime);
+            }
         }
-
-
-        #region Animation Management
 
         /// <summary>
         /// Play an animation clip
@@ -270,7 +283,6 @@ namespace DevilSoup
 
             if (this.HasAnimation)
             {
-
                 if (this.Clips.Count > 0)
                     this.animationUpdate(gameTime);
 

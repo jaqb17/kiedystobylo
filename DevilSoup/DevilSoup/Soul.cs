@@ -9,10 +9,33 @@ namespace DevilSoup
     public class Soul
     {
         Camera camera;
-        Asset soul;
+        public Asset soul { get; set; }
         Vector3 soulPosition;
-        
+       
         public int lifes { get; set; }
+
+        private bool ifPlay = false;
+
+        public bool IfPlay
+        {
+            get { return soul.ifPlay; }
+            set {
+                ifPlay = value;
+                soul.ifPlay = ifPlay;
+            }
+        }
+
+        private bool ifDamageAfterPlay = false;
+
+        public bool IfDamageAfterPlay
+        {
+            get { return soul.IfDamageAfterPlay; }
+            set
+            {
+                ifDamageAfterPlay = value;
+                soul.IfDamageAfterPlay = ifDamageAfterPlay;
+            }
+        }
 
         public Soul(ContentManager content, string modelPath)
         {
@@ -27,12 +50,12 @@ namespace DevilSoup
             soul = new Asset();
             lifes = randomNumber(Enum.GetValues(typeof(LifeColors)).Length);
             soul.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath);
-            
         }
 
         public void Initialize(Camera camera)
         {
             this.camera = camera;
+            this.soul.PlayClip(this.soul.Clips[0]);
         }
 
         private int randomNumber(int range)
@@ -42,6 +65,9 @@ namespace DevilSoup
 
         public void setSoulPosition(Vector3 position)
         {
+            if (this.soul == null)
+                return;
+
             this.soulPosition = position;
             this.soul.world = Matrix.CreateTranslation(position);
             this.soul.scaleAset(0.3f, 0.5f, 0.5f);
@@ -65,6 +91,26 @@ namespace DevilSoup
             }
 
             return new Vector3(255.0f, 0.0f, 0.0f);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (this.soul == null) return;
+
+            if (this.soul.HasAnimation)
+            {
+                this.soul.animationUpdate(gameTime);
+
+                if (!this.soul.ifPlay && this.soul.IfDamageAfterPlay)
+                {
+                    this.soul.ifPlay = true;
+                }
+
+                if (this.soul.finishedAnimation && this.soul.IfDamageAfterPlay)
+                {
+                    killSoul();
+                }
+            }
         }
 
         public void Draw(GameTime gameTime)

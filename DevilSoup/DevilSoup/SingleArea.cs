@@ -26,6 +26,30 @@ namespace DevilSoup
         public double heatValue = 2f;
         public int level = 0;
 
+        private bool ifPlay = false;
+        public bool IfPlay
+        {
+            get { return soul.IfPlay; }
+            set
+            {
+                ifPlay = value;
+                soul.IfPlay = ifPlay;
+            }
+        }
+
+        private bool ifDamageAfterPlay = false;
+
+        public bool IfDamageAfterPlay
+        {
+            get { return soul.IfDamageAfterPlay; }
+            set
+            {
+                ifDamageAfterPlay = value;
+                soul.IfDamageAfterPlay = ifDamageAfterPlay;
+            }
+        }
+
+
         public SingleArea(ContentManager content, GraphicsDevice graphicsDevice, Vector3 areaCenter)
         {
             this.areaCenter = areaCenter;
@@ -49,6 +73,14 @@ namespace DevilSoup
 
             this.soulPosition = position;
             this.soul.setSoulPosition(this.soulPosition);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if(this.soul != null && this.ifSoulIsAlive && !this.ifSoulIsAnimated)
+            {
+                this.soul.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime)

@@ -16,13 +16,11 @@ namespace DevilSoup
         public double fireBoostValue { get; set; }
         public bool isDestroyable { get; set; }
         public bool isLogCreated { get; set; }
-
         public bool isLogDestroyed { get; set; }
-
         public bool isWoodActive { get; set; }
-
         private Camera camera;
         public double decayValue { get; set; }
+
         public WoodenLog()
         {
             isLogCreated = true;
@@ -76,9 +74,7 @@ namespace DevilSoup
             this.position = _position;
             this.log.world = Matrix.CreateTranslation(position);
             this.log.scaleAset(4f);
-
         }
-
 
         public void Draw(GameTime gameTime)
         {
@@ -93,7 +89,7 @@ namespace DevilSoup
             if (this.log == null || !this.isWoodActive) return;
 
             Console.WriteLine("Zniszczono drewno");
-            this.log.ifDamageAfterPlay = true;
+            this.log.IfDamageAfterPlay = true;
         }
 
         private void woodLogDestroyFailedToHit()
@@ -142,20 +138,19 @@ namespace DevilSoup
             {
                 this.log.animationUpdate(gameTime);
 
-                if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
+                if (!this.log.ifPlay && this.log.IfDamageAfterPlay)
                 {
                     this.log.PlayClip(this.log.Clips[0]);
                     this.log.ifPlay = true;
                 }
 
-                if (this.log.finishedAnimation && this.log.ifDamageAfterPlay)
+                if (this.log.finishedAnimation && this.log.IfDamageAfterPlay)
                 {
                     this.log.unloadModel();
                     this.log = null;
                     isLogCreated = false;
                 }
             }
-
         }
 
         public void Update(GameTime gameTime)
@@ -168,13 +163,13 @@ namespace DevilSoup
             {
                 this.log.animationUpdate(gameTime);
 
-                if (!this.log.ifPlay && this.log.ifDamageAfterPlay)
+                if (!this.log.ifPlay && this.log.IfDamageAfterPlay)
                 {
                     this.log.PlayClip(this.log.Clips[0]);
                     this.log.ifPlay = true;
                 }
 
-                if (this.log.finishedAnimation && this.log.ifDamageAfterPlay)
+                if (this.log.finishedAnimation && this.log.IfDamageAfterPlay)
                 {
                     this.log.unloadModel();
                     this.log = null;

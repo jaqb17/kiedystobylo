@@ -68,7 +68,7 @@ namespace DevilSoup
             if (this.iceModel == null || !this.isIceActive) return;
             isIceCreated = false;
             Console.WriteLine("Zniszczono lod");
-            this.iceModel.ifDamageAfterPlay = true;
+            this.iceModel.IfDamageAfterPlay = true;
         }
 
         private void iceCubeDestroyFailedToHit()
@@ -115,12 +115,12 @@ namespace DevilSoup
             if (this.iceModel.HasAnimation)
             {
 
-                if (!this.iceModel.ifPlay && this.iceModel.ifDamageAfterPlay)
+                if (!this.iceModel.ifPlay && this.iceModel.IfDamageAfterPlay)
                 {
                     this.iceModel.ifPlay = true;
                 }
 
-                if (this.iceModel.finishedAnimation && this.iceModel.ifDamageAfterPlay)
+                if (this.iceModel.finishedAnimation && this.iceModel.IfDamageAfterPlay)
                 {
                     this.iceModel.unloadModel();
                     this.iceModel = null;
