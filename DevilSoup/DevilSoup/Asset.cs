@@ -323,11 +323,7 @@ namespace DevilSoup
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
                     part.Effect = renderEffect;
-                    if (addColor != null)
-                    {
-                        renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
-                    }
-
+                    renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
                     renderEffect.Parameters["ColorMap"].SetValue(colorMap);
                     renderEffect.Parameters["NormalMap"].SetValue(normalMap);
 
@@ -357,8 +353,7 @@ namespace DevilSoup
 
         private void AnimatedDraw(Matrix view, Matrix projection, Matrix[] boneTransforms, Matrix[] skeleton, Vector3? color = null)
         {
-            if (color != null) renderEffect.Parameters["addColor"].SetValue(color ?? new Vector3(0.0f, 0.0f, 0.0f));
-
+            renderEffect.Parameters["addColor"].SetValue(color ?? new Vector3(0.0f, 0.0f, 0.0f));
             renderEffect.Parameters["ColorMap"].SetValue(colorMap);
             renderEffect.Parameters["NormalMap"].SetValue(normalMap);
 
