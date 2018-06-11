@@ -12,7 +12,6 @@ namespace DevilSoup
     public class Fireplace
     {
 
-
         public WoodenLog[] logsUnderCauldron { get; set; }
         public double fuelValue { get; set; }
         public const int maxLogsUnderCauldron = 5;
@@ -122,6 +121,18 @@ namespace DevilSoup
             removeLog();
         }
 
+        private Vector3 computePosition(int id)
+        {
+            Vector3 result = new Vector3(0f, 0f, 0f);
+            //Vector3 result = new Vector3(1.484828f, 25.99457f, 4.579611f);
+            float radius = 1f;
+            float angle = (float)(id * 360.0f / (maxLogsUnderCauldron * 2) * Math.PI / 180.0f);
+            result.X += (float)(1.0f * radius * Math.Cos(angle));
+            result.Y += (float)(1.0f * radius * Math.Sin(angle));
+
+            return result;
+        }
+
         public void Draw(GameTime gameTime, Camera _camera)
         {
             for (int i = 0; i < maxLogsUnderCauldron; i++)
@@ -129,6 +140,10 @@ namespace DevilSoup
                 if (logsUnderCauldron[i] != null)
                 {
                     logsUnderCauldron[i].Initialization(_camera);
+                    Vector3 factor = computePosition(i);
+                    System.Console.WriteLine(factor);
+                    logsUnderCauldron[i].log.rotateAsset((int)(factor.X * 90), (int)(factor.Y * 90), 0);
+                    logsUnderCauldron[i].log.scaleAset(2.8f, 3.8f, 1.8f);
                     logsUnderCauldron[i].Draw(gameTime);
                 }
             }
