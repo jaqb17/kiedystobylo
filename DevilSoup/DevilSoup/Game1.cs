@@ -15,8 +15,8 @@ namespace DevilSoup
     /// </summary>
     public class Game1 : Game
     {
-        private const int width = 1280;
-        private const int height = 640;
+        private const int width = 1920;
+        private const int height = 1080;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
@@ -48,7 +48,7 @@ namespace DevilSoup
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferHeight = height;
             graphics.PreferredBackBufferWidth = width;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
@@ -97,7 +97,8 @@ namespace DevilSoup
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
             zupa.world = Matrix.CreateTranslation(zupyPosition);
             zupa.scaleAset(3f);
-            zupa.setAmbientIntensity(.5f);
+            zupa.setShine(3f);
+            zupa.setAmbientIntensity(.8f);
 
             //NIE OTWIERAć
             {

@@ -14,7 +14,7 @@ namespace DevilSoup
         public bool ifSoulIsAnimated { get; set; } = false;
         private Camera camera;
         public Soul soul;
-        private String modelPath = "Assets\\Souls\\grzesznikT\\T-Pose";
+        private String modelPath = "Assets\\Souls\\grzesznikT\\TreadingWater";
         private String aldeboMapPath = "Assets\\Souls\\grzesznikT\\grzesznik_Albedo";
         private String normalMapPath = "Assets\\Souls\\grzesznikT\\grzesznik_Normal";
         private String specularMapPath = null;

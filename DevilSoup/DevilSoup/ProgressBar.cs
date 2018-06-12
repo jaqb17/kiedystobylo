@@ -320,10 +320,10 @@ namespace DevilSoup
             backgroundData = new Color[1];
 
             // initialize colors
-            borderColorOuter = Color.Gray;
+            borderColorOuter = Color.Black;
             borderColorInner = Color.Black;
-            fillColor = Color.DarkBlue;
-            backgroundColor = Color.White;
+            fillColor = Color.DarkRed;
+            backgroundColor = Color.Black;
 
             // set border thickness
             m_borderThicknessInner = 2;
