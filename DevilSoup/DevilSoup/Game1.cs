@@ -28,7 +28,7 @@ namespace DevilSoup
         Skybox skybox;
 
         private Vector3 cameraPos, cauldronPos, czachaPos;
-
+        Matrix world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
         private Camera camera;
         private Asset cauldron;
         private Asset zupa;
@@ -48,7 +48,7 @@ namespace DevilSoup
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = height;
             graphics.PreferredBackBufferWidth = width;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
@@ -65,8 +65,8 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
-            cameraPos = new Vector3(0, 130, 65);
-
+            cameraPos = new Vector3(0,130, 65);
+            
 
             cauldronPos = new Vector3(0f, 0f, 0f);
             czachaPos = cauldronPos;
@@ -83,6 +83,7 @@ namespace DevilSoup
                                             "Assets/Cauldron/hKociol/kociol1d_Albedo",
                                             "Assets/Cauldron/hKociol/kociol1d_Normal"
                                             , "Assets/Cauldron/hKociol/kociol1d_Specular",
+                                            "Assets/Skybox/helll",
                                             camera
                                             );
             //cauldron.setShine(5f); //less = more shiny ^^
@@ -92,6 +93,7 @@ namespace DevilSoup
                                        "Assets/Soup/zupa_Albedo",
                                        "Assets/Soup/zupa_Normal",
                                        "Assets/Soup/zupa_Metallic",
+                                       "Assets/Skybox/helll",
                                        camera);
 
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
@@ -127,11 +129,14 @@ namespace DevilSoup
 
             }
 
-            //czacha = new Asset(Content, "Assets/test/vs",
-            //                            "Assets/test/vsc",
-            //                            "Assets/test/vsn",
-            //                            "Assets/test/vss",
-            //                            camera);
+           
+            czacha = new Asset(Content, "Assets/test/vs",
+                                        "Assets/test/vsc",
+                                        "Assets/test/vsn",
+                                        "Assets/test/vss",
+                                         "Assets/Skybox/helll",
+                                        camera);
+            czacha.world = world;
 
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera, GraphicsDevice);
@@ -228,8 +233,8 @@ namespace DevilSoup
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             // Draw the scene
-            //world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
-            //czacha.world = world;
+           // world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
+           // czacha.world = world;
             GraphicsDevice.Clear(Color.DimGray);
 
             RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
@@ -240,7 +245,6 @@ namespace DevilSoup
             skybox.Draw(camera.view, camera.projection, camera.Position);
 
             graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
-
 
             cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
@@ -258,7 +262,8 @@ namespace DevilSoup
                 }
             }
            
-            // czacha.SimpleDraw(camera.view, camera.projection);
+           // czacha.SimpleDraw(camera.view, camera.projection);
+           // czacha.setShine(1f);
             danceArea.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);

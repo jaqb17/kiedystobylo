@@ -42,6 +42,7 @@ namespace DevilSoup
         private Texture colorMap = null;
         private Texture normalMap = null;
         private Texture specMap = null;
+        private TextureCube skyBoxTexture = null;
 
         /// <summary>
         /// The model bones
@@ -109,11 +110,12 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, Camera camera, string effectPath = "Assets/Effects/CNS")
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, 
+            Camera camera, string effectPath = "Assets/Effects/CNS")
         {
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath);
+            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath, null);
             shaderAttached = true;
 
             this.cameraPos = camera.Position;
@@ -121,12 +123,26 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, Camera camera, string effectPath = "Assets/Effects/CN")
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, Camera camera, 
+            string effectPath = "Assets/Effects/CN")
         {
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(effectPath);
-            loadTextures(content, colorTexturePath, normalTexturePath, null);
+            loadTextures(content, colorTexturePath, normalTexturePath, null, null);
             shaderAttached = true;
+            this.cameraPos = camera.Position;
+            initShaderData();
+            computeCenter();
+        }
+
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, 
+            string skyboxPath, Camera camera, string effectPath = "Assets/Effects/CNS_E")
+        {
+            this.model = content.Load<Model>(modelPath);
+            this.renderEffect = content.Load<Effect>(effectPath);
+            loadTextures(content, colorTexturePath, normalTexturePath, specTexturePath, skyboxPath);
+            shaderAttached = true;
+
             this.cameraPos = camera.Position;
             initShaderData();
             computeCenter();
@@ -231,7 +247,8 @@ namespace DevilSoup
             computeCenter();
         }
 
-        private void loadTextures(ContentManager content, string aldeboTexturePath, string normalTexturePath, string specTexturePath)
+        private void loadTextures(ContentManager content, string aldeboTexturePath, string normalTexturePath, string specTexturePath,
+            string skyboxPath)
         {
 
             if (aldeboTexturePath != null)
@@ -251,6 +268,11 @@ namespace DevilSoup
                 specMap = content.Load<Texture>(specTexturePath);
                 renderEffect.Parameters["SpecMap"].SetValue(specMap);
             }
+            if (skyboxPath != null)
+            {
+                skyBoxTexture = content.Load<TextureCube>(skyboxPath);
+                renderEffect.Parameters["SkyboxTexture"].SetValue(skyBoxTexture);
+            }
         }
 
         public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, string normalTexturePath, string shaderPath, string specTexturePath = null)
@@ -259,7 +281,7 @@ namespace DevilSoup
             shaderAttached = true;
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(shaderPath);
-            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath);
+            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath, null);
             initShaderData();
             modelExtra = model.Tag as ModelExtra;
 
@@ -338,6 +360,8 @@ namespace DevilSoup
                     renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
                     renderEffect.Parameters["ColorMap"].SetValue(colorMap);
                     renderEffect.Parameters["NormalMap"].SetValue(normalMap);
+                    if (skyBoxTexture != null)
+                        renderEffect.Parameters["SkyboxTexture"].SetValue(skyBoxTexture);                    
 
                     if (specMap != null)
                     {
