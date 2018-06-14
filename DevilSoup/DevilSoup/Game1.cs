@@ -110,19 +110,19 @@ namespace DevilSoup
 
             //NIE OTWIERAć
             {
-                string color = " Assets/Cauldron/hKociol/kociol1d_Albedo";
+                string color = "Assets/Cauldron/hKociol/kociol1d_Albedo";
                 string normal = "Assets/Cauldron/hKociol/kociol1d_Normal";
                 string specular = "Assets/Cauldron/hKociol/kociol1d_Specular";
                 
                 //ostrzegałem...
-                edge1 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyG", normal, specular, camera);                
-                edge2 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekG", normal, specular, camera);
-                edge3 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyG", normal, specular, camera);                                
-                edge4 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyBok", normal, specular, camera);
-                edge5 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyBok", normal, specular, camera);
-                edge6 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyD", normal, specular, camera);
-                edge7 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekD", normal, specular, camera);
-                edge8 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyD", normal, specular, camera);
+                edge1 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyG",color, normal, specular, camera);                
+                edge2 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekG", color, normal, specular, camera);
+                edge3 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyG", color, normal, specular, camera);                                
+                edge4 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyBok", color, normal, specular, camera);
+                edge5 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyBok", color, normal, specular, camera);
+                edge6 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyD", color, normal, specular, camera);
+                edge7 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekD", color, normal, specular, camera);
+                edge8 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyD", color, normal, specular, camera);
 
                 edge1.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
                 edge2.world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
