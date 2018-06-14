@@ -104,7 +104,7 @@ namespace DevilSoup
             Vector3 newLogPosition = position;
 
             newLogPosition.X -= 1f;
-            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 50;
+            newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 60;
             setPosition(newLogPosition);
             if (position.Y > 48.5f)
                 isDestroyable = true;
