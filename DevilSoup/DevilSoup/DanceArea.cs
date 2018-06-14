@@ -56,6 +56,10 @@ namespace DevilSoup
         private GraphicsDevice graphicsDevice;
 
 
+        //Billboard test
+        BillboardSys slashes;
+        Vector3[] ParPositions;
+
         public bool IfGameStarted
         {
             get { return ifGameStarted; }
@@ -131,6 +135,16 @@ namespace DevilSoup
                 woodChopSoundTable[i] = content.Load<SoundEffect>("Assets\\Sounds\\WoodChop\\wood" + (i + 1));
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.3f;
+
+            //BB Test
+            Random r = new Random();
+            ParPositions = new Vector3[2];
+            ParPositions[0] = new Vector3(65, 0, 0);
+            ParPositions[1] = new Vector3(80, 0, 0);
+            //ParPositions[2] = new Vector3(90, 20, 10);
+
+
+            slashes = new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\slashTexture"), new Vector2(15), ParPositions);
         }
 
         public void Update(GameTime gameTime)
@@ -333,6 +347,7 @@ namespace DevilSoup
 
         public void Draw(GameTime gameTime)
         {
+            slashes.Draw(camera.view, camera.projection, camera.Up, camera.Right);
             if (ifGameStarted)
             {
                 moveSouls(gameTime);
@@ -342,8 +357,7 @@ namespace DevilSoup
                     woodLog.Draw(gameTime);
                 if (isIceCreated == true)
                     iceCube.Draw(gameTime);
-                //if (billboardRect != null)
-                //billboardRect.DrawRect(cameraPos, eff, graphics.GraphicsDevice, camera);
+                
             }
 
             switch (level)
@@ -601,6 +615,8 @@ namespace DevilSoup
                 iceCube.destroyIce();
                 heatValue += iceCube.fireBoostValue;
             }
+            
+                
         }
 
         public void FuelBarInitialize(ContentManager content)

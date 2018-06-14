@@ -16,9 +16,8 @@ namespace DevilSoup
         public double fuelValue { get; set; }
         public const int maxLogsUnderCauldron = 5;
         private Vector3[] positionVectors;
-        private Vector3 position1, position2, position3, position4, position5;
         GraphicsDevice graphicsDevice;
-
+        private Random r;
         public Fireplace(ContentManager content, GraphicsDevice graphicsDevice)
         {
             #region Positions for logs under Cauldron
@@ -44,11 +43,12 @@ namespace DevilSoup
             logsUnderCauldron[1] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, positionVectors[1]);
             logsUnderCauldron[0].isWoodActive = true;
             logsUnderCauldron[1].isWoodActive = true;
+            r = new Random();
         }
 
         public void addLogBeneathCauldron(ContentManager content, Camera camera)
         {
-
+            //int choose;
             string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
             string colorTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Albedo";
             string normalTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Normal";
@@ -56,6 +56,7 @@ namespace DevilSoup
 
             for (int i = 0; i < maxLogsUnderCauldron; i++)
             {
+                //choose = r.Next(0, maxLogsUnderCauldron);
                 if (logsUnderCauldron[i] == null)
                 {
                     logsUnderCauldron[i] = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath, positionVectors[i]);

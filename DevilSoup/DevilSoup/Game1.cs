@@ -66,6 +66,8 @@ namespace DevilSoup
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
             cameraPos = new Vector3(0,130, 65);
+            //cameraPos = new Vector3(100, 200, 70);
+            //cameraPos = new Vector3(0, 0, 250);
             
 
             cauldronPos = new Vector3(0f, 0f, 0f);
@@ -75,6 +77,10 @@ namespace DevilSoup
             camera.Position = cameraPos;
             camera.setWorldMatrix(camera.Position);
             camera.view = Matrix.CreateLookAt(camera.Position, cauldronPos, Vector3.UnitY);
+            camera.Forward = camera.Position - cauldronPos;
+            camera.Forward = Vector3.Normalize(camera.Forward);
+            camera.Right = Vector3.Cross(new Vector3(0,1f,0), camera.Forward);
+            camera.Up = Vector3.Cross(camera.Forward, camera.Right);
 
 
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!

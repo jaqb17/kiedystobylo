@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="AnimationPlayer.cs" />
     <Compile Include="Asset.cs" />
-    <Compile Include="BBRectangle.cs" />
+    <Compile Include="BillboardSys.cs" />
     <Compile Include="Bone.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Combo.cs" />
