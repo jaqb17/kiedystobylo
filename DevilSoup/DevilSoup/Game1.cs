@@ -146,9 +146,9 @@ namespace DevilSoup
             czacha.world = world;
 
             bubble = new Asset(Content, "Assets/bubble", "Assets/Effects/Reflection", camera);
-            bubble.world = Matrix.CreateTranslation(new Vector3(10,35,0));
+            bubble.world = Matrix.CreateTranslation(new Vector3(10,10,0));
            // bubble.scaleAset(12f);
-            bubble.scaleAset(.5f);
+            bubble.scaleAset(.3f);
             skyBoxTexture = Content.Load<TextureCube>("Assets/Skybox/helll");
 
             danceArea = new DanceArea(cauldron);
@@ -247,7 +247,7 @@ namespace DevilSoup
 
             // Draw the scene
             //bubble.world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * bubble.world;
-            bubble.world = Matrix.CreateTranslation(new Vector3(.1f,0,0))*bubble.world;
+            bubble.world = Matrix.CreateTranslation(new Vector3(0,0.1f,0))*bubble.world;
             
             GraphicsDevice.Clear(Color.DimGray);
 
