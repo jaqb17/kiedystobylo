@@ -119,7 +119,7 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, 
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath,
             Camera camera, string effectPath = "Assets/Effects/CNS")
         {
             this.model = content.Load<Model>(modelPath);
@@ -132,7 +132,7 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, Camera camera, 
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, Camera camera,
             string effectPath = "Assets/Effects/CN")
         {
             this.model = content.Load<Model>(modelPath);
@@ -144,7 +144,7 @@ namespace DevilSoup
             computeCenter();
         }
 
-        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, 
+        public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath,
             string skyboxPath, Camera camera, string effectPath = "Assets/Effects/CNS_E")
         {
             this.model = content.Load<Model>(modelPath);
@@ -205,7 +205,7 @@ namespace DevilSoup
         #region Animation Management
 
         public void animationUpdate(GameTime gameTime)
-        {       
+        {
             if (animationDelay > 0)
             {
                 animationDelayCounter++;
@@ -370,7 +370,7 @@ namespace DevilSoup
                     renderEffect.Parameters["ColorMap"].SetValue(colorMap);
                     renderEffect.Parameters["NormalMap"].SetValue(normalMap);
                     if (skyBoxTexture != null)
-                        renderEffect.Parameters["SkyboxTexture"].SetValue(skyBoxTexture);                    
+                        renderEffect.Parameters["SkyboxTexture"].SetValue(skyBoxTexture);
 
                     if (specMap != null)
                     {
@@ -485,9 +485,9 @@ namespace DevilSoup
             }
         }
 
-        public void DrawReflected( Matrix view, Matrix projection, TextureCube skybox, Vector3 camPosition, Vector3? addColor=null)
+        public void DrawReflected(Matrix view, Matrix projection, TextureCube skybox, Vector3 camPosition, Vector3? addColor = null)
         {
-           
+
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
@@ -501,14 +501,13 @@ namespace DevilSoup
                     renderEffect.Parameters["WorldInverseTranspose"].SetValue(
                                             Matrix.Transpose(Matrix.Invert(this.world * mesh.ParentBone.Transform)));
 
-                    
-                        renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
-                    
+                    renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
+
 
                 }
                 mesh.Draw();
             }
-          
+
         }
 
         public void scaleAset(float scale)

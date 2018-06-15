@@ -73,26 +73,6 @@ namespace DevilSoup
             this.soul.scaleAset(0.3f, 0.5f, 0.5f);
         }
 
-        private Vector3 defineColor()
-        {
-            if (lifes == 0) return new Vector3(255.0f, 0.0f, 0.0f);
-            LifeColors color = (LifeColors)Enum.Parse(typeof(LifeColors), Enum.GetName(typeof(LifeColors), lifes));
-
-            switch (color)
-            {
-                case LifeColors.Red:
-                    return new Vector3(255.0f, 0.0f, 0.0f);
-                case LifeColors.Green:
-                    return new Vector3(0.0f, 255.0f, 0.0f);
-                case LifeColors.Blue:
-                    return new Vector3(0.0f, 0.0f, 255.0f);
-                case LifeColors.Brown:
-                    return new Vector3(210.0f, 105.0f, 30.0f);
-            }
-
-            return new Vector3(255.0f, 0.0f, 0.0f);
-        }
-
         public void Update(GameTime gameTime)
         {
             if (this.soul == null) return;
@@ -116,7 +96,7 @@ namespace DevilSoup
         public void Draw(GameTime gameTime)
         {
             if (this.soul != null)
-                this.soul.Draw(gameTime, camera.view, camera.projection, defineColor()*.001f);
+                this.soul.Draw(gameTime, camera.view, camera.projection);
         }
 
         public void killSoulWithAnimation()

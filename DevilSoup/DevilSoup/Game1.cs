@@ -24,16 +24,12 @@ namespace DevilSoup
         RenderTarget2D renderTarget;
         Skybox skybox;
 
-        private TextureCube skyBoxTexture;
-
-
         private Vector3 cameraPos, cauldronPos, czachaPos;
         Matrix world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
         private Camera camera;
         private Asset cauldron;
-        private Asset zupa;
+        
         private Asset czacha;
-        private Asset bubble;
 
         private Asset edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8;
         private DanceArea danceArea;
@@ -66,10 +62,10 @@ namespace DevilSoup
         {
             // TODO: Add your initialization logic here
             //models = new ModelsInstancesClass();
-            cameraPos = new Vector3(0,130, 65);
+            cameraPos = new Vector3(0, 130, 65);
             //cameraPos = new Vector3(100, 200, 70);
             //cameraPos = new Vector3(0, 0, 250);
-            
+
 
             cauldronPos = new Vector3(0f, 0f, 0f);
             czachaPos = cauldronPos;
@@ -80,7 +76,7 @@ namespace DevilSoup
             camera.view = Matrix.CreateLookAt(camera.Position, cauldronPos, Vector3.UnitY);
             camera.Forward = camera.Position - cauldronPos;
             camera.Forward = Vector3.Normalize(camera.Forward);
-            camera.Right = Vector3.Cross(new Vector3(0,1f,0), camera.Forward);
+            camera.Right = Vector3.Cross(new Vector3(0, 1f, 0), camera.Forward);
             camera.Up = Vector3.Cross(camera.Forward, camera.Right);
 
 
@@ -95,30 +91,18 @@ namespace DevilSoup
                                             );
             //cauldron.setShine(5f); //less = more shiny ^^
 
-            Vector3 zupyPosition = new Vector3(0, 0, 0);
-            zupa = new Asset(Content, "Assets/Soup/zupaModel",
-                                       "Assets/Soup/zupa_Albedo",
-                                       "Assets/Soup/zupa_Normal",
-                                       "Assets/Soup/zupa_Metallic",
-                                       "Assets/Skybox/helll",
-                                       camera);
-
             cauldron.world = Matrix.CreateTranslation(cauldronPos);
-            zupa.world = Matrix.CreateTranslation(zupyPosition);
-            zupa.scaleAset(3f);
-            zupa.setShine(3f);
-            zupa.setAmbientIntensity(.8f);
 
             //NIE OTWIERAć
             {
                 string color = "Assets/Cauldron/hKociol/kociol1d_Albedo";
                 string normal = "Assets/Cauldron/hKociol/kociol1d_Normal";
                 string specular = "Assets/Cauldron/hKociol/kociol1d_Specular";
-                
+
                 //ostrzegałem...
-                edge1 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyG",color, normal, specular, camera);                
+                edge1 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyG", color, normal, specular, camera);
                 edge2 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaSrodekG", color, normal, specular, camera);
-                edge3 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyG", color, normal, specular, camera);                                
+                edge3 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyG", color, normal, specular, camera);
                 edge4 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyBok", color, normal, specular, camera);
                 edge5 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaPrawyBok", color, normal, specular, camera);
                 edge6 = new Asset(Content, "Assets/Cauldron/hKociol/krawedzKotlaLewyD", color, normal, specular, camera);
@@ -136,7 +120,7 @@ namespace DevilSoup
 
             }
 
-           
+
             czacha = new Asset(Content, "Assets/test/vs",
                                         "Assets/test/vsc",
                                         "Assets/test/vsn",
@@ -144,12 +128,6 @@ namespace DevilSoup
                                          "Assets/Skybox/helll",
                                         camera);
             czacha.world = world;
-
-            bubble = new Asset(Content, "Assets/bubble", "Assets/Effects/Reflection", camera);
-            bubble.world = Matrix.CreateTranslation(new Vector3(10,10,0));
-           // bubble.scaleAset(12f);
-            bubble.scaleAset(.3f);
-            skyBoxTexture = Content.Load<TextureCube>("Assets/Skybox/helll");
 
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera, GraphicsDevice);
@@ -195,7 +173,7 @@ namespace DevilSoup
             sprites.LoadContent(this, spriteBatch);
             eff = new BasicEffect(GraphicsDevice);
 
-            
+
 
             //billboardRect = new BBRectangle("Assets\\OtherTextures\\slashTexture", Content, new Vector3(0, 0, 0), graphics.GraphicsDevice);
 
@@ -224,7 +202,7 @@ namespace DevilSoup
                 Exit();
 
             danceArea.Update(gameTime);
-          
+
             sprites.Update(gameTime, danceArea);
             //  cauldron.setSpecularColor(new Vector4(1, 0, 0, 1));
 
@@ -245,10 +223,6 @@ namespace DevilSoup
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
-            // Draw the scene
-            //bubble.world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * bubble.world;
-            bubble.world = Matrix.CreateTranslation(new Vector3(0,0.1f,0))*bubble.world;
-            
             GraphicsDevice.Clear(Color.DimGray);
 
             RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
@@ -260,10 +234,7 @@ namespace DevilSoup
 
             graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
-           cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
-            zupa.SimpleDraw(camera.view, camera.projection);
-
-            bubble.DrawReflected(camera.view, camera.projection, skyBoxTexture,camera.Position,new Vector3(0,.0f,1f));
+            cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
 
             {
                 if (danceArea.combo.ifComboActive)
@@ -278,9 +249,9 @@ namespace DevilSoup
                     edge8.SimpleDraw(camera.view, camera.projection, danceArea.combo.getColor((int)SingleAreasIndexes.BottomRight));
                 }
             }
-           
-           // czacha.SimpleDraw(camera.view, camera.projection);
-           // czacha.setShine(1f);
+
+            // czacha.SimpleDraw(camera.view, camera.projection);
+            // czacha.setShine(1f);
             danceArea.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);

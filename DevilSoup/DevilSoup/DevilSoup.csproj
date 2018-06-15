@@ -47,6 +47,7 @@
     <Compile Include="Asset.cs" />
     <Compile Include="BillboardSys.cs" />
     <Compile Include="Bone.cs" />
+    <Compile Include="Bubble.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Combo.cs" />
     <Compile Include="Component.cs" />

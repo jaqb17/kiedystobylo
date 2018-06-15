@@ -29,6 +29,7 @@ namespace DevilSoup
         public int stage = 1;
         public bool ifLogHaveFlownAlready = false;
 
+        private Asset soup;
         private Camera camera;
         private Pad gamepad;
         private ContentManager content;
@@ -54,7 +55,6 @@ namespace DevilSoup
         private SoundEffect[] woodChopSoundTable;
         private bool isBoilingSoundActive;
         private GraphicsDevice graphicsDevice;
-
 
         //Billboard test
         BillboardSys slashes;
@@ -143,6 +143,18 @@ namespace DevilSoup
             ParPositions[1] = new Vector3(80, 0, 0);
             //ParPositions[2] = new Vector3(90, 20, 10);
 
+            Vector3 soupPosition = new Vector3(0, 0, 0);
+            soup = new Asset(content, "Assets/Soup/zupaModel",
+                                       "Assets/Soup/zupa_Albedo",
+                                       "Assets/Soup/zupa_Normal",
+                                       "Assets/Soup/zupa_Metallic",
+                                       "Assets/Skybox/helll",
+                                       camera);
+
+            soup.world = Matrix.CreateTranslation(soupPosition);
+            soup.scaleAset(3f);
+            soup.setShine(3f);
+            soup.setAmbientIntensity(.8f);
 
             slashes = new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\slashTexture"), new Vector2(15), ParPositions);
         }
@@ -348,6 +360,7 @@ namespace DevilSoup
         public void Draw(GameTime gameTime)
         {
             slashes.Draw(camera.view, camera.projection, camera.Up, camera.Right);
+            soup.SimpleDraw(camera.view, camera.projection);
             if (ifGameStarted)
             {
                 moveSouls(gameTime);

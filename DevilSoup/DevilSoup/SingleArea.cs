@@ -14,6 +14,7 @@ namespace DevilSoup
         public bool ifSoulIsAnimated { get; set; } = false;
         private Camera camera;
         public Soul soul;
+        private Bubble bubble;
         private String modelPath = "Assets\\Souls\\grzesznikT\\TreadingWater";
         private String aldeboMapPath = "Assets\\Souls\\grzesznikT\\grzesznik_Albedo";
         private String normalMapPath = "Assets\\Souls\\grzesznikT\\grzesznik_Normal";
@@ -55,6 +56,7 @@ namespace DevilSoup
             this.areaCenter = areaCenter;
             //this.soul = new Soul(content, this.modelPath);
             this.soul = new Soul(content, graphicsDevice, modelPath, aldeboMapPath, normalMapPath, null);
+            this.bubble = new Bubble(content);
             this.soulPosition = this.areaCenter;
             this.ifSoulIsAlive = true;
         }
@@ -64,6 +66,7 @@ namespace DevilSoup
             this.camera = camera;
             player = Player.getPlayer();
             this.soul.Initialize(camera);
+            this.bubble.Initialize(camera, soulPosition);
         }
 
         private void moveSoul(Vector3 position)
@@ -83,6 +86,26 @@ namespace DevilSoup
             }
         }
 
+        private Vector3 defineColor(int lifes)
+        {
+            if (lifes == 0) return new Vector3(255.0f, 0.0f, 0.0f);
+            LifeColors color = (LifeColors)Enum.Parse(typeof(LifeColors), Enum.GetName(typeof(LifeColors), lifes));
+
+            switch (color)
+            {
+                case LifeColors.Red:
+                    return new Vector3(255.0f, 0.0f, 0.0f);
+                case LifeColors.Green:
+                    return new Vector3(0.0f, 255.0f, 0.0f);
+                case LifeColors.Blue:
+                    return new Vector3(0.0f, 0.0f, 255.0f);
+                case LifeColors.Brown:
+                    return new Vector3(210.0f, 105.0f, 30.0f);
+            }
+
+            return new Vector3(255.0f, 0.0f, 0.0f);
+        }
+
         public void Draw(GameTime gameTime)
         {
             if (this.soul != null && this.ifSoulIsAlive)
@@ -92,6 +115,9 @@ namespace DevilSoup
                     newPos.Y += baseSoulsSpeed * (float)heatValue;
 
                 moveSoul(newPos);
+                bubble.setPosition(newPos);
+                bubble.scale(0.2f, 0.25f, 0.2f);
+                bubble.Draw(defineColor(soul.lifes) * .001f);
                 if (newPos.Y >= escape_height)
                 {
                     this.Escaped(soul.lifes * 10);
