@@ -189,6 +189,7 @@ technique NotSkinned
 {
 	pass Pass1
 	{
+	AlphaBlendEnable = FALSE;
 		VertexShader = compile vs_4_0 VertexShaderFunction();
 		PixelShader = compile ps_4_0 PixelShaderFunction();
 	}
@@ -198,6 +199,7 @@ technique Skinned
 {
 	pass Pass1
 	{
+	AlphaBlendEnable = FALSE;
 		VertexShader = compile vs_4_0 Skinned_VertexShaderFunction();
 		PixelShader = compile ps_4_0 PixelShaderFunction();
 	}
