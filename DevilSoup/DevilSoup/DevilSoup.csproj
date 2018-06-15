@@ -55,6 +55,7 @@
     <Compile Include="Fireplace.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GlobalVariables.cs" />
     <Compile Include="HandTip.cs" />
     <Compile Include="LifeColors.cs" />
     <Compile Include="Light.cs" />

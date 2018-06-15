@@ -67,7 +67,8 @@ namespace DevilSoup
                 this.spriteRender.Draw(
 
                     this.spriteSheet.Sprite(imageName),
-                    new Vector2(1020, 250));
+                    new Vector2(GlobalVariables.SCREEN_WIDTH * 4 / 5, GlobalVariables.SCREEN_HEIGTH * 3 / 5));
+
             }
 
         }
