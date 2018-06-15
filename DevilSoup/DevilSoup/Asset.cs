@@ -109,6 +109,15 @@ namespace DevilSoup
             shaderAttached = false;
             computeCenter();
         }
+        public Asset(ContentManager content, string modelPath, string effectPath, Camera camera)
+        {
+            this.model = content.Load<Model>(modelPath);
+            this.cameraPos = camera.Position;
+            this.world = camera.world;
+            this.renderEffect = content.Load<Effect>(effectPath);
+            shaderAttached = true;
+            computeCenter();
+        }
 
         public Asset(ContentManager content, string modelPath, string colorTexturePath, string normalTexturePath, string specTexturePath, 
             Camera camera, string effectPath = "Assets/Effects/CNS")
@@ -474,6 +483,32 @@ namespace DevilSoup
 
                 modelMesh.Draw();
             }
+        }
+
+        public void DrawReflected( Matrix view, Matrix projection, TextureCube skybox, Vector3 camPosition, Vector3? addColor=null)
+        {
+           
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    part.Effect = renderEffect;
+                    renderEffect.Parameters["World"].SetValue(this.world * mesh.ParentBone.Transform);
+                    renderEffect.Parameters["View"].SetValue(view);
+                    renderEffect.Parameters["Projection"].SetValue(projection);
+                    renderEffect.Parameters["SkyboxTexture"].SetValue(skybox);
+                    renderEffect.Parameters["CameraPosition"].SetValue(camPosition);
+                    renderEffect.Parameters["WorldInverseTranspose"].SetValue(
+                                            Matrix.Transpose(Matrix.Invert(this.world * mesh.ParentBone.Transform)));
+
+                    
+                        renderEffect.Parameters["addColor"].SetValue(addColor ?? new Vector3(0.0f, 0.0f, 0.0f));
+                    
+
+                }
+                mesh.Draw();
+            }
+          
         }
 
         public void scaleAset(float scale)

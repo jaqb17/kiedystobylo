@@ -24,12 +24,16 @@ namespace DevilSoup
         RenderTarget2D renderTarget;
         Skybox skybox;
 
+        private TextureCube skyBoxTexture;
+
+
         private Vector3 cameraPos, cauldronPos, czachaPos;
         Matrix world = Matrix.CreateTranslation(new Vector3(0, 0, 0));
         private Camera camera;
         private Asset cauldron;
         private Asset zupa;
         private Asset czacha;
+        private Asset bubble;
 
         private Asset edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8;
         private DanceArea danceArea;
@@ -141,6 +145,12 @@ namespace DevilSoup
                                         camera);
             czacha.world = world;
 
+            bubble = new Asset(Content, "Assets/bubble", "Assets/Effects/Reflection", camera);
+            bubble.world = Matrix.CreateTranslation(new Vector3(10,35,0));
+           // bubble.scaleAset(12f);
+            bubble.scaleAset(.5f);
+            skyBoxTexture = Content.Load<TextureCube>("Assets/Skybox/helll");
+
             danceArea = new DanceArea(cauldron);
             danceArea.Initialize(Content, camera, GraphicsDevice);
             sprites = new Sprites();
@@ -236,8 +246,9 @@ namespace DevilSoup
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             // Draw the scene
-           // world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * world;
-           // czacha.world = world;
+            //bubble.world = Matrix.CreateRotationY(-1f * (MathHelper.Pi / 180f)) * bubble.world;
+            bubble.world = Matrix.CreateTranslation(new Vector3(.1f,0,0))*bubble.world;
+            
             GraphicsDevice.Clear(Color.DimGray);
 
             RasterizerState originalRasterizerState = graphics.GraphicsDevice.RasterizerState;
@@ -249,8 +260,11 @@ namespace DevilSoup
 
             graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
-            cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
+           cauldron.SimpleDraw(camera.view, camera.projection, danceArea.currentColor);
             zupa.SimpleDraw(camera.view, camera.projection);
+
+            bubble.DrawReflected(camera.view, camera.projection, skyBoxTexture,camera.Position,new Vector3(0,.0f,1f));
+
             {
                 if (danceArea.combo.ifComboActive)
                 {
