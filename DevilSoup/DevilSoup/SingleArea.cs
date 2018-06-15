@@ -117,7 +117,7 @@ namespace DevilSoup
                 moveSoul(newPos);
                 bubble.setPosition(newPos);
                 bubble.scale(0.2f, 0.25f, 0.2f);
-                bubble.Draw(defineColor(soul.lifes) * .001f);
+                
                 if (newPos.Y >= escape_height)
                 {
                     this.Escaped(soul.lifes * 10);
@@ -135,6 +135,7 @@ namespace DevilSoup
             {
                 this.soul.Draw(gameTime);
             }
+            bubble.Draw(defineColor(soul.lifes) * .001f);
         }
 
         private void Killed()
