@@ -106,7 +106,7 @@ namespace DevilSoup
             newLogPosition.X -= 1f;
             newLogPosition.Y = -(newLogPosition.X * newLogPosition.X) / 200 + 60;
             setPosition(newLogPosition);
-            if (position.Y > 48.5f)
+            if (position.Y > 58.5f)
                 isDestroyable = true;
             else
                 isDestroyable = false;

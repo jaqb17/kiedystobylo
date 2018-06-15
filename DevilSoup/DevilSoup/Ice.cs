@@ -83,12 +83,12 @@ namespace DevilSoup
             Vector3 newIcePosition = position;
 
             newIcePosition.X -= 1f;
-            newIcePosition.Y = -(newIcePosition.X * newIcePosition.X) / 200 + 50;
+            newIcePosition.Y = -(newIcePosition.X * newIcePosition.X) / 200 + 60;
             //newLogPosition.Y += 0.1f;
             //if (newLogPosition.X < 0f)
             //    newLogPosition.Y -= 0.1f;
             setPosition(newIcePosition);
-            if (position.Y > 48.5f)
+            if (position.Y > 58.5f)
                 isDestroyable = true;
             else
                 isDestroyable = false;

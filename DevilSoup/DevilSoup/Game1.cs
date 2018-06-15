@@ -15,14 +15,11 @@ namespace DevilSoup
     /// </summary>
     public class Game1 : Game
     {
-        private const int width = 1920;
-        private const int height = 1080;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         BasicEffect eff;
         Effect CCPP;
-
- 
 
         RenderTarget2D renderTarget;
         Skybox skybox;
@@ -49,8 +46,8 @@ namespace DevilSoup
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = height;
-            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = GlobalVariables.SCREEN_HEIGTH;
+            graphics.PreferredBackBufferWidth = GlobalVariables.SCREEN_WIDTH;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
         }
