@@ -166,6 +166,7 @@ namespace DevilSoup
             animatedKill.Name = "Animated killing thread";
             animatedKill.Start();
             this.soul.lifes = 0;
+            this.bubble.kill();
             this.ifSoulIsAlive = false;
         }
 
@@ -175,6 +176,7 @@ namespace DevilSoup
             if (this.soul.lifes == 0) return false;
 
             this.soul.lifes -= 1;
+            this.bubble.takeLife();
 
             if (this.soul.lifes <= 0)
             {

@@ -19,6 +19,9 @@ namespace DevilSoup
         private Camera camera;
         private ContentManager content;
         private TextureCube skyBoxTexture;
+        private bool ifKilled = false;
+        private const int hideBubbleForXFrames = 5;
+        private int framesCounter = 0;
 
         public Bubble(ContentManager content)
         {
@@ -48,9 +51,29 @@ namespace DevilSoup
             bubble.scaleAset(x, y, z);
         }
 
+        public void takeLife()
+        {
+            ifKilled = true;
+        }
+
+        public void kill()
+        {
+            ifKilled = true;
+            framesCounter = -2000;
+        }
+
         public void Draw(Vector3? color = null)
         {
-            bubble.DrawReflected(camera.view, camera.projection, skyBoxTexture, camera.Position, color);
+            if (!ifKilled) bubble.DrawReflected(camera.view, camera.projection, skyBoxTexture, camera.Position, color);
+            else
+            {
+                framesCounter++;
+                if(framesCounter >= hideBubbleForXFrames)
+                {
+                    ifKilled = !ifKilled;
+                    framesCounter = 0;
+                }      
+            }
         }
     }
 }
