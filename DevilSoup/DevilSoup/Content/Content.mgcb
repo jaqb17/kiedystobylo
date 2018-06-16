@@ -1065,3 +1065,9 @@
 #begin Assets/handTipAnim/pilot.txt
 /copy:Assets/handTipAnim/pilot.txt
 
+#begin Assets/Effects/Refraction.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Assets/Effects/Refraction.fx
+

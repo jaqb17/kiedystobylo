@@ -284,13 +284,32 @@ namespace DevilSoup
             }
         }
 
-        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, string normalTexturePath, string shaderPath, string specTexturePath = null)
+        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, String modelPath, string aldeboTexturePath, 
+            string normalTexturePath, string shaderPath, string specTexturePath = null, string skyboxPath = null)
         {
             this.graphicsDevice = graphicsDevice;
             shaderAttached = true;
             this.model = content.Load<Model>(modelPath);
             this.renderEffect = content.Load<Effect>(shaderPath);
-            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath, null);
+            loadTextures(content, aldeboTexturePath, normalTexturePath, specTexturePath, skyboxPath);
+            initShaderData();
+            modelExtra = model.Tag as ModelExtra;
+
+            if (modelExtra != null)
+            {
+                ObtainBones();
+            }
+
+            computeCenter();
+        }
+        public void loadModel(ContentManager content, GraphicsDevice graphicsDevice, 
+            String modelPath, string normalTexturePath,  string shaderPath, string skyboxPath = null)
+        {
+            this.graphicsDevice = graphicsDevice;
+            shaderAttached = true;
+            this.model = content.Load<Model>(modelPath);
+            this.renderEffect = content.Load<Effect>(shaderPath);
+            loadTextures(content, null, normalTexturePath, null, skyboxPath);
             initShaderData();
             modelExtra = model.Tag as ModelExtra;
 
@@ -398,8 +417,10 @@ namespace DevilSoup
 
         private void AnimatedDraw(Matrix view, Matrix projection, Matrix[] boneTransforms, Matrix[] skeleton, Vector3? color = null)
         {
+            if (colorMap == null)
+                renderEffect.Parameters["addColor"].SetValue(color ?? new Vector3(0.0f, 0.0f, 1.0f));
             renderEffect.Parameters["addColor"].SetValue(color ?? new Vector3(0.0f, 0.0f, 0.0f));
-            renderEffect.Parameters["ColorMap"].SetValue(colorMap);
+            if (colorMap != null) renderEffect.Parameters["ColorMap"].SetValue(colorMap);
             renderEffect.Parameters["NormalMap"].SetValue(normalMap);
 
             if (specMap != null) renderEffect.Parameters["SpecMap"].SetValue(specMap);
@@ -409,14 +430,17 @@ namespace DevilSoup
             renderEffect.Parameters["Bones"].SetValue(skeleton);
             renderEffect.Parameters["CamPosition"].SetValue(cameraPos);
             // effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
+            if (colorMap != null)
+            {
 
-            renderEffect.Parameters["AmbientColor"].SetValue(ambientColor);
-            renderEffect.Parameters["AmbientIntensity"].SetValue(ambientIntensity);
-            renderEffect.Parameters["LightDirection"].SetValue(LightDirection);
-            renderEffect.Parameters["DiffuseColor"].SetValue(diffuseColor);
-            renderEffect.Parameters["DiffuseIntensity"].SetValue(diffuseIntesity);
-            renderEffect.Parameters["SpecularColor"].SetValue(specularColor);
-            renderEffect.Parameters["Shine"].SetValue(shine);
+                renderEffect.Parameters["AmbientColor"].SetValue(ambientColor);
+                renderEffect.Parameters["AmbientIntensity"].SetValue(ambientIntensity);
+                renderEffect.Parameters["LightDirection"].SetValue(LightDirection);
+                renderEffect.Parameters["DiffuseColor"].SetValue(diffuseColor);
+                renderEffect.Parameters["DiffuseIntensity"].SetValue(diffuseIntesity);
+                renderEffect.Parameters["SpecularColor"].SetValue(specularColor);
+                renderEffect.Parameters["Shine"].SetValue(shine);
+            }
 
             foreach (ModelMesh mesh in model.Meshes)
             {

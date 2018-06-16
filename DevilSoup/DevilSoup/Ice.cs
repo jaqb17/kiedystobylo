@@ -28,7 +28,9 @@ namespace DevilSoup
             position = new Vector3(150f, 0, 0);
         }
 
-        public Ice(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, string normalTexturePath, string specularTexturePath, string shaderPath = "Assets/Effects/CNS")
+        public Ice(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, 
+            string colorTexturePath, string normalTexturePath, string specularTexturePath,
+            string shaderPath = "Assets/Effects/Refraction", string skyboxPath = "Assets/Skybox/helll")
         {
             isIceCreated = true;
             isDestroyable = false;
@@ -37,7 +39,9 @@ namespace DevilSoup
             position = new Vector3(100f, 0, 10);
             iceModel = new Asset();
             fireBoostValue = -1.5;
-            iceModel.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);   
+            iceModel.loadModel( content,graphicsDevice, modelPath, normalTexturePath, shaderPath,skyboxPath);
+
+            //iceModel.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);   
         }
 
         public void Initialization(Camera camera)
