@@ -1050,3 +1050,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/bubble2.fbx
 
+#begin Assets/handTipAnim/pilot.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/handTipAnim/pilot.png
+
+#begin Assets/handTipAnim/pilot.txt
+/copy:Assets/handTipAnim/pilot.txt
+
