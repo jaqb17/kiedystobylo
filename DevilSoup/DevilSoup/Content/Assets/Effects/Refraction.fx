@@ -144,7 +144,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
     
    
-    float4 outputColor = TintColor * float4(RefractColor,1) + float4(addColor,1) ;
+    float4 outputColor = TintColor * float4(RefractColor,1);
 
    //Sepia
   //  outputColor.r = (final.r * 0.393) + (final.g * 0.769) + (final.b * 0.189);
@@ -156,7 +156,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
   // outputColor.g = 1.0-final.g;
   // outputColor.b = 1.0-final.b;
  
-    return outputColor;
+    return outputColor + 0.2* float4(1,1,1,1) +0.2 * float4(addColor,1);
 
 }
 
