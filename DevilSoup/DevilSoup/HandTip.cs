@@ -35,7 +35,7 @@ namespace DevilSoup
         public void LoadContent(ContentManager content, SpriteBatch spriteBatch)
         {
             spriteSheetLoader = new SpriteSheetLoader(content);
-            spriteSheet = spriteSheetLoader.Load("Assets\\handTipAnim\\animation");
+            spriteSheet = spriteSheetLoader.Load("Assets\\handTipAnim\\pilot");
             this.spriteBatch = spriteBatch;
             spriteRender = new SpriteRender(this.spriteBatch);
         }
@@ -67,7 +67,10 @@ namespace DevilSoup
                 this.spriteRender.Draw(
 
                     this.spriteSheet.Sprite(imageName),
-                    new Vector2(GlobalVariables.SCREEN_WIDTH * 4 / 5, GlobalVariables.SCREEN_HEIGTH * 3 / 5));
+                    new Vector2(GlobalVariables.SCREEN_WIDTH * 6 / 7, GlobalVariables.SCREEN_HEIGTH * 6 / 7),
+                    null,
+                    180f * MathHelper.Pi /180f
+                );
 
             }
 
