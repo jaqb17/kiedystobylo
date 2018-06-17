@@ -457,7 +457,6 @@ namespace DevilSoup
             {
                 combo.reset();
             }
-            //combo.stopComboLoop();            
             stage = 1;
             isWoodEnabled = false;
             isIceEnabled = false;

@@ -89,9 +89,7 @@ namespace DevilSoup
         }
          public void reset()
         {
-            //this.ifComboActive = !ifComboActive;
             comboPointsProgressBar = 0;
-            //this.ifComboActive = true;
         }
 
         public void startComboLoop()
