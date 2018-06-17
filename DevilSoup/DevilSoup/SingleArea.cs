@@ -141,10 +141,10 @@ namespace DevilSoup
         {
             player = Player.getPlayer();
             Console.WriteLine("sa1hp=" + player.hp + " gameover=" + player.gameOver);
-            if (player.hp <= 0)
+            if (Player.getPlayer().hp <= 0)
                 return;
             Console.WriteLine("sa2hp=" + player.hp + " gameover=" + player.gameOver);
-            if (player.hp > 0)
+            if (Player.getPlayer().hp > 0)
                 player.points += (this.level + 1); 
 
         }
@@ -180,20 +180,24 @@ namespace DevilSoup
 
         public bool takeSoulLife()
         {
-            if (this.soul == null) return true;
-            if (this.soul.lifes == 0) return false;
-
-            this.soul.lifes -= 1;
-            this.bubble.takeLife();
-
-            if (this.soul.lifes <= 0)
+            player = Player.getPlayer();
+            if(player.hp > 0)
             {
-                this.ifSoulIsAlive = false;
-                this.soul.killSoul();
-                this.soul = null;
-                return true;
-            }
+                if (this.soul == null) return true;
+                if (this.soul.lifes == 0) return false;
 
+                this.soul.lifes -= 1;
+                this.bubble.takeLife();
+
+                if (this.soul.lifes <= 0)
+                {
+                    this.ifSoulIsAlive = false;
+                    this.soul.killSoul();
+                    this.soul = null;
+                    return true;
+                }
+                return false;
+            }   
             return false;
         }
     }
