@@ -140,12 +140,20 @@ namespace DevilSoup
         private void Killed()
         {
             player = Player.getPlayer();
-            player.points += (this.level + 1);
+            Console.WriteLine("sa1hp=" + player.hp + " gameover=" + player.gameOver);
+            if (player.hp <= 0)
+                return;
+            Console.WriteLine("sa2hp=" + player.hp + " gameover=" + player.gameOver);
+            if (player.hp > 0)
+                player.points += (this.level + 1); 
+
         }
 
         private void Escaped(int power)
         {
             player = Player.getPlayer();
+            if (player.hp <= 0)
+                return;
             player.hp -= power;
         }
 

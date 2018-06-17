@@ -84,6 +84,7 @@ namespace DevilSoup
             else
             {
                 stopComboLoop();
+                comboPointsProgressBar = 0;
             }
         }
 

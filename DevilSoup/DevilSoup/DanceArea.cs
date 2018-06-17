@@ -253,6 +253,7 @@ namespace DevilSoup
                     availableToChange = true;
                 }
             }
+           
 
             if (ifGameStarted)
             {
@@ -314,6 +315,24 @@ namespace DevilSoup
                         heatValue = -iceCube.fireBoostValue;
                         iceCube.destroyIce();
                     }
+                }
+
+                player = Player.getPlayer();
+                if (player.hp <= 0)
+                {
+                    Console.WriteLine("da1hp=" + player.hp + " gameover=" + player.gameOver);
+                    player.gameOver = true;
+                    Console.WriteLine("da2hp=" + player.hp + " gameover=" + player.gameOver);
+                }
+                   // player.gameOver = true;
+                player = Player.getPlayer();
+                if (player.gameOver)
+                {
+                    Console.WriteLine("sa3hp=" + player.hp + " gameover=" + player.gameOver);
+                    if (woodLog != null)
+                        woodLog.isDestroyable = false;
+                    if(iceCube != null)
+                        iceCube.isDestroyable = false;
                 }
                 // tymczasowo wylaczone
 
@@ -434,7 +453,18 @@ namespace DevilSoup
                     }
                 }
             }
-            combo.stopComboLoop();
+            combo.stopComboLoop();            
+            stage = 1;
+            isWoodEnabled = false;
+            isIceEnabled = false;
+            iceCube = null;
+            woodLog = null;
+            level = 0;
+            heatValue = 2f;
+            fuelBar = null;
+            fuelBar = new Fireplace(content, graphicsDevice);
+            fuelBar.Initialization(camera);
+            currentColor = yellow;
         }
 
         private void Killed()
