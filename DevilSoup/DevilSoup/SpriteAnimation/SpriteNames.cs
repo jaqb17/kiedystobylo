@@ -9,15 +9,16 @@
  */
 namespace DevilSoup
 {
-	public class HandWave
+	public class Images
 	{
 		public const string Hand_001 = "001";
-		public const string Hand_002 = "002";
-		public const string Hand_003 = "003";
-		public const string Hand_004 = "004";
-		public const string Hand_005 = "005";
-		public const string Hand_006 = "006";
-		public const string Hand_007 = "007";
-		public const string Hand_008 = "008";
-	}
+        public const int handIndexInc = 1;
+        public const int handsLimit = 8;
+
+        public const string HP_100=  "100";
+
+        public const string Temp_200 = "200";
+        public const int TempBottomLimit = 200;
+        public const int TempTopLimit = 2200;
+    }
 }

@@ -61,7 +61,6 @@ namespace DevilSoup
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //models = new ModelsInstancesClass();
             cameraPos = new Vector3(0, 130, 65);
             //cameraPos = new Vector3(100, 200, 70);
             //cameraPos = new Vector3(0, 0, 250);
@@ -151,13 +150,6 @@ namespace DevilSoup
             skybox = new Skybox(Content);
 
             // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
-
-            /*animTemplate = new Asset();
-            animTemplate.loadModel(Content, "Assets\\TestAnim\\muchomorStadnyAtak");
-            animTemplate.world = Matrix.CreateTranslation(cauldronPos);
-            animTemplate.scaleAset(0.5f);
-            animTemplate.cameraPos = camera.Position;
-            */
             base.Initialize();
         }
 
