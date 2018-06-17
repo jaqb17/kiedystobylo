@@ -461,6 +461,7 @@ namespace DevilSoup
             woodLog = null;
             level = 0;
             heatValue = 2f;
+            fuelBar.reset();
             fuelBar = null;
             fuelBar = new Fireplace(content, graphicsDevice);
             fuelBar.Initialization(camera);

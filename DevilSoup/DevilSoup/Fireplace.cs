@@ -18,6 +18,7 @@ namespace DevilSoup
         private Vector3[] positionVectors;
         GraphicsDevice graphicsDevice;
         private Random r;
+       
         public Fireplace(ContentManager content, GraphicsDevice graphicsDevice)
         {
             #region Positions for logs under Cauldron
@@ -44,6 +45,11 @@ namespace DevilSoup
             logsUnderCauldron[0].isWoodActive = true;
             logsUnderCauldron[1].isWoodActive = true;
             r = new Random();
+        }
+        public void reset()
+        {
+            for (int i = 0; i < maxLogsUnderCauldron; i++)
+                logsUnderCauldron[i] = null;
         }
 
         public void addLogBeneathCauldron(ContentManager content, Camera camera)
