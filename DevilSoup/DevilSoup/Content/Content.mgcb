@@ -1071,3 +1071,33 @@
 /processorParam:DebugMode=Auto
 /build:Assets/Effects/Refraction.fx
 
+#begin Assets/GUI/Hp/meat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/GUI/Hp/meat.png
+
+#begin Assets/GUI/Hp/meat.txt
+/copy:Assets/GUI/Hp/meat.txt
+
+#begin Assets/GUI/Termometr/termo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/GUI/Termometr/termo.png
+
+#begin Assets/GUI/Termometr/termo.txt
+/copy:Assets/GUI/Termometr/termo.txt
+

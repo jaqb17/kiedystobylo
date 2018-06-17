@@ -58,9 +58,9 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GlobalVariables.cs" />
     <Compile Include="HandTip.cs" />
+    <Compile Include="HPTexture.cs" />
     <Compile Include="LifeColors.cs" />
     <Compile Include="Light.cs" />
-    <Compile Include="ModelsInstancesClass.cs" />
     <Compile Include="Pad.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
@@ -77,6 +77,7 @@
     <Compile Include="TexturePackerLoader\SpriteRender.cs" />
     <Compile Include="TexturePackerLoader\SpriteSheet.cs" />
     <Compile Include="TexturePackerLoader\SpriteSheetLoader.cs" />
+    <Compile Include="Thermometer.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="Ice.cs" />
     <Compile Include="WoodenLog.cs" />

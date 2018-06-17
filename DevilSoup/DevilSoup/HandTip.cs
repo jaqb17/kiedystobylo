@@ -14,7 +14,7 @@ namespace DevilSoup
         SpriteRender spriteRender;
 
         int imageID = 1;
-        string imageName = HandWave.Hand_001;
+        string imageName = Images.Hand_001;
         int frameDelay = 0;
         int frameLimit = 5;
         int currentLoop = 0;
@@ -50,9 +50,9 @@ namespace DevilSoup
                 if (frameDelay > frameLimit)
                 {
                     imageName = "00" + imageID;
-                    imageID++;
+                    imageID += Images.handIndexInc;
 
-                    if (imageID > 8)
+                    if (imageID > Images.handsLimit)
                     {
                         imageID = 1;
                         currentLoop++;
@@ -69,11 +69,10 @@ namespace DevilSoup
                     this.spriteSheet.Sprite(imageName),
                     new Vector2(GlobalVariables.SCREEN_WIDTH * 6 / 7, GlobalVariables.SCREEN_HEIGTH * 6 / 7),
                     null,
-                    180f * MathHelper.Pi /180f
+                    180f * MathHelper.Pi / 180f
                 );
 
             }
-
         }
     }
 }
