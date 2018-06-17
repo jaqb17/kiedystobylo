@@ -83,9 +83,15 @@ namespace DevilSoup
             }
             else
             {
-                stopComboLoop();
+               // stopComboLoop();
                 comboPointsProgressBar = 0;
             }
+        }
+         public void reset()
+        {
+            //this.ifComboActive = !ifComboActive;
+            comboPointsProgressBar = 0;
+            //this.ifComboActive = true;
         }
 
         public void startComboLoop()
@@ -103,27 +109,31 @@ namespace DevilSoup
 
         private void comboLoop()
         {
-            while (true)
+            if(Player.getPlayer().hp > 0)
             {
-                if (!ifComboActive)
+                while (true)
                 {
-                    Thread.Sleep(250);
-                    checkIfComboIsActive();
-                    Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
-                }
-                else
-                {
-                    for (int i = 0; i < 20; i++)
+                    if (!ifComboActive)
                     {
-                        Thread.Sleep(300);
-                        transparency -= 0.05f;
+                        Thread.Sleep(250);
+                        checkIfComboIsActive();
+                        Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
                     }
+                    else
+                    {
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Thread.Sleep(300);
+                            transparency -= 0.05f;
+                        }
 
-                    if (ifComboActive)
-                        this.finishCombo();
-                    //Thread.Sleep(10000);
+                        if (ifComboActive)
+                            this.finishCombo();
+                        //Thread.Sleep(10000);
+                    }
                 }
             }
+           
         }
 
         private void defineCombos()
@@ -243,15 +253,19 @@ namespace DevilSoup
         private void checkIfComboIsActive()
         {
             player = Player.getPlayer();
-            comboPointsProgressBar = player.points - lastPointsHistory;
-            if (comboPointsProgressBar >= pointsLimitToActivateCombo)
+            if (Player.getPlayer().hp > 0)
             {
-                ifComboActive = true;
-                comboPosition = 0;
-                transparency = 1.0f;
-                randomizeCombo();
-                lastPointsHistory = player.points;
+                comboPointsProgressBar = player.points - lastPointsHistory;
+                if (comboPointsProgressBar >= pointsLimitToActivateCombo)
+                {
+                    ifComboActive = true;
+                    comboPosition = 0;
+                    transparency = 1.0f;
+                    randomizeCombo();
+                    lastPointsHistory = player.points;
+                }
             }
+                
         }
 
         private void randomizeCombo()

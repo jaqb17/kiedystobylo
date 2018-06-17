@@ -453,7 +453,11 @@ namespace DevilSoup
                     }
                 }
             }
-            combo.stopComboLoop();            
+            if(Player.getPlayer().hp <= 0)
+            {
+                combo.reset();
+            }
+            //combo.stopComboLoop();            
             stage = 1;
             isWoodEnabled = false;
             isIceEnabled = false;
@@ -466,6 +470,8 @@ namespace DevilSoup
             fuelBar = new Fireplace(content, graphicsDevice);
             fuelBar.Initialization(camera);
             currentColor = yellow;
+            
+
         }
 
         private void Killed()
@@ -524,15 +530,19 @@ namespace DevilSoup
 
         private void calculateHeatValue(double _var)
         {
-            double difference = _var - heatValue;
-
-            heatValue += difference / 500;
+            if(Player.getPlayer().hp > 0 )
+            {
+                double difference = _var - heatValue;
+                heatValue += difference / 500;
+            }
+            
         }
 
         private void woodLogDestroySuccessfulHit()
         {
             //Add fuel to the flames
-            woodLog.destroyLog();
+            if (Player.getPlayer().hp > 0)
+                woodLog.destroyLog();
 
         }
 
@@ -650,13 +660,15 @@ namespace DevilSoup
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && woodLog != null && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
             {
                 woodLog.isLogDestroyed = true;
-                fuelBar.addLogBeneathCauldron(content, camera);
+                if (Player.getPlayer().hp > 0)
+                    fuelBar.addLogBeneathCauldron(content, camera);
                 woodLogDestroySuccessfulHit();
             }
             if (currentKeyPressed.IsKeyDown(Keys.NumPad5) && iceCube != null && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
             {
                 iceCube.isIceDestroyed = true;
-                iceCube.destroyIce();
+                if (Player.getPlayer().hp > 0)
+                    iceCube.destroyIce();
                 heatValue += iceCube.fireBoostValue;
             }
             
