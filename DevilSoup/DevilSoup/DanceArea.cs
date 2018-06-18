@@ -435,13 +435,13 @@ namespace DevilSoup
             }
         }
 
-        Vector3 randVec3(Vector3 min, Vector3 max)
-        {
-            return new Vector3(
-            min.X + (float)rnd.NextDouble() * (max.X - min.X),
-            min.Y + (float)rnd.NextDouble() * (max.Y - min.Y),
-            min.Z + (float)rnd.NextDouble() * (max.Z - min.Z));
-        }
+        //Vector3 randVec3(Vector3 min, Vector3 max)
+        //{
+        //    return new Vector3(
+        //    min.X + (float)rnd.NextDouble() * (max.X - min.X),
+        //    min.Y + (float)rnd.NextDouble() * (max.Y - min.Y),
+        //    min.Z + (float)rnd.NextDouble() * (max.Z - min.Z));
+        //}
 
         private void cauldronColorLogic()
         {
