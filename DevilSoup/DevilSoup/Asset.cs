@@ -1,13 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using System.Reflection;
 using System;
 using MGSkinnedAnimationAux;
-using System.Threading.Tasks;
-using System.IO;
-using System.Diagnostics;
-using System.Text;
 using System.Collections.Generic;
 
 namespace DevilSoup

@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevilSoup
 {
@@ -28,7 +24,7 @@ namespace DevilSoup
             position = new Vector3(150f, 0, 0);
         }
 
-        public Ice(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, 
+        public Ice(ContentManager content, GraphicsDevice graphicsDevice, string modelPath,
             string colorTexturePath, string normalTexturePath, string specularTexturePath,
             string shaderPath = "Assets/Effects/Refraction", string skyboxPath = "Assets/Skybox/helll")
         {
@@ -39,7 +35,7 @@ namespace DevilSoup
             position = new Vector3(100f, 0, 10);
             iceModel = new Asset();
             fireBoostValue = -1.5;
-            iceModel.loadModel( content,graphicsDevice, modelPath, normalTexturePath, shaderPath,skyboxPath);
+            iceModel.loadModel(content, graphicsDevice, modelPath, normalTexturePath, shaderPath, skyboxPath);
 
             //iceModel.loadModel(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, shaderPath, specularTexturePath);   
         }
@@ -70,7 +66,7 @@ namespace DevilSoup
         public void destroyIce()
         {
             if (this.iceModel == null || !this.isIceActive) return;
-            isIceCreated = false;
+
             Console.WriteLine("Zniszczono lod");
             this.iceModel.IfDamageAfterPlay = true;
         }
@@ -88,9 +84,6 @@ namespace DevilSoup
 
             newIcePosition.X -= 1f;
             newIcePosition.Y = -(newIcePosition.X * newIcePosition.X) / 200 + 60;
-            //newLogPosition.Y += 0.1f;
-            //if (newLogPosition.X < 0f)
-            //    newLogPosition.Y -= 0.1f;
             setPosition(newIcePosition);
             if (position.Y > 58.5f)
                 isDestroyable = true;

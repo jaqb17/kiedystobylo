@@ -557,10 +557,10 @@ namespace DevilSoup
         {
             if (heatValue > 5.2f && heatValue <= 10f)
             {
-                string modelPath = "Assets\\Ice\\lodAn";
-                string colorTexturePath = "Assets\\Ice\\lod_Albedo";
-                string normalTexturePath = "Assets\\Ice\\lod_Normal";
-                string specularTexturePath = "Assets\\Ice\\lod_Metallic";
+                string modelPath = "Assets\\Drewno\\DrewnoRozpad\\drewnoRoz";
+                string colorTexturePath = "Assets\\Ice\\ice_map1_color";
+                string normalTexturePath = "Assets\\Ice\\ice_map1_nmap";
+                string specularTexturePath = "Assets\\Ice\\ice_map1_specular_color";
                 iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 iceCube.Initialization(camera);
                 ifLogHaveFlownAlready = true;

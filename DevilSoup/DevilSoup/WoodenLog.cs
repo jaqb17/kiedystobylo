@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevilSoup
 {
@@ -31,7 +27,7 @@ namespace DevilSoup
             decayValue = 3;
         }
 
-        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, 
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath,
             string normalTexturePath, string specularTexturePath, string shaderPath = "Assets/Effects/CNS_E", string skyboxPath = "Assets/Skybox/helll")
         {
             isLogCreated = true;
@@ -47,7 +43,7 @@ namespace DevilSoup
             isLogDestroyed = false;
         }
 
-        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath, 
+        public WoodenLog(ContentManager content, GraphicsDevice graphicsDevice, string modelPath, string colorTexturePath,
             string normalTexturePath, string specularTexturePath, Vector3 _position, string shaderPath = "Assets/Effects/CNS_E", string skyboxPath = "Assets/Skybox/helll")
         {
             isLogCreated = true;
@@ -163,11 +159,8 @@ namespace DevilSoup
 
             if (this.log.HasAnimation)
             {
-                this.log.animationUpdate(gameTime);
-
                 if (!this.log.ifPlay && this.log.IfDamageAfterPlay)
                 {
-                    this.log.PlayClip(this.log.Clips[0]);
                     this.log.ifPlay = true;
                 }
 
