@@ -62,6 +62,8 @@
     <Compile Include="LifeColors.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Pad.cs" />
+    <Compile Include="ParticleSystems\ParticleSystem.cs" />
+    <Compile Include="ParticleSystems\ParticleVertex.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressBar.cs" />
@@ -123,9 +125,7 @@
     <None Include="WiimoteLib_Extras\docs\WiimoteLib.chm" />
     <None Include="WiimoteLib_Extras\samples.zip" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ParticleSystems\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\MGSkinnedAnimationAux\MGSkinnedAnimationAux.csproj">
       <Project>{d1cc382b-7d83-4ab0-9978-dfdafde7f027}</Project>

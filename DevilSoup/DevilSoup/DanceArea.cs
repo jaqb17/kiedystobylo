@@ -5,6 +5,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using System.Collections.Generic;
 
 namespace DevilSoup
 {
@@ -57,8 +58,12 @@ namespace DevilSoup
         private GraphicsDevice graphicsDevice;
 
         //Billboard test
-        BillboardSys slashes;
-        Vector3[] ParPositions;
+        List<BillboardSys> billboardIndicators;
+        List<BillboardSys> toDelete;
+
+        //Particles
+        //ParticleSystem exampleFire;
+        //Random rnd;
 
         public bool IfGameStarted
         {
@@ -138,9 +143,7 @@ namespace DevilSoup
 
             //BB Test
             Random r = new Random();
-            ParPositions = new Vector3[2];
-            ParPositions[0] = new Vector3(65, 0, 0);
-            ParPositions[1] = new Vector3(80, 0, 0);
+            
             //ParPositions[2] = new Vector3(90, 20, 10);
 
             Vector3 soupPosition = new Vector3(0, 0, 0);
@@ -156,11 +159,30 @@ namespace DevilSoup
             soup.setShine(3f);
             soup.setAmbientIntensity(.8f);
 
-            slashes = new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\slashTexture"), new Vector2(15), ParPositions);
+            billboardIndicators = new List<BillboardSys>();
+            toDelete = new List<BillboardSys>();
+            //Particles
+            //rnd = new Random();
+            //exampleFire = new ParticleSystem(graphicsDevice, content, content.Load<Texture2D>("Assets\\Ogien1\\1"), 200, new Vector2(40), 1, Vector3.Zero, 0.5f);
         }
 
         public void Update(GameTime gameTime)
         {
+
+
+            //Vector3 offset = new Vector3(MathHelper.ToRadians(10.0f));
+            //Vector3 randAngle = Vector3.Up + randVec3(-offset, offset);
+            //    //Generate a position between (-400, 0, -400) and (400, 0, 400)
+            //Vector3 randPosition = randVec3(new Vector3(-40), new
+            //Vector3(40));
+            //    //Generate a speed between 600 and 900
+            //float randSpeed = (float)rnd.NextDouble() * 30 + 60;
+            //exampleFire.AddParticle(randPosition, randAngle, randSpeed);
+            //exampleFire.Update();
+
+
+
+            
             combo.actualGarnekColor = currentColor;
             int keyPressed;
             int Val = 10;
@@ -311,6 +333,7 @@ namespace DevilSoup
                     iceCube.Update(gameTime);
                     if (gamepad.swung() > 6.5f && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
                     {
+                        iceCubeDestroySuccessfulHit();
                         iceCube.isIceDestroyed = true;
                         heatValue = -iceCube.fireBoostValue;
                         iceCube.destroyIce();
@@ -354,7 +377,7 @@ namespace DevilSoup
                 }
                 //fuelBar.Update(gameTime);
             }
-
+            billboardIndicatorsClearingLogic();
             pastKeyPressed = currentKeyPressed;
         }
 
@@ -378,7 +401,13 @@ namespace DevilSoup
 
         public void Draw(GameTime gameTime)
         {
-            slashes.Draw(camera.view, camera.projection, camera.Up, camera.Right);
+            //if(slashes != null)
+            //    slashes.Draw(camera.view, camera.projection, camera.Up, camera.Right);
+            //exampleFire.Draw(camera.view, camera.projection, camera.Up, camera.Right);
+            foreach(BillboardSys _var in billboardIndicators)
+            {
+                _var.Draw(camera.view, camera.projection, camera.Up, camera.Right);
+            }
             soup.SimpleDraw(camera.view, camera.projection);
             if (ifGameStarted)
             {
@@ -404,6 +433,14 @@ namespace DevilSoup
                     baseSoulsSpeed = 0.04f;
                     break;
             }
+        }
+
+        Vector3 randVec3(Vector3 min, Vector3 max)
+        {
+            return new Vector3(
+            min.X + (float)rnd.NextDouble() * (max.X - min.X),
+            min.Y + (float)rnd.NextDouble() * (max.Y - min.Y),
+            min.Z + (float)rnd.NextDouble() * (max.Z - min.Z));
         }
 
         private void cauldronColorLogic()
@@ -483,7 +520,10 @@ namespace DevilSoup
         {
             bool ifKilled = false;
             if (singleAreas[id] != null)
+            {
                 ifKilled = singleAreas[id].takeSoulLife();
+                billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\blood"), new Vector2(18), singleAreas[id].soulPosition + ((camera.Position - singleAreas[id].soulPosition)/10)));
+            }
 
             if (ifKilled)
                 this.Killed();
@@ -539,10 +579,16 @@ namespace DevilSoup
 
         private void woodLogDestroySuccessfulHit()
         {
+            billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\SlashTexture"), new Vector2(55), woodLog.position));
             //Add fuel to the flames
             if (Player.getPlayer().hp > 0)
                 woodLog.destroyLog();
 
+        }
+
+        private void iceCubeDestroySuccessfulHit()
+        {
+            billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\slashTexture"), new Vector2(55), iceCube.position));
         }
 
         private void comboFunction(int areaPressed)
@@ -669,6 +715,7 @@ namespace DevilSoup
                 if (Player.getPlayer().hp > 0)
                     iceCube.destroyIce();
                 heatValue += iceCube.fireBoostValue;
+                iceCubeDestroySuccessfulHit();
             }
             
                 
@@ -727,6 +774,20 @@ namespace DevilSoup
             return amp;
         }
 
-
+        private void billboardIndicatorsClearingLogic()
+        {
+            foreach (BillboardSys _var in billboardIndicators)
+            {
+                if (_var.currentTtl > _var.ttl)
+                {
+                    toDelete.Add(_var);
+                }
+            }
+            foreach (BillboardSys _var in toDelete)
+            {
+                billboardIndicators.Remove(_var);
+            }
+            toDelete.Clear();
+        }
     }
 }

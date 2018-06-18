@@ -7,6 +7,10 @@ sampler2D texSampler = sampler_state {
 float2 Size;
 float3 Up; // Camera UP
 float3 Side; // Camera SIDE
+bool AlphaTest = true;
+bool AlphaTestGreater;
+float AlphaTestValue = 0.5f;
+
 
 struct VertexShaderInput
 {
@@ -39,6 +43,10 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 color = tex2D(texSampler, input.UV);
+	if (AlphaTest)
+	{
+		clip((color.a - AlphaTestValue) * (AlphaTestGreater ? 1 : -1));
+	}
 	return color;
 }
 technique Technique1

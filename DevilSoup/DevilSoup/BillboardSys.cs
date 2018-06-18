@@ -27,39 +27,59 @@ namespace DevilSoup
         public GraphicsDevice gDevice;
         public Effect eff;
 
-        public BillboardSys(GraphicsDevice _graphicDevice, ContentManager content, Texture2D texture, Vector2 _BBSize, Vector3[] parPositions)
+        public int ttl = 10;
+        public int currentTtl;
+
+        public bool EnsureOcclusion = true;
+        public BillboardSys(GraphicsDevice _graphicDevice, ContentManager content, Texture2D texture, Vector2 _BBSize, Vector3 parPositions)
         {
-            this.nBillboards = parPositions.Length;
+            this.nBillboards = 1;
             this.BBsize = _BBSize;
             this.gDevice = _graphicDevice;
             this.tex2D = texture;
             eff = content.Load<Effect>("Assets\\Effects\\BillBoardEff");
             generateParticles(parPositions);
+            currentTtl = 0;
         }
 
         public void Draw(Matrix View, Matrix Projection, Vector3 Up, Vector3 Right)
         {
+            currentTtl++;
             // Set the vertex and index buffer to the graphics card
             gDevice.SetVertexBuffer(vBuffer);
             gDevice.Indices = iBufffer;
+
             setEffectParameters(View, Projection, Up, Right);
+            gDevice.BlendState = BlendState.AlphaBlend;
+
             // Draw the billboards
+            if(EnsureOcclusion)
+            {
+                drawOpaquePixels();
+                drawTransparentPixels();
+            }
+            else
+            {
+                gDevice.DepthStencilState = DepthStencilState.DepthRead;
+                eff.Parameters["AlphaTest"].SetValue(false);
+                drawBillboards();
+            };
             gDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4 * nBillboards, 0, nBillboards * 2);
             
             // Un-set the vertex and index buffer
             gDevice.SetVertexBuffer(null);
             gDevice.Indices = null;
-
+            
         }
 
-        private void generateParticles(Vector3[] positions)
+        private void generateParticles(Vector3 positions)
         {
             particles = new VertexPositionTexture[nBillboards * 4];
             indices = new int[nBillboards * 6];
             int x = 0;
             for (int i = 0; i < nBillboards * 4; i += 4)
             {
-                Vector3 pos = positions[i / 4];
+                Vector3 pos = positions;
                 // Add 4 vertices at the billboard's position
                 particles[i + 0] = new VertexPositionTexture(pos, new Vector2(0, 0));
                 particles[i + 1] = new VertexPositionTexture(pos, new Vector2(0, 1));
@@ -90,6 +110,28 @@ namespace DevilSoup
             eff.Parameters["Side"].SetValue(right);
 
             eff.CurrentTechnique.Passes[0].Apply();
+        }
+
+        void drawOpaquePixels()
+        {
+            gDevice.DepthStencilState = DepthStencilState.Default;
+            eff.Parameters["AlphaTest"].SetValue(true);
+            eff.Parameters["AlphaTestGreater"].SetValue(true);
+            drawBillboards();
+        }
+
+        void drawTransparentPixels()
+        {
+            gDevice.DepthStencilState = DepthStencilState.DepthRead;
+            eff.Parameters["AlphaTest"].SetValue(true);
+            eff.Parameters["AlphaTestGreater"].SetValue(false);
+            drawBillboards();
+        }
+
+        void drawBillboards()
+        {
+            eff.CurrentTechnique.Passes[0].Apply();
+            gDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4 * nBillboards, 0, nBillboards * 2);
         }
     }
 }
