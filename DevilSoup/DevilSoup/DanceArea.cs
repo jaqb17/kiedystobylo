@@ -323,12 +323,12 @@ namespace DevilSoup
                     }
                 }
 
-                if (isIceCreated == false && isIceEnabled)
+                if (isIceCreated == false && isIceEnabled && !player.gameOver)
                 {
                     createIce();
 
                 }
-                if (isIceCreated == true)
+                if (isIceCreated == true && !player.gameOver)
                 {
                     iceCube.Update(gameTime);
                     if (gamepad.swung() > 6.5f && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
@@ -359,11 +359,11 @@ namespace DevilSoup
                 }
                 // tymczasowo wylaczone
 
-                if (isLogCreated == false && isWoodEnabled)
+                if (isLogCreated == false && isWoodEnabled && !player.gameOver)
                 {
                     createLog();
                 }
-                if (isLogCreated == true)
+                if (isLogCreated == true && !player.gameOver)
                 {
                     woodLog.Update(gameTime);
 
