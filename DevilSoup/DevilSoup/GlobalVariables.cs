@@ -8,7 +8,7 @@ namespace DevilSoup
 {
     public static class GlobalVariables
     {
-        public const int SCREEN_HEIGTH = 640;
-        public const int SCREEN_WIDTH = 1280;
+        public const int SCREEN_HEIGTH = 1080;
+        public const int SCREEN_WIDTH = 1920;
     }
 }

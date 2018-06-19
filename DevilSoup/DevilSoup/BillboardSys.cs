@@ -65,6 +65,9 @@ namespace DevilSoup
                 drawBillboards();
             };
             gDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 4 * nBillboards, 0, nBillboards * 2);
+
+            gDevice.BlendState = BlendState.Opaque;
+            gDevice.DepthStencilState = DepthStencilState.Default;
             
             // Un-set the vertex and index buffer
             gDevice.SetVertexBuffer(null);
