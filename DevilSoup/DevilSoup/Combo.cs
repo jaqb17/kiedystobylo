@@ -3,10 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Diagnostics;
 
 namespace DevilSoup
 {
@@ -26,25 +23,11 @@ namespace DevilSoup
         private SpriteBatch spriteBatch;
         private Player player;
         private GraphicsDeviceManager graphics;
-        private bool ifGameStarted = false;
         private int lastPointsHistory = 0;
-        public readonly int pointsLimitToActivateCombo =15;
+        public readonly int pointsLimitToActivateCombo = 15;
         public int comboPointsProgressBar { get; private set; } = 0;
 
         public Vector3 actualGarnekColor;
-
-
-        public bool IfGameStarted
-        {
-            get
-            {
-                return ifGameStarted;
-            }
-            set
-            {
-                ifGameStarted = value;
-            }
-        }
 
         public static Combo createCombo()
         {
@@ -71,25 +54,17 @@ namespace DevilSoup
 
         public void Draw(GameTime gameTime)
         {
-            if (player.hp > 0)
+            if (player.hp <= 0)
             {
-                if (getIfComboIsActive() && ifGameStarted)
-                {
-                    for (int i = 0; i < 9; i++)
-                    {
-                       // spriteBatch.Draw(drawMap(graphics, i), getRectangleCoord(graphics, i), getColor());
-                    }
-                }
-            }
-            else
-            {
-               // stopComboLoop();
+                // stopComboLoop();
                 comboPointsProgressBar = 0;
             }
         }
-         public void reset()
+
+        public void reset()
         {
             comboPointsProgressBar = 0;
+            lastPointsHistory = 0;
         }
 
         public void startComboLoop()
@@ -107,31 +82,33 @@ namespace DevilSoup
 
         private void comboLoop()
         {
-            if(Player.getPlayer().hp > 0)
+            if (Player.getPlayer().hp > 0)
             {
-                while (true)
+                while (!GlobalVariables.ifGameOver)
                 {
-                    if (!ifComboActive)
+                    if (!GlobalVariables.ifGamePause)
                     {
-                        Thread.Sleep(250);
-                        checkIfComboIsActive();
-                        Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < 20; i++)
+                        if (!ifComboActive)
                         {
-                            Thread.Sleep(300);
-                            transparency -= 0.05f;
+                            Thread.Sleep(250);
+                            checkIfComboIsActive();
+                            Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
                         }
+                        else
+                        {
+                            for (int i = 0; i < 20; i++)
+                            {
+                                Thread.Sleep(300);
+                                transparency -= 0.05f;
+                            }
 
-                        if (ifComboActive)
-                            this.finishCombo();
-                        //Thread.Sleep(10000);
+                            if (ifComboActive)
+                                this.finishCombo();
+                            //Thread.Sleep(10000);
+                        }
                     }
                 }
             }
-           
         }
 
         private void defineCombos()
@@ -168,18 +145,18 @@ namespace DevilSoup
 
             if (index == availableCombos[randomedComboIndex][comboPosition])
             {
-                
-                return ( new Vector3(0.5f, 0, 0)*transparency);
+
+                return (new Vector3(0.5f, 0, 0) * transparency);
             }
-            else if(availableCombos[randomedComboIndex].Contains<int>(index))
+            else if (availableCombos[randomedComboIndex].Contains<int>(index))
             {
-                
-                return new Vector3(0, 0.5f, 0)*transparency;
+
+                return new Vector3(0, 0.5f, 0) * transparency;
             }
             else
             {
-                
-                return actualGarnekColor*transparency;
+
+                return actualGarnekColor * transparency;
             }
         }
 
@@ -263,7 +240,7 @@ namespace DevilSoup
                     lastPointsHistory = player.points;
                 }
             }
-                
+
         }
 
         private void randomizeCombo()

@@ -65,7 +65,6 @@ namespace DevilSoup
             //cameraPos = new Vector3(100, 200, 70);
             //cameraPos = new Vector3(0, 0, 250);
 
-
             cauldronPos = new Vector3(0f, 0f, 0f);
             czachaPos = cauldronPos;
 
@@ -77,7 +76,6 @@ namespace DevilSoup
             camera.Forward = Vector3.Normalize(camera.Forward);
             camera.Right = Vector3.Cross(new Vector3(0, 1f, 0), camera.Forward);
             camera.Up = Vector3.Cross(camera.Forward, camera.Right);
-
 
             camera.projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.DisplayMode.AspectRatio, 1f, 1000f); //Bardzo ważne! Głębokość na jaką patrzymy!
             IsFixedTimeStep = false; //False - update i draw są wywoływane po kolei, true - update jest wywoływane 60 razy/sek, draw może być porzucone w celu nadrobienia jeżeli gra działa wolno 
@@ -254,7 +252,6 @@ namespace DevilSoup
             spriteBatch.Draw(renderTarget, new Vector2(0, 0), Color.White);
 
             spriteBatch.End();
-
 
             spriteBatch.Begin();
 

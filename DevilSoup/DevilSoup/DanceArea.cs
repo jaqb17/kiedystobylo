@@ -40,7 +40,6 @@ namespace DevilSoup
         bool ifCreateSoul = true;
         bool ifCheckAccelerometer = true;
         int accelTimeDelay = 0;
-        private bool ifGameStarted = false;
         private bool balance = true;
         private bool isWoodEnabled = false;
         private bool isIceEnabled = false;
@@ -64,12 +63,6 @@ namespace DevilSoup
         //Particles
         //ParticleSystem exampleFire;
         //Random rnd;
-
-        public bool IfGameStarted
-        {
-            get { return ifGameStarted; }
-            set { ifGameStarted = value; }
-        }
 
         public bool isLogCreated
         {
@@ -143,7 +136,7 @@ namespace DevilSoup
 
             //BB Test
             Random r = new Random();
-            
+
             //ParPositions[2] = new Vector3(90, 20, 10);
 
             Vector3 soupPosition = new Vector3(0, 0, 0);
@@ -166,33 +159,15 @@ namespace DevilSoup
             //exampleFire = new ParticleSystem(graphicsDevice, content, content.Load<Texture2D>("Assets\\Ogien1\\1"), 200, new Vector2(40), 1, Vector3.Zero, 0.5f);
         }
 
-        public void Update(GameTime gameTime)
+        private void StageUpdate()
         {
-
-
-            //Vector3 offset = new Vector3(MathHelper.ToRadians(10.0f));
-            //Vector3 randAngle = Vector3.Up + randVec3(-offset, offset);
-            //    //Generate a position between (-400, 0, -400) and (400, 0, 400)
-            //Vector3 randPosition = randVec3(new Vector3(-40), new
-            //Vector3(40));
-            //    //Generate a speed between 600 and 900
-            //float randSpeed = (float)rnd.NextDouble() * 30 + 60;
-            //exampleFire.AddParticle(randPosition, randAngle, randSpeed);
-            //exampleFire.Update();
-
-
-
-            
-            combo.actualGarnekColor = currentColor;
-            int keyPressed;
             int Val = 10;
-            currentKeyPressed = Keyboard.GetState();
             cauldronColorLogic();
             stage = (player.points / Val) + 1;
-            if (stage == 1 && heatValue <= 1f)
-                stage += 1;
-            if (stage > 5)
-                stage = 5;
+
+            if (stage == 1 && heatValue <= 1f) stage += 1;
+            if (stage > 5) stage = 5;
+
             switch (stage)
             {
                 case 1:
@@ -246,25 +221,65 @@ namespace DevilSoup
                     }
                     break;
             }
+
             if (((player.points / Val) + 1) == 1)
                 balance = true;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+
+
+            //Vector3 offset = new Vector3(MathHelper.ToRadians(10.0f));
+            //Vector3 randAngle = Vector3.Up + randVec3(-offset, offset);
+            //    //Generate a position between (-400, 0, -400) and (400, 0, 400)
+            //Vector3 randPosition = randVec3(new Vector3(-40), new
+            //Vector3(40));
+            //    //Generate a speed between 600 and 900
+            //float randSpeed = (float)rnd.NextDouble() * 30 + 60;
+            //exampleFire.AddParticle(randPosition, randAngle, randSpeed);
+            //exampleFire.Update();
+
+            int keyPressed;
+
+            currentKeyPressed = Keyboard.GetState();
             if (gamepad.USBMatt != null) keyPressed = gamepad.getKeyState();
             else keyPressed = -1;
 
+            combo.actualGarnekColor = currentColor;
+
             if ((keyPressed == 9 || currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
             {
-                ifGameStarted = !ifGameStarted;
-                combo.IfGameStarted = ifGameStarted;
+                bool ifGameJustStarted = false;
+
+                if (GlobalVariables.ifGamePause) GlobalVariables.ifGamePause = false;
+                else if (!GlobalVariables.ifGamePause && GlobalVariables.ifGameOver)
+                {
+                    GlobalVariables.ifGameOver = false;
+                    ifGameJustStarted = true;
+                }
+                else if (!GlobalVariables.ifGamePause && !GlobalVariables.ifGameOver)
+                {
+                    GlobalVariables.ifGameOver = true;
+                    ifGameJustStarted = false;
+                    combo.stopComboLoop();
+                    combo.reset();
+                }
+
                 availableToChange = false;
                 timeDelayed = 60;           // 60fps czyli 30 to 0.5 sekundy
 
-                if (ifGameStarted)
+                if (ifGameJustStarted)
                 {
                     Player.reset();
+                    this.reset();
                     player = Player.getPlayer();
                     combo.startComboLoop();
                 }
-                else this.reset();
+                else if (!ifGameJustStarted && GlobalVariables.ifGameOver)
+                {
+                    this.reset();
+                }
             }
 
             if (!availableToChange)
@@ -275,15 +290,16 @@ namespace DevilSoup
                     availableToChange = true;
                 }
             }
-           
 
-            if (ifGameStarted)
+            if (isBoilingSoundActive == false)
             {
-                if (isBoilingSoundActive == false)
-                {
-                    MediaPlayer.Play(boil);
-                    isBoilingSoundActive = !isBoilingSoundActive;
-                }
+                MediaPlayer.Play(boil);
+                isBoilingSoundActive = !isBoilingSoundActive;
+            }
+
+            if (!GlobalVariables.ifGameOver && !GlobalVariables.ifGamePause)
+            {
+                StageUpdate();
                 fuelBar.Update(gameTime);
                 calculateHeatValue(fuelBar.fuelValue);
                 readKey(keyPressed);
@@ -323,12 +339,24 @@ namespace DevilSoup
                     }
                 }
 
-                if (isIceCreated == false && isIceEnabled && !player.gameOver)
+                if (!isIceCreated && isIceEnabled)
                 {
                     createIce();
-
                 }
-                if (isIceCreated == true && !player.gameOver)
+
+                if (woodLog != null)
+                    woodLog.isDestroyable = false;
+                if (iceCube != null)
+                    iceCube.isDestroyable = false;
+
+                // tymczasowo wylaczone
+
+                if (!isLogCreated && isWoodEnabled)
+                {
+                    createLog();
+                }
+
+                if (isIceCreated)
                 {
                     iceCube.Update(gameTime);
                     if (gamepad.swung() > 6.5f && iceCube.isDestroyable == true && iceCube.isIceDestroyed == false)
@@ -340,34 +368,9 @@ namespace DevilSoup
                     }
                 }
 
-                player = Player.getPlayer();
-                if (player.hp <= 0)
-                {
-                    Console.WriteLine("da1hp=" + player.hp + " gameover=" + player.gameOver);
-                    player.gameOver = true;
-                    Console.WriteLine("da2hp=" + player.hp + " gameover=" + player.gameOver);
-                }
-                   // player.gameOver = true;
-                player = Player.getPlayer();
-                if (player.gameOver)
-                {
-                    Console.WriteLine("sa3hp=" + player.hp + " gameover=" + player.gameOver);
-                    if (woodLog != null)
-                        woodLog.isDestroyable = false;
-                    if(iceCube != null)
-                        iceCube.isDestroyable = false;
-                }
-                // tymczasowo wylaczone
-
-                if (isLogCreated == false && isWoodEnabled && !player.gameOver)
-                {
-                    createLog();
-                }
-                if (isLogCreated == true && !player.gameOver)
+                if (isLogCreated)
                 {
                     woodLog.Update(gameTime);
-
-
                     if (gamepad.swung() > 6.5f && woodLog.isDestroyable == true && woodLog.isLogDestroyed == false)
                     {
                         fuelBar.addLogBeneathCauldron(content, camera);
@@ -377,6 +380,7 @@ namespace DevilSoup
                 }
                 //fuelBar.Update(gameTime);
             }
+
             billboardIndicatorsClearingLogic();
             pastKeyPressed = currentKeyPressed;
         }
@@ -389,7 +393,9 @@ namespace DevilSoup
                 {
                     singleAreas[i].baseSoulsSpeed = baseSoulsSpeed;
                     singleAreas[i].heatValue = heatValue;
-                    singleAreas[i].Update(gameTime);
+
+                    if (!GlobalVariables.ifGamePause) singleAreas[i].Update(gameTime);
+
                     singleAreas[i].Draw(gameTime);
 
                     if (!singleAreas[i].ifSoulIsAlive && !singleAreas[i].ifSoulIsAnimated)
@@ -404,34 +410,33 @@ namespace DevilSoup
             //if(slashes != null)
             //    slashes.Draw(camera.view, camera.projection, camera.Up, camera.Right);
             //exampleFire.Draw(camera.view, camera.projection, camera.Up, camera.Right);
-            foreach(BillboardSys _var in billboardIndicators)
+            foreach (BillboardSys _var in billboardIndicators)
             {
                 _var.Draw(camera.view, camera.projection, camera.Up, camera.Right);
             }
+
             soup.SimpleDraw(camera.view, camera.projection);
-            if (ifGameStarted)
+
+            if (!GlobalVariables.ifGameOver)
             {
                 moveSouls(gameTime);
                 fuelBar.Draw(gameTime, camera);
 
-                if (isLogCreated == true)
-                    woodLog.Draw(gameTime);
-                if (isIceCreated == true)
-                    iceCube.Draw(gameTime);
-                
-            }
+                if (isLogCreated == true) woodLog.Draw(gameTime);
+                if (isIceCreated == true) iceCube.Draw(gameTime);
 
-            switch (level)
-            {
-                case 0:
-                    baseSoulsSpeed = 0.02f;
-                    break;
-                case 1:
-                    baseSoulsSpeed = 0.03f;
-                    break;
-                case 2:
-                    baseSoulsSpeed = 0.04f;
-                    break;
+                switch (level)
+                {
+                    case 0:
+                        baseSoulsSpeed = 0.02f;
+                        break;
+                    case 1:
+                        baseSoulsSpeed = 0.03f;
+                        break;
+                    case 2:
+                        baseSoulsSpeed = 0.04f;
+                        break;
+                }
             }
         }
 
@@ -488,9 +493,10 @@ namespace DevilSoup
                         singleAreas[i].soul.killSoul();
                         singleAreas[i].soul = null;
                     }
+                    singleAreas[i] = null;
                 }
             }
-            if(Player.getPlayer().hp <= 0)
+            if (Player.getPlayer().hp <= 0)
             {
                 combo.reset();
             }
@@ -506,8 +512,7 @@ namespace DevilSoup
             fuelBar = new Fireplace(content, graphicsDevice);
             fuelBar.Initialization(camera);
             currentColor = yellow;
-            
-
+            ifLogHaveFlownAlready = false;
         }
 
         private void Killed()
@@ -522,7 +527,7 @@ namespace DevilSoup
             if (singleAreas[id] != null)
             {
                 ifKilled = singleAreas[id].takeSoulLife();
-                billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\blood"), new Vector2(18), singleAreas[id].soulPosition + ((camera.Position - singleAreas[id].soulPosition)/10)));
+                billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\blood"), new Vector2(18), singleAreas[id].soulPosition + ((camera.Position - singleAreas[id].soulPosition) / 10)));
             }
 
             if (ifKilled)
@@ -550,7 +555,6 @@ namespace DevilSoup
                 string specularTexturePath = "Assets\\Drewno\\DrewnoRozpad\\drewnoR_Metallic";
                 woodLog = new WoodenLog(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 woodLog.Initialization(camera);
-                ifLogHaveFlownAlready = true;
             }
         }
         private void createIce()
@@ -563,18 +567,16 @@ namespace DevilSoup
                 string specularTexturePath = "Assets\\Ice\\ice_map1_specular_color";
                 iceCube = new Ice(content, graphicsDevice, modelPath, colorTexturePath, normalTexturePath, specularTexturePath);
                 iceCube.Initialization(camera);
-                ifLogHaveFlownAlready = true;
             }
         }
 
         private void calculateHeatValue(double _var)
         {
-            if(Player.getPlayer().hp > 0 )
+            if (Player.getPlayer().hp > 0)
             {
                 double difference = _var - heatValue;
                 heatValue += difference / 500;
             }
-            
         }
 
         private void woodLogDestroySuccessfulHit()
@@ -583,7 +585,6 @@ namespace DevilSoup
             //Add fuel to the flames
             if (Player.getPlayer().hp > 0)
                 woodLog.destroyLog();
-
         }
 
         private void iceCubeDestroySuccessfulHit()
@@ -717,8 +718,6 @@ namespace DevilSoup
                 heatValue += iceCube.fireBoostValue;
                 iceCubeDestroySuccessfulHit();
             }
-            
-                
         }
 
         public void FuelBarInitialize(ContentManager content)
@@ -730,15 +729,15 @@ namespace DevilSoup
         {
             float intensity = 0;
 
-            if(currentColor == standard)
+            if (currentColor == standard)
             {
                 intensity = 0.05f;
             }
-            else if(currentColor == yellow)
+            else if (currentColor == yellow)
             {
                 intensity = 0.15f;
             }
-            else if(currentColor == orange)
+            else if (currentColor == orange)
             {
                 intensity = 0.35f;
             }

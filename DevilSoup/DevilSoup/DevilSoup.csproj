@@ -46,7 +46,6 @@
     <Compile Include="AnimationPlayer.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="BillboardSys.cs" />
-    <Compile Include="Bone.cs" />
     <Compile Include="Bubble.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Combo.cs" />
@@ -60,7 +59,6 @@
     <Compile Include="HandTip.cs" />
     <Compile Include="HPTexture.cs" />
     <Compile Include="LifeColors.cs" />
-    <Compile Include="Light.cs" />
     <Compile Include="Pad.cs" />
     <Compile Include="ParticleSystems\ParticleSystem.cs" />
     <Compile Include="ParticleSystems\ParticleVertex.cs" />

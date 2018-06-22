@@ -80,7 +80,7 @@ namespace DevilSoup
 
         public void Update(GameTime gameTime)
         {
-            if(this.soul != null && this.ifSoulIsAlive && !this.ifSoulIsAnimated)
+            if (this.soul != null && this.ifSoulIsAlive && !this.ifSoulIsAnimated)
             {
                 this.soul.Update(gameTime);
             }
@@ -111,8 +111,12 @@ namespace DevilSoup
             if (this.soul != null && this.ifSoulIsAlive)
             {
                 Vector3 newPos = soulPosition;
-                if (this.soul.lifes > 0)
-                    newPos.Y += baseSoulsSpeed * (float)heatValue;
+
+                if (!GlobalVariables.ifGameOver && !GlobalVariables.ifGamePause)
+                {
+                    if (this.soul.lifes > 0)
+                        newPos.Y += baseSoulsSpeed * (float)heatValue;
+                }
 
                 moveSoul(newPos);
                 bubble.setPosition(newPos);
@@ -140,12 +144,11 @@ namespace DevilSoup
         private void Killed()
         {
             player = Player.getPlayer();
-            Console.WriteLine("sa1hp=" + player.hp + " gameover=" + player.gameOver);
-            if (Player.getPlayer().hp <= 0)
+            if (player.hp <= 0)
                 return;
-            Console.WriteLine("sa2hp=" + player.hp + " gameover=" + player.gameOver);
-            if (Player.getPlayer().hp > 0)
-                player.points += (this.level + 1); 
+
+            if (player.hp > 0)
+                player.points += (this.level + 1);
 
         }
 
@@ -153,7 +156,13 @@ namespace DevilSoup
         {
             player = Player.getPlayer();
             if (player.hp <= 0)
+            {
+                GlobalVariables.ifGameOver = true;
+                Combo combo = Combo.createCombo();
+                combo.stopComboLoop();
+                combo.reset();
                 return;
+            }
             player.hp -= power;
         }
 
@@ -181,7 +190,7 @@ namespace DevilSoup
         public bool takeSoulLife()
         {
             player = Player.getPlayer();
-            if(player.hp > 0)
+            if (player.hp > 0)
             {
                 if (this.soul == null) return true;
                 if (this.soul.lifes == 0) return false;
@@ -197,7 +206,7 @@ namespace DevilSoup
                     return true;
                 }
                 return false;
-            }   
+            }
             return false;
         }
     }

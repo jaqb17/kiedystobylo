@@ -10,5 +10,7 @@ namespace DevilSoup
     {
         public const int SCREEN_HEIGTH = 1080;
         public const int SCREEN_WIDTH = 1920;
+        public static bool ifGameOver = true;
+        public static bool ifGamePause = false;
     }
 }

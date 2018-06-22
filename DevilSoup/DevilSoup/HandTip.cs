@@ -61,7 +61,10 @@ namespace DevilSoup
                     frameDelay = 0;
 
                     if (currentLoop >= loopsLimit)
+                    {
                         displayTip = false;
+                        currentLoop = 0;
+                    }
                 }
 
                 this.spriteRender.Draw(

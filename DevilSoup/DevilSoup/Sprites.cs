@@ -66,12 +66,12 @@ namespace DevilSoup
         public void Draw(DanceArea danceArea)
         {
             Player player = Player.getPlayer();
-            if (!ifLogHaveFlownAlready && danceArea.ifLogHaveFlownAlready)
+            if (danceArea.isLogCreated && !danceArea.ifLogHaveFlownAlready)
             {
                 handTip.DisplayTip = true;
-                ifLogHaveFlownAlready = true;
+                danceArea.ifLogHaveFlownAlready = true;
             }
-
+            
             thermometer.Draw();
             hpTexture.Draw();
             handTip.Draw();
