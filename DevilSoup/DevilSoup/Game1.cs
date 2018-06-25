@@ -35,6 +35,7 @@ namespace DevilSoup
         private DanceArea danceArea;
         private Player player;
         private Combo combo;
+        private SkullRing skullRing;
 
         private Sprites sprites;
 
@@ -146,6 +147,7 @@ namespace DevilSoup
             CCPP = Content.Load<Effect>("Assets/Effects/CC");
 
             skybox = new Skybox(Content);
+            skullRing = new SkullRing(Content, danceArea, camera);
 
             // CCPP.Parameters["colorMul"].SetValue(new Vector3(.6f, 1f, .7f));
             base.Initialize();
@@ -243,7 +245,7 @@ namespace DevilSoup
             // czacha.SimpleDraw(camera.view, camera.projection);
             // czacha.setShine(1f);
             danceArea.Draw(gameTime);
-
+            skullRing.render(camera);
             GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);

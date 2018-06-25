@@ -471,6 +471,8 @@ namespace DevilSoup
             return result;
         }
 
+   
+
         private void createSoul()
         {
             int i = Randomizer.GetRandomNumber(0, numberOfAreas);
@@ -531,8 +533,10 @@ namespace DevilSoup
                 ifKilled = singleAreas[id].takeSoulLife();
                 billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\blood"), new Vector2(18), singleAreas[id].soulPosition + ((camera.Position - singleAreas[id].soulPosition) / 10)));
             }
+            if (ifKilled)
+                this.Killed();
 
-            
+
         }
 
         private void takeAllSoulHP(int id)

@@ -242,6 +242,17 @@ namespace DevilSoup
             }
 
         }
+        public float getComboStatus()
+        {
+            if (comboPointsProgressBar >= pointsLimitToActivateCombo)
+            {
+                return 1.0f;
+            }
+            else
+            {
+                return (1.0f * comboPointsProgressBar) / (pointsLimitToActivateCombo * 1.0f);
+            }
+        }
 
         private void randomizeCombo()
         {

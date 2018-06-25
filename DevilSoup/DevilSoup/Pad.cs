@@ -132,7 +132,7 @@ namespace DevilSoup
             if (Math.Abs(result.X) <= 1.1f) result.X = 0f;
             if (Math.Abs(result.Y) <= 1.1f) result.Y = 0f;
             if (Math.Abs(result.Z) <= 1.1f) result.Z = 0f;
-            Console.WriteLine(result.ToString());
+          //  Console.WriteLine(result.ToString());
             return result;
         }
 

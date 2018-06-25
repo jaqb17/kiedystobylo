@@ -148,7 +148,7 @@ namespace DevilSoup
                 {
                     logsUnderCauldron[i].Initialization(_camera);
                     Vector3 factor = computePosition(i);
-                    System.Console.WriteLine(factor);
+                  //  System.Console.WriteLine(factor);
                     logsUnderCauldron[i].log.rotateAsset((int)(factor.X * 90), (int)(factor.Y * 90), 0);
                     logsUnderCauldron[i].log.scaleAset(2.8f, 3.8f, 1.8f);
                     logsUnderCauldron[i].Draw(gameTime);
