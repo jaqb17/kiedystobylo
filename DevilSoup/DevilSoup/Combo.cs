@@ -88,10 +88,10 @@ namespace DevilSoup
                 {
                     if (!GlobalVariables.ifGamePause)
                     {
+                        checkIfComboIsActive();
                         if (!ifComboActive)
                         {
                             Thread.Sleep(250);
-                            checkIfComboIsActive();
                             Console.WriteLine("Czy kombo jest aktywne: " + this.ifComboActive);
                         }
                         else
@@ -99,6 +99,7 @@ namespace DevilSoup
                             for (int i = 0; i < 20; i++)
                             {
                                 Thread.Sleep(300);
+                                updateComboPointDuringCombo();
                                 transparency -= 0.05f;
                             }
 
@@ -221,27 +222,31 @@ namespace DevilSoup
         private void finishCombo()
         {
             this.ifComboActive = false;
-            comboPointsProgressBar = 0;
+            //comboPointsProgressBar = 0;
+        }
+
+        //Na razie jest 30% szans na rozpoczecie combosa
+        private void updateComboPointDuringCombo()
+        {
+            player = Player.getPlayer();
+            comboPointsProgressBar = player.points - lastPointsHistory;
         }
 
         //Na razie jest 30% szans na rozpoczecie combosa
         private void checkIfComboIsActive()
         {
             player = Player.getPlayer();
-            if (Player.getPlayer().hp > 0)
+            comboPointsProgressBar = player.points - lastPointsHistory;
+            if (comboPointsProgressBar >= pointsLimitToActivateCombo)
             {
-                comboPointsProgressBar = player.points - lastPointsHistory;
-                if (comboPointsProgressBar >= pointsLimitToActivateCombo)
-                {
-                    ifComboActive = true;
-                    comboPosition = 0;
-                    transparency = 1.0f;
-                    randomizeCombo();
-                    lastPointsHistory = player.points;
-                }
+                ifComboActive = true;
+                comboPosition = 0;
+                transparency = 1.0f;
+                randomizeCombo();
+                lastPointsHistory = player.points;
             }
-
         }
+
         public float getComboStatus()
         {
             if (comboPointsProgressBar >= pointsLimitToActivateCombo)

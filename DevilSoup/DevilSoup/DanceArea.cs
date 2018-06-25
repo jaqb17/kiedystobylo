@@ -248,6 +248,15 @@ namespace DevilSoup
 
             combo.actualGarnekColor = currentColor;
 
+            if (currentKeyPressed.IsKeyDown(Keys.C) && availableToChange)
+            {
+                if (!GlobalVariables.ifGameOver)
+                {
+                    if (GlobalVariables.ifGamePause) GlobalVariables.ifGamePause = false;
+                    else GlobalVariables.ifGamePause = true;
+                }
+            }
+
             if ((keyPressed == 9 || currentKeyPressed.IsKeyDown(Keys.V)) && availableToChange)
             {
                 bool ifGameJustStarted = false;
@@ -471,7 +480,7 @@ namespace DevilSoup
             return result;
         }
 
-   
+
 
         private void createSoul()
         {
