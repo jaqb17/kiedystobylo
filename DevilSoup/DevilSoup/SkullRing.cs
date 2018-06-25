@@ -13,12 +13,13 @@ namespace DevilSoup
     {
         private Asset skullAsset;
         private DanceArea danceArea;
-
+        private float rotation = 0.0f;
         private List<Matrix> transforms;
 
         public SkullRing(ContentManager content, DanceArea danceArea, Camera camera)
         {
             this.danceArea = danceArea;
+           
 
             transforms = new List<Matrix>();
             skullAsset = new Asset(content, "Assets/Souls/TreadingWater",
@@ -51,12 +52,16 @@ namespace DevilSoup
             Debug.WriteLine(danceArea.combo.getComboStatus());
             for (int i = 0; i < howManyToDraw; i++)
             {
-                skullAsset.world = transforms[i];
+                skullAsset.world = Matrix.Identity * Matrix.CreateRotationY(MathHelper.ToRadians(rotation));
+                skullAsset.world = skullAsset.world*transforms[i];
                 skullAsset.SimpleDraw(camera.view, camera.projection);
             }
 
 
+            rotation += 0.3f;
 
+            if (rotation >= 360)
+                rotation = 0.0f;
 
         }
     }
