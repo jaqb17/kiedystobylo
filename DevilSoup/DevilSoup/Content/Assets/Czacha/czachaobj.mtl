@@ -1,0 +1,17 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 25.06.2018 17:02:59
+
+newmtl cialkoSG
+	Ns 18.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5000 0.5000 0.5000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka C:\Users\Kuba\Desktop\kiedystobylo\DevilSoup\DevilSoup\Content\Assets\Czacha\czacha.fbm\grzesznik2txtr_Occlusion.tga
+	map_Kd C:\Users\Kuba\Desktop\kiedystobylo\DevilSoup\DevilSoup\Content\Assets\Czacha\czacha.fbm\grzesznik2txtr_Albedo.tga
+	map_Ks C:\Users\Kuba\Desktop\kiedystobylo\DevilSoup\DevilSoup\Content\Assets\Czacha\czacha.fbm\grzesznik2txtr_Specular.tga
