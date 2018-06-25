@@ -24,7 +24,7 @@ namespace DevilSoup
         private Player player;
         private GraphicsDeviceManager graphics;
         private int lastPointsHistory = 0;
-        public readonly int pointsLimitToActivateCombo = 15;
+        public readonly int pointsLimitToActivateCombo = 60;
         public int comboPointsProgressBar { get; private set; } = 0;
 
         public Vector3 actualGarnekColor;
