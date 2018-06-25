@@ -526,12 +526,13 @@ namespace DevilSoup
             bool ifKilled = false;
             if (singleAreas[id] != null)
             {
+                player = Player.getPlayer();
+                player.points++;
                 ifKilled = singleAreas[id].takeSoulLife();
                 billboardIndicators.Add(new BillboardSys(graphicsDevice, content, content.Load<Texture2D>("Assets\\OtherTextures\\blood"), new Vector2(18), singleAreas[id].soulPosition + ((camera.Position - singleAreas[id].soulPosition) / 10)));
             }
 
-            if (ifKilled)
-                this.Killed();
+            
         }
 
         private void takeAllSoulHP(int id)
