@@ -46,7 +46,7 @@ namespace DevilSoup
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferHeight = GlobalVariables.SCREEN_HEIGTH;
             graphics.PreferredBackBufferWidth = GlobalVariables.SCREEN_WIDTH;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
