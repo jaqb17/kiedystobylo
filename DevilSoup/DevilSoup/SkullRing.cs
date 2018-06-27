@@ -19,7 +19,7 @@ namespace DevilSoup
         public SkullRing(ContentManager content, DanceArea danceArea, Camera camera)
         {
             this.danceArea = danceArea;
-           
+
 
             transforms = new List<Matrix>();
             skullAsset = new Asset(content, "Assets/Czacha/czachaobj",
@@ -28,6 +28,9 @@ namespace DevilSoup
                                             "Assets /Czacha/grzesznik2txtr_Specular",
                                             camera);
             skullAsset.setLightDirection(new Vector3(0, -1, -1));
+            skullAsset.setSpecularColor(new Vector4(1, 0, 0, 1));
+            skullAsset.setDiffuseColor(new Vector4(1f, .7f, .7f, 1f));
+            skullAsset.setShine(1f);
 
             //skullAsset = new Asset(content, "Assets/test/vs",
             //                               "Assets/test/vsc",
@@ -58,11 +61,11 @@ namespace DevilSoup
         public void render(Camera camera)
         {
             int howManyToDraw = Convert.ToInt32(Math.Floor(transforms.Count * danceArea.combo.getComboStatus()));
-           // Debug.WriteLine(danceArea.combo.getComboStatus());
+            // Debug.WriteLine(danceArea.combo.getComboStatus());
             for (int i = 0; i < howManyToDraw; i++)
             {
-                skullAsset.world = Matrix.Identity * Matrix.CreateRotationY(MathHelper.ToRadians(rotation)) * Matrix.CreateRotationX(MathHelper.ToRadians(rotation))* Matrix.CreateRotationZ(MathHelper.ToRadians(rotation));
-                skullAsset.world = skullAsset.world*transforms[i];
+                skullAsset.world = Matrix.Identity * Matrix.CreateRotationY(MathHelper.ToRadians(rotation)) * Matrix.CreateRotationX(MathHelper.ToRadians(rotation)) * Matrix.CreateRotationZ(MathHelper.ToRadians(rotation));
+                skullAsset.world = skullAsset.world * transforms[i];
                 skullAsset.SimpleDraw(camera.view, camera.projection);
             }
 
